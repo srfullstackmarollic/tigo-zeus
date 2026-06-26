@@ -14,8 +14,9 @@
 | 2 · Bootstrap del mesh (control + data plane) | ✅ completo y verde en ArgoCD |
 | 3 · Telemetría ambient | ✅ ns `argocd` etiquetado `ambient` (130 pods), Rabbit/ArgoCD excluidos (`none` en vivo). **Pendiente: firmeza del `none` de Rabbit vía GitOps** |
 | 4 · Exponer Kiali | ✅ completo — `https://k8s-dev-sat.tigo.com.pa/kiali` |
+| 5 · L7 vía waypoint (opcional) | ✅ **piloto validado** — waypoint `argocd-waypoint` (escopo service) en ns `argocd`; servicio `cr-service-processpayments-v1-services` vinculado (label en vivo) → Kiali muestra **RPS / % error / códigos HTTP**. CRDs de Gateway API vendorizadas |
 
-**Versiones desplegadas:** Istio **1.26.8** (ambient), kiali-server **2.11.0**, prometheus (chart) **29.13.0**.
+**Versiones desplegadas:** Istio **1.26.8** (ambient), kiali-server **2.11.0**, prometheus (chart) **29.13.0**, Gateway API CRDs (standard) **v1.3.0** (vendorizadas).
 **Sin tocar ninguna app:** ningún namespace de negocio fue etiquetado todavía; data-plane ocioso.
 
 ## 1. Contexto y problema
@@ -112,6 +113,27 @@ Sidecar exige recrear/reiniciar el pod (viola "no alterar apps") y es riesgoso e
   (host `kiali-dev-sat`) quedaron ociosos y **fueron removidos** en la limpieza.
 - **Acceso:** `https://k8s-dev-sat.tigo.com.pa/kiali` (validado desde la VPN; sin port-forward).
 
+### Fase 5 — L7 vía waypoint (PILOTO) ✅
+- **Por qué:** ambient (ztunnel) solo da **L4** (bytes/conexiones/mTLS). Para **RPS, latencia, % error y
+  códigos HTTP** hace falta un **waypoint** (Envoy gestionado por istiod), sin tocar los pods de las apps.
+- **Pre-requisito descubierto:** las **CRDs de Gateway API NO existían** y el istiod 1.26 **no las instala**
+  solo (ese auto-install fue removido). Se **vendorizaron** las CRDs (standard channel **v1.3.0**) en
+  `cluster-resources/istio/gateway-api/gateway-api-crds.yaml` (el repo-server no las baja por el proxy TLS).
+- **GitOps:** `cluster-resources/istio/waypoint/waypoint.yaml` — `Gateway argocd-waypoint`
+  (`gatewayClassName: istio-waypoint`, **escopo `service`** vía label `istio.io/waypoint-for: service`) en ns
+  `argocd`. istiod crea automáticamente el Deployment del waypoint (1 pod Envoy). **Ocioso** hasta vincular
+  un Service. `PROGRAMMED=True`, pod `1/1`.
+- **Vinculación del piloto (en vivo, reversible):**
+  `kubectl -n argocd label svc cr-service-processpayments-v1-services istio.io/use-waypoint=argocd-waypoint`.
+  El label **persiste** (selfHeal no lo revierte), igual que el enrolamiento ambient.
+- **Validado:** tráfico de prueba (`curl` desde un pod en el mesh) → en Kiali aparece el nodo de servicio
+  (triángulo waypoint) con **HTTP RPS, % Success/Error y desglose de códigos** (OK/3xx/4xx/5xx). El 100% 4xx
+  del test es esperado (se golpeó `/`, que el REST responde 404) — prueba justamente que el waypoint **mide y
+  clasifica L7**. Prometheus **ya raspa el waypoint** (sin gap de scrape).
+- **Alcance actual:** solo el servicio-piloto pasa por el waypoint; el resto del ns sigue solo L4. Para ampliar
+  (p.ej. todos los `payments-*`): mismo label por Service (comparten el mismo pod waypoint).
+- **Reversión:** `kubectl -n argocd label svc <svc> istio.io/use-waypoint-` (inmediato, sin restart).
+
 ## 7. Verificación end-to-end (lograda)
 
 - `istiod`, `istio-cni`, `ztunnel`, `prometheus`, `kiali` `Running`; DaemonSets 13/13.
@@ -132,8 +154,14 @@ Sidecar exige recrear/reiniciar el pod (viola "no alterar apps") y es riesgoso e
   (el ns es del bootstrap). Es permanente en la práctica (el ns no se recrea), pero documentarlo.
 - **Pods server-first dentro de `argocd`:** si aparece algún workload server-first (DB embebida, etc.),
   vigilar su readiness al entrar al mesh; excluir con `=none` si hace falta.
-- **L7 opcional:** para HTTP/RPS/latencia (no solo L4), desplegar *waypoint* por namespace (sin tocar
-  pods) en una fase posterior.
+- **L7 vía waypoint (PILOTO entregado):** ya hay un waypoint (escopo service) en `argocd`; se gana L7 por
+  Service vía label `istio.io/use-waypoint` (en vivo). Notas: (1) cada Service vinculado **rutea por el pod
+  waypoint** (1 hop extra; SPOF temporal si el pod cae — solo afecta a los Services vinculados); (2) el
+  waypoint parsea como HTTP (sniffing) — vincular Services **no-HTTP** puede romperlos, validar protocolo
+  antes; (3) el label de vinculación está **en vivo**, no en GitOps (misma deuda de firmeza que el ns y el
+  Rabbit) — para versionarlo, bajar el label al Service en el overlay del app.
+- **CRDs de Gateway API vendorizadas:** para subir su versión hay que re-vendorizar el `standard-install.yaml`
+  (igual que los charts; el repo-server no lo baja por el proxy TLS).
 
 ## 9. Referencias
 

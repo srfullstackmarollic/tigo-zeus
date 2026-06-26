@@ -21,6 +21,8 @@
 | `app-kiali.yaml` | Application `kiali-server` (ns kiali, podAffinity preferred + toleration `gitlab-ci`) | 6 |
 | `kiali-ingress.yaml` | Ingress nginx → `https://k8s-dev-sat.tigo.com.pa/kiali` | — |
 | `prometheus/app-prometheus.yaml` | Prometheus dedicado (`prometheus.istio-system:9090`) | 2 |
+| `gateway-api/gateway-api-crds.yaml` | CRDs Gateway API (standard v1.3.0) **vendorizadas** — pré-req do waypoint | — |
+| `waypoint/waypoint.yaml` | `Gateway argocd-waypoint` (L7, escopo service) no ns `argocd` | — |
 
 Wiring: AppProject `istio` em `argocd-projects.yaml`; `- istio` em `cluster-resources/kustomization.yaml`.
 **Versões:** Istio **1.26.8**, kiali-server **2.11.0**, prometheus (chart) **29.13.0**.
@@ -111,6 +113,44 @@ kubectl -n kiali port-forward svc/kiali 20001:20001
 ```
 
 ---
+
+## Fase 5 — L7 via waypoint (PILOTO, opcional) — feito
+
+Ambient (ztunnel) só dá **L4**. Para **RPS/latência/% erro/códigos HTTP** sobe-se um **waypoint** (Envoy
+gerenciado pelo istiod), sem tocar nos pods. Pré-req: **CRDs da Gateway API** (vendorizadas no git;
+o istiod 1.26 não as instala e o repo-server não as baixa pelo proxy TLS).
+
+```bash
+# validar pré-req + waypoint no ar
+kubectl get crd | grep gateway.networking.k8s.io            # 5 CRDs (standard v1.3.0)
+kubectl get gatewayclass istio-waypoint                     # criada pelo istiod
+kubectl -n argocd get gateway.gateway.networking.k8s.io argocd-waypoint   # PROGRAMMED=True
+kubectl -n argocd get pods -l gateway.networking.k8s.io/gateway-name=argocd-waypoint   # 1/1 Running
+```
+
+**Vincular um serviço (ao vivo, reversível).** ⚠️ Confirmar que a porta é HTTP antes (o waypoint parseia
+como HTTP; serviço não-HTTP pode quebrar). O label **persiste** (selfHeal não reverte).
+
+```bash
+# 1) checar protocolo da porta (name http* ou appProtocol http -> ok; sniffing cobre porta 80 sem nome)
+kubectl -n argocd get svc <svc> -o jsonpath='{range .spec.ports[*]}{.name}{" appProto="}{.appProtocol}{"\n"}{end}'
+# 2) vincular (não recria pod)
+kubectl -n argocd label svc <svc> istio.io/use-waypoint=argocd-waypoint --overwrite
+# 3) gerar tráfego de teste de DENTRO do mesh (ns argocd já é ambient)
+kubectl -n argocd run wptest --rm -it --restart=Never --image=curlimages/curl -- \
+  sh -c 'for i in $(seq 1 10); do curl -s -o /dev/null -w "%{http_code}\n" http://<svc>/; sleep 1; done'
+# 4) confirmar L7 direto no waypoint (e depois no Kiali: nó de serviço + HTTP RPS/% error/códigos)
+kubectl -n argocd exec deploy/argocd-waypoint -c istio-proxy -- \
+  curl -s localhost:15020/stats/prometheus | grep istio_requests_total | head
+```
+
+> Piloto feito com `cr-service-processpayments-v1-services` (porta 80, sem nome → sniffing pegou como HTTP).
+> O Prometheus **já raspa** o waypoint (métricas chegam ao Kiali sem ajuste de scrape).
+>
+> **Reversão:** `kubectl -n argocd label svc <svc> istio.io/use-waypoint-` (imediato, sem restart).
+> **Ampliar** (ex.: todos `payments-*`): mesmo label por Service; todos compartilham o mesmo pod waypoint.
+> **Firmeza GitOps:** o label de vinculação está **ao vivo** (mesma dívida do ns/Rabbit); para versionar,
+> baixar `istio.io/use-waypoint` no Service do overlay do app.
 
 ## Verificação end-to-end (checklist)
 
