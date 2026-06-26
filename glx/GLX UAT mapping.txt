@@ -1,0 +1,430 @@
+GLX UAT mapping
+
+ kubectl get ns --show-labels
+NAME                          STATUS   AGE    LABELS
+argocd                        Active   305d   kubernetes.io/metadata.name=argocd
+castlemock                    Active   300d   kubernetes.io/metadata.name=castlemock
+cattle-fleet-system           Active   303d   field.cattle.io/projectId=p-v4p78,kubernetes.io/metadata.name=cattle-fleet-system,objectset.rio.cattle.io/hash=f399d0b310fbfb28e9667312fdc7a33954e2b8c8
+cattle-impersonation-system   Active   303d   authz.cluster.cattle.io/impersonator=true,cattle.io/creator=norman,field.cattle.io/projectId=p-v4p78,kubernetes.io/metadata.name=cattle-impersonation-system
+cattle-system                 Active   303d   field.cattle.io/projectId=p-v4p78,kubernetes.io/metadata.name=cattle-system
+cdr                           Active   230d   kubernetes.io/metadata.name=cdr
+cdr-pa                        Active   301d   kubernetes.io/metadata.name=cdr-pa
+default                       Active   306d   field.cattle.io/projectId=p-dv5k6,kubernetes.io/metadata.name=default
+galaxion                      Active   300d   kubernetes.io/metadata.name=galaxion
+glx                           Active   300d   kubernetes.io/metadata.name=glx
+kube-node-lease               Active   306d   field.cattle.io/projectId=p-v4p78,kubernetes.io/metadata.name=kube-node-lease
+kube-public                   Active   306d   field.cattle.io/projectId=p-v4p78,kubernetes.io/metadata.name=kube-public
+kube-system                   Active   306d   field.cattle.io/projectId=p-v4p78,kubernetes.io/metadata.name=kube-system
+local                         Active   303d   kubernetes.io/metadata.name=local
+logging                       Active   26d    app.kubernetes.io/name=fluent-bit,kubernetes.io/metadata.name=logging
+microcks                      Active   245d   kubernetes.io/metadata.name=microcks
+monitoring                    Active   40d    kubernetes.io/metadata.name=monitoring
+
+
+ kubectl -n glx get deploy
+  kubectl -n glx get podsNAME                                            READY   UP-TO-DATE   AVAILABLE   AGE
+account-receivable-facade                       1/1     1            1           300d
+account-receivable-service                      1/1     1            1           300d
+accounts-service                                1/1     1            1           300d
+acquisition-prospects-service                   1/1     1            1           300d
+add-ons-service                                 1/1     1            1           300d
+addresses-service                               1/1     1            1           300d
+adjustments-service                             1/1     1            1           300d
+appointments-service                            1/1     1            1           258d
+ar-payment-facade                               1/1     1            1           217d
+barrings-service                                1/1     1            1           300d
+billing-api                                     1/1     1            1           245d
+billing-apigateway                              1/1     1            1           300d
+billing-cycles-service                          1/1     1            1           300d
+billing-service                                 1/1     1            1           300d
+billing-ui                                      1/1     1            1           300d
+billing-worker                                  1/1     1            1           53d
+carts-service                                   1/1     1            1           259d
+case-management-pa-audit-worker                 1/1     1            1           258d
+case-management-pa-service                      1/1     1            1           258d
+case-management-pa-tasks                        1/1     1            1           258d
+case-management-pa-ui                           1/1     1            1           258d
+case-management-pa-users-worker                 1/1     1            1           258d
+catalog-service                                 1/1     1            1           300d
+cdr-usage-consumption-service                   1/1     1            1           154d
+change-offers-service                           1/1     1            1           257d
+collections-service                             1/1     1            1           300d
+contacts-service                                1/1     1            1           297d
+credit-scores-service                           1/1     1            1           300d
+customer-history-admin-ui                       1/1     1            1           300d
+customer-pa-management                          1/1     1            1           117d
+deposits-service                                1/1     1            1           300d
+discounts-service                               1/1     1            1           259d
+email-sender-service                            1/1     1            1           300d
+equipments-pa-service                           1/1     1            1           300d
+equipments-service                              1/1     1            1           257d
+financial-documents                             1/1     1            1           300d
+geographic-management                           1/1     1            1           300d
+itsf-dbmdl                                      0/1     1            0           243d
+maildev                                         1/1     1            1           300d
+notifications-service                           1/1     1            1           300d
+notifications-ui                                1/1     1            1           300d
+order-status-facade                             1/1     1            1           300d
+otp-verification-service                        1/1     1            1           258d
+payment-plan                                    1/1     1            1           300d
+payments-service                                1/1     1            1           297d
+payments-ui                                     1/1     1            1           300d
+prospect-lead                                   1/1     1            1           300d
+search-engine-service                           1/1     1            1           300d
+security-questions-service                      1/1     1            1           119d
+service-coverage-mock-up                        1/1     1            1           300d
+sms-sender-service                              1/1     1            1           300d
+tecrep-pa-equipments-management-webservice      0/1     1            0           117d
+tigo-accounts-workflow-connector                1/1     1            1           300d
+tigo-addons-workflow-connector                  1/1     1            1           300d
+tigo-ar-workflow-connector                      1/1     1            1           300d
+tigo-b2c-crm-ui                                 1/1     1            1           300d
+tigo-bill-cycles-workflow-connector             1/1     1            1           300d
+tigo-cbs-workflow-connector                     1/1     1            1           300d
+tigo-collection-management-workflow-connector   1/1     1            1           300d
+tigo-contact-workflow-connector                 1/1     1            1           300d
+tigo-credit-scores-workflow-connector           1/1     1            1           300d
+tigo-crm-api-gateway                            1/1     1            1           260d
+tigo-equipments-workflow-connector              1/1     1            1           41d
+tigo-field-service-workflow-connector           1/1     1            1           300d
+tigo-order-helper-workflow-connector            1/1     1            1           300d
+tigo-order-status-workflow-connector            1/1     1            1           300d
+tigo-pa-adjustment-custom-service               1/1     1            1           256d
+tigo-pa-barrings-workflow-connector             1/1     1            1           49d
+tigo-pa-notifications-workflow-connector        1/1     1            1           300d
+tigo-pa-oauth-adapter                           1/1     1            1           217d
+tigo-pa-order-processor                         1/1     1            1           41d
+tigo-sales-facade                               1/1     1            1           300d
+tigo-symphonica-workflow-connector              1/1     1            1           300d
+unique-references-service                       1/1     1            1           300d
+user-management-workflow-connector              1/1     1            1           300d
+users-management-pa                             1/1     1            1           258d
+users-service                                   1/1     1            1           300d
+workflow-engine                                 1/1     1            1           260d
+workflow-engine-facade                          1/1     1            1           41d
+workflow-engine-ui                              1/1     1            1           300d
+workflow-query                                  1/1     1            1           260d
+workflow-query-facade                           1/1     1            1           300d
+[outs_djoliveira@tocpait-glx-uat-mster-01 ~]$   kubectl -n glx get pods
+NAME                                                             READY   STATUS             RESTARTS            AGE
+account-receivable-facade-6d7b554cdb-ttp4q                       1/1     Running            8 (42d ago)         43d
+account-receivable-service-66d7d59f98-b4lvh                      1/1     Running            7 (42d ago)         43d
+accounts-service-5ff689c55c-ts7jj                                1/1     Running            7 (42d ago)         43d
+acquisition-prospects-service-c7bb8854b-p68nb                    1/1     Running            3 (42d ago)         43d
+add-ons-service-59d98fb48f-7vv94                                 1/1     Running            0                   32d
+addresses-service-69bc7fcd-2c2wm                                 1/1     Running            0                   43d
+adjustments-service-bcd8f79c8-rf2fv                              1/1     Running            3 (42d ago)         43d
+appointments-service-784c6b88ff-pr8ws                            1/1     Running            7 (42d ago)         43d
+ar-payment-facade-6765b547c5-wcbkd                               1/1     Running            7 (42d ago)         43d
+barrings-service-745bb489bc-rfqdw                                1/1     Running            7 (42d ago)         43d
+billing-api-6b6c44fb8f-w8shk                                     1/1     Running            1 (17d ago)         25d
+billing-apigateway-bd6ffd96c-zglkm                               1/1     Running            0                   43d
+billing-cycles-service-9f47fb866-zgczq                           1/1     Running            7 (42d ago)         43d
+billing-service-f55df89d-k8j8p                                   1/1     Running            7 (42d ago)         43d
+billing-ui-99c6d7579-q85jm                                       1/1     Running            0                   43d
+billing-worker-578d467795-2svqj                                  1/1     Running            0                   19d
+carts-service-7f5b9b745d-zh6l6                                   1/1     Running            7 (42d ago)         43d
+case-management-pa-audit-worker-5cf978f4cb-cltbx                 1/1     Running            0                   43d
+case-management-pa-service-5674484fdd-hkxnb                      1/1     Running            0                   43d
+case-management-pa-tasks-845c767d8-7mcjm                         1/1     Running            0                   43d
+case-management-pa-ui-665dcc68c4-b6jg4                           1/1     Running            0                   43d
+case-management-pa-users-worker-69fdd5b9f9-bjh4l                 1/1     Running            0                   43d
+catalog-service-7dff667b87-rc428                                 1/1     Running            0                   43d
+cdr-usage-consumption-service-7f4df5b88-rs7ns                    1/1     Running            0                   109d
+change-offers-service-f77c64646-lwdkn                            1/1     Running            3 (42d ago)         43d
+collections-service-54d9df9d76-ls4st                             1/1     Running            7 (42d ago)         43d
+contacts-service-6d7878685d-zb42w                                1/1     Running            7 (42d ago)         43d
+credit-scores-service-5c6fd6b8bc-gd657                           1/1     Running            0                   32d
+customer-history-admin-ui-759979bb9-mv9sw                        1/1     Running            0                   43d
+customer-history-dbmdl-2.5.4-jjpb8                               1/1     Running            0                   46d
+customer-pa-management-5fbcdbf898-t7wv9                          1/1     Running            0                   43d
+deposits-service-bfbdc894c-rq96q                                 1/1     Running            0                   43d
+discounts-service-7f7df949-p8tx9                                 1/1     Running            0                   32d
+email-sender-service-7fb6ff588b-gzz8l                            1/1     Running            7 (42d ago)         43d
+equipments-pa-service-577b5d47fd-hrfld                           1/1     Running            0                   43d
+equipments-service-779448b848-lktql                              1/1     Running            7 (42d ago)         43d
+financial-documents-5b67557fbc-cmqxh                             1/1     Running            0                   41d
+geographic-management-5476479b9d-lxrqb                           1/1     Running            0                   43d
+itsf-dbmdl-7d76cc6c66-swmj7                                      0/1     Completed          14930 (5m16s ago)   53d
+itsf-dbmdl-84bc6d46bb-2s6s6                                      0/1     CrashLoopBackOff   11960 (2m14s ago)   43d
+keycloak-0                                                       1/1     Running            0                   249d
+maildev-6fccdd564b-qgrvq                                         1/1     Running            0                   284d
+notifications-service-58665fbc64-7n4tg                           1/1     Running            7 (42d ago)         43d
+notifications-ui-6d4bf57977-7ng5q                                1/1     Running            0                   43d
+order-status-facade-c4868c-pwxxh                                 1/1     Running            7 (42d ago)         43d
+otp-verification-service-7cdfb4c6db-9shp7                        1/1     Running            7 (42d ago)         43d
+payment-plan-ff878cf8d-q8pjr                                     1/1     Running            0                   43d
+payments-service-7bd5959d4f-dk4g9                                1/1     Running            7 (42d ago)         43d
+payments-ui-54fff8f94d-k9ffj                                     1/1     Running            0                   43d
+prospect-lead-59558bc68c-sgjtl                                   1/1     Running            0                   43d
+search-engine-service-77794b8bc5-9cb6k                           1/1     Running            0                   43d
+security-questions-service-7d9dbcc648-t5zsx                      1/1     Running            0                   32d
+service-coverage-mock-up-7f8c4779b-nxlfd                         1/1     Running            0                   64d
+sms-sender-service-69b75c67d-8ddq8                               1/1     Running            7 (42d ago)         43d
+tecrep-pa-equipments-management-webservice-7cc96bbbfb-c8xj7      0/1     CrashLoopBackOff   11136 (3m51s ago)   43d
+tecrep-pa-equipments-management-webservice-c6c9575db-z4828       0/1     CrashLoopBackOff   30357 (117s ago)    117d
+tigo-accounts-workflow-connector-5598f55654-dnpfd                1/1     Running            0                   20d
+tigo-addons-workflow-connector-d465d4dfb-bqvkv                   1/1     Running            0                   20d
+tigo-ar-workflow-connector-8559766df9-xxmnj                      1/1     Running            7 (42d ago)         43d
+tigo-b2c-crm-ui-558c778df4-54dv9                                 1/1     Running            0                   20d
+tigo-bill-cycles-workflow-connector-6d9b795668-w9btj             1/1     Running            7 (42d ago)         43d
+tigo-cbs-workflow-connector-5666947f77-2tqpg                     1/1     Running            2 (42d ago)         284d
+tigo-collection-management-workflow-connector-76644846fc-cl5xh   1/1     Running            497 (25h ago)       256d
+tigo-contact-workflow-connector-d8b8f659c-x9b8g                  1/1     Running            0                   20d
+tigo-credit-scores-workflow-connector-fc449d5f6-w8zwm            1/1     Running            0                   20d
+tigo-crm-api-gateway-78d4df6b7c-jp2bq                            1/1     Running            0                   20d
+tigo-equipments-workflow-connector-844b7b4674-nm8k9              1/1     Running            0                   34d
+tigo-field-service-workflow-connector-54898c5956-jxdj5           1/1     Running            0                   20d
+tigo-order-helper-workflow-connector-5649b9f56f-l7z8l            1/1     Running            7 (42d ago)         43d
+tigo-order-status-workflow-connector-5c64f4f9d8-56gkz            1/1     Running            7 (42d ago)         64d
+tigo-pa-adjustment-custom-service-56d8f9f546-kxxbv               1/1     Running            0                   43d
+tigo-pa-barrings-workflow-connector-d45676db8-c42gk              1/1     Running            7 (42d ago)         43d
+tigo-pa-notifications-workflow-connector-5c664fc76-bn95d         1/1     Running            7 (42d ago)         43d
+tigo-pa-oauth-adapter-d68dcbffc-8vm9c                            1/1     Running            0                   43d
+tigo-pa-order-processor-96b77c474-kn4vd                          1/1     Running            0                   41d
+tigo-sales-facade-667c4ccd74-gs67p                               1/1     Running            0                   18d
+tigo-symphonica-workflow-connector-6cb4f744c-gg5cq               1/1     Running            0                   22d
+unique-references-service-867dccf764-fvkxm                       1/1     Running            0                   32d
+user-management-workflow-connector-84d79f56bb-8xp9b              1/1     Running            7 (42d ago)         43d
+users-management-pa-9d9895b45-2l725                              1/1     Running            0                   43d
+users-service-5999dfb89d-zqd6k                                   1/1     Running            7 (42d ago)         43d
+workflow-engine-8495cf674c-47dnq                                 1/1     Running            0                   34d
+workflow-engine-facade-5d9855bc9f-ttm9j                          1/1     Running            0                   41d
+workflow-engine-ui-7b48c56f78-xn6g2                              1/1     Running            0                   43d
+workflow-query-7cb6566d5c-8vqrc                                  1/1     Running            0                   41d
+workflow-query-facade-cdc5785c9-27rvv                            1/1     Running            0                   43d
+
+kubectl -n istio-system get deploy istiod -o jsonpath='{.spec.template.spec.containers[0].image}'; echo
+Error from server (NotFound): namespaces "istio-system" not found
+
+kubectl -n glx get gateway,virtualservice,destinationrule,peerauthentication,authorizationpolicy,sidecar 2>&1
+error: the server doesn't have a resource type "gateway"
+
+---
+
+ kubectl get hpa -A 2>&1
+No resources found
+[outs_djoliveira@tocpait-glx-uat-mster-01 ~]$ kubectl -n kube-system get deploy 2>&1 | grep -i metrics || echo "sem metrics-server"
+rke2-metrics-server                    1/1     1            1           306d
+[outs_djoliveira@tocpait-glx-uat-mster-01 ~]$
+
+---
+
+
+[outs_djoliveira@tocpait-glx-uat-mster-01 ~]$ kubectl -n monitoring get deploy,sts 2>&1
+NAME                                                  READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/prometheus-kube-prometheus-operator   1/1     1            1           39d
+deployment.apps/prometheus-kube-state-metrics         1/1     1            1           39d
+
+NAME                                                                READY   AGE
+statefulset.apps/prometheus-prometheus-kube-prometheus-prometheus   1/1     39d
+
+---
+
+ kubectl get ingress -A 2>&1
+NAMESPACE    NAME                                      CLASS   HOSTS                                                                                  ADDRESS
+                                   PORTS     AGE
+castlemock   castlemock                                nginx   cattlemock.tigo.com.pa                                                                 10.30.19.10,10.30.19.11,10.30.19.12,10.30.19.13,10.30.19.14,10.30.19.15,10.30.19.16,10.30.19.17,10.30.19.18,1
+0.30.19.19,10.30.19.7,10.30.19.9   80, 443   242d
+galaxion     case-management-tasks-pa-ingress          nginx   glx-case-management-tasks-pa-stg.tigo.cam                                              10.30.19.10,10.30.19.11,10.30.19.12,10.30.19.13,10.30.19.14,10.30.19.15,10.30.19.16,10.30.19.17,10.30.19.18,1
+0.30.19.19,10.30.19.7,10.30.19.9   80, 443   242d
+glx          account-receivable-facade-ingress         nginx   glx-account-receivable-facade-uat.tigo.com.pa                                          10.30.19.10,10.30.19.11,10.30.19.12,10.30.19.13,10.30.19.14,10.30.19.15,10.30.19.16,10.30.19.17,10.30.19.18,1
+0.30.19.19,10.30.19.7,10.30.19.9   80, 443   242d
+glx          account-receivable-service-ingress        nginx   glx-account-receivable-uat.tigo.com.pa                                                 10.30.19.10,10.30.19.11,10.30.19.12,10.30.19.13,10.30.19.14,10.30.19.15,10.30.19.16,10.30.19.17,10.30.19.18,1
+0.30.19.19,10.30.19.7,10.30.19.9   80, 443   242d
+glx          accounts-service-ingress                  nginx   glx-accounts-uat.tigo.com.pa                                                           10.30.19.10,10.30.19.11,10.30.19.12,10.30.19.13,10.30.19.14,10.30.19.15,10.30.19.16,10.30.19.17,10.30.19.18,1
+0.30.19.19,10.30.19.7,10.30.19.9   80, 443   242d
+glx          acquisition-prospects-service-ingress     nginx   glx-acquisition-prospects-uat.tigo.com.pa                                              10.30.19.10,10.30.19.11,10.30.19.12,10.30.19.13,10.30.19.14,10.30.19.15,10.30.19.16,10.30.19.17,10.30.19.18,1
+0.30.19.19,10.30.19.7,10.30.19.9   80, 443   242d
+glx          addons-service-ingress                    nginx   glx-addons-uat.tigo.com.pa                                                             10.30.19.10,10.30.19.11,10.30.19.12,10.30.19.13,10.30.19.14,10.30.19.15,10.30.19.16,10.30.19.17,10.30.19.18,1
+0.30.19.19,10.30.19.7,10.30.19.9   80, 443   242d
+glx          addresses-service-ingress                 nginx   glx-addresses-uat.tigo.com.pa                                                          10.30.19.10,10.30.19.11,10.30.19.12,10.30.19.13,10.30.19.14,10.30.19.15,10.30.19.16,10.30.19.17,10.30.19.18,1
+0.30.19.19,10.30.19.7,10.30.19.9   80, 443   242d
+glx          adjustments-service-ingress               nginx   glx-adjustments-uat.tigo.com.pa                                                        10.30.19.10,10.30.19.11,10.30.19.12,10.30.19.13,10.30.19.14,10.30.19.15,10.30.19.16,10.30.19.17,10.30.19.18,1
+0.30.19.19,10.30.19.7,10.30.19.9   80, 443   242d
+glx          appointments-service-ingress              nginx   glx-appointments-uat.tigo.com.pa                                                       10.30.19.10,10.30.19.11,10.30.19.12,10.30.19.13,10.30.19.14,10.30.19.15,10.30.19.16,10.30.19.17,10.30.19.18,1
+0.30.19.19,10.30.19.7,10.30.19.9   80, 443   242d
+glx          billing-api-ingress                       nginx   glx-billing-api-uat.tigo.com.pa                                                        10.30.19.10,10.30.19.11,10.30.19.12,10.30.19.13,10.30.19.14,10.30.19.15,10.30.19.16,10.30.19.17,10.30.19.18,1
+0.30.19.19,10.30.19.7,10.30.19.9   80, 443   242d
+glx          billing-apigateway-ingress                nginx   glx-billing-apigateway-uat.tigo.com.pa                                                 10.30.19.10,10.30.19.11,10.30.19.12,10.30.19.13,10.30.19.14,10.30.19.15,10.30.19.16,10.30.19.17,10.30.19.18,1
+0.30.19.19,10.30.19.7,10.30.19.9   80, 443   242d
+glx          billing-cycles-service-ingress            nginx   glx-billing-cycles-uat.tigo.com.pa                                                     10.30.19.10,10.30.19.11,10.30.19.12,10.30.19.13,10.30.19.14,10.30.19.15,10.30.19.16,10.30.19.17,10.30.19.18,1
+0.30.19.19,10.30.19.7,10.30.19.9   80, 443   242d
+glx          billing-service-ingress                   nginx   glx-billing-service-uat.tigo.com.pa                                                    10.30.19.10,10.30.19.11,10.30.19.12,10.30.19.13,10.30.19.14,10.30.19.15,10.30.19.16,10.30.19.17,10.30.19.18,1
+0.30.19.19,10.30.19.7,10.30.19.9   80, 443   242d
+glx          billing-ui-ingress                        nginx   glx-billing-ui-uat.tigo.com.pa                                                         10.30.19.10,10.30.19.11,10.30.19.12,10.30.19.13,10.30.19.14,10.30.19.15,10.30.19.16,10.30.19.17,10.30.19.18,1
+0.30.19.19,10.30.19.7,10.30.19.9   80, 443   242d
+glx          carts-service-ingress                     nginx   glx-carts-uat.tigo.com.pa                                                              10.30.19.10,10.30.19.11,10.30.19.12,10.30.19.13,10.30.19.14,10.30.19.15,10.30.19.16,10.30.19.17,10.30.19.18,1
+0.30.19.19,10.30.19.7,10.30.19.9   80, 443   242d
+glx          case-management-audit-worker-pa-ingress   nginx   glx-case-management-audit-worker-uat.tigo.com.pa                                       10.30.19.10,10.30.19.11,10.30.19.12,10.30.19.13,10.30.19.14,10.30.19.15,10.30.19.16,10.30.19.17,10.30.19.18,1
+0.30.19.19,10.30.19.7,10.30.19.9   80, 443   242d
+glx          case-management-service-pa-ingress        nginx   glx-case-management-uat.tigo.com.pa                                                    10.30.19.10,10.30.19.11,10.30.19.12,10.30.19.13,10.30.19.14,10.30.19.15,10.30.19.16,10.30.19.17,10.30.19.18,1
+0.30.19.19,10.30.19.7,10.30.19.9   80, 443   242d
+glx          case-management-ui-pa-ingress             nginx   glx-case-management-ui-uat.tigo.com.pa                                                 10.30.19.10,10.30.19.11,10.30.19.12,10.30.19.13,10.30.19.14,10.30.19.15,10.30.19.16,10.30.19.17,10.30.19.18,1
+0.30.19.19,10.30.19.7,10.30.19.9   80, 443   242d
+glx          case-management-users-worker-pa-ingress   nginx   glx-case-management-users-worker-uat.tigo.com.pa                                       10.30.19.10,10.30.19.11,10.30.19.12,10.30.19.13,10.30.19.14,10.30.19.15,10.30.19.16,10.30.19.17,10.30.19.18,1
+0.30.19.19,10.30.19.7,10.30.19.9   80, 443   242d
+glx          catalog-service-ingress                   nginx   glx-catalog-uat.tigo.com.pa                                                            10.30.19.10,10.30.19.11,10.30.19.12,10.30.19.13,10.30.19.14,10.30.19.15,10.30.19.16,10.30.19.17,10.30.19.18,1
+0.30.19.19,10.30.19.7,10.30.19.9   80, 443   242d
+glx          cdr-usage-consumption-service             nginx   glx-cdr-usage-consumption-service-uat.tigo.com.pa                                      10.30.19.10,10.30.19.11,10.30.19.12,10.30.19.13,10.30.19.14,10.30.19.15,10.30.19.16,10.30.19.17,10.30.19.18,1
+0.30.19.19,10.30.19.7,10.30.19.9   80, 443   242d
+glx          collections-service-ingress               nginx   glx-collections-uat.tigo.com.pa                                                        10.30.19.10,10.30.19.11,10.30.19.12,10.30.19.13,10.30.19.14,10.30.19.15,10.30.19.16,10.30.19.17,10.30.19.18,1
+0.30.19.19,10.30.19.7,10.30.19.9   80, 443   242d
+glx          contacts-service-ingress                  nginx   glx-contacts-uat.tigo.com.pa                                                           10.30.19.10,10.30.19.11,10.30.19.12,10.30.19.13,10.30.19.14,10.30.19.15,10.30.19.16,10.30.19.17,10.30.19.18,1
+0.30.19.19,10.30.19.7,10.30.19.9   80, 443   242d
+glx          credit-deposits-service-ingress           nginx   glx-deposits-uat.tigo.com.pa                                                           10.30.19.10,10.30.19.11,10.30.19.12,10.30.19.13,10.30.19.14,10.30.19.15,10.30.19.16,10.30.19.17,10.30.19.18,1
+0.30.19.19,10.30.19.7,10.30.19.9   80, 443   242d
+glx          credit-scores-service-ingress             nginx   glx-credit-scores-uat.tigo.com.pa                                                      10.30.19.10,10.30.19.11,10.30.19.12,10.30.19.13,10.30.19.14,10.30.19.15,10.30.19.16,10.30.19.17,10.30.19.18,1
+0.30.19.19,10.30.19.7,10.30.19.9   80, 443   242d
+glx          crm-api-ingress                           nginx   glx-crm-uat.tigo.com.pa,glx-crm-uat.tigo.com.pa,glx-crm-uat.tigo.com.pa + 31 more...   10.30.19.10,10.30.19.11,10.30.19.12,10.30.19.13,10.30.19.14,10.30.19.15,10.30.19.16,10.30.19.17,10.30.19.18,1
+0.30.19.19,10.30.19.7,10.30.19.9   80, 443   242d
+glx          discounts-service-ingress                 nginx   glx-discounts-uat.tigo.com.pa                                                          10.30.19.10,10.30.19.11,10.30.19.12,10.30.19.13,10.30.19.14,10.30.19.15,10.30.19.16,10.30.19.17,10.30.19.18,1
+0.30.19.19,10.30.19.7,10.30.19.9   80, 443   242d
+glx          email-sender-service-ingress              nginx   glx-email-sender-uat.tigo.com.pa                                                       10.30.19.10,10.30.19.11,10.30.19.12,10.30.19.13,10.30.19.14,10.30.19.15,10.30.19.16,10.30.19.17,10.30.19.18,1
+0.30.19.19,10.30.19.7,10.30.19.9   80, 443   242d
+glx          equipment-service-ingress                 nginx   glx-equipment-uat.tigo.com.pa                                                          10.30.19.10,10.30.19.11,10.30.19.12,10.30.19.13,10.30.19.14,10.30.19.15,10.30.19.16,10.30.19.17,10.30.19.18,1
+0.30.19.19,10.30.19.7,10.30.19.9   80, 443   242d
+glx          equipments-seravice-ingress               nginx   glx-equipments-seravice-uat.tigo.com.pa                                                10.30.19.10,10.30.19.11,10.30.19.12,10.30.19.13,10.30.19.14,10.30.19.15,10.30.19.16,10.30.19.17,10.30.19.18,1
+0.30.19.19,10.30.19.7,10.30.19.9   80, 443   242d
+glx          financial-documents-ingress               nginx   glx-financial-documents-uat.tigo.com.pa                                                10.30.19.10,10.30.19.11,10.30.19.12,10.30.19.13,10.30.19.14,10.30.19.15,10.30.19.16,10.30.19.17,10.30.19.18,1
+0.30.19.19,10.30.19.7,10.30.19.9   80, 443   242d
+glx          geographic-management-mockup-ingress      nginx   galaxion-geographic-management-mockup-uat.tigo.com.pa                                  10.30.19.10,10.30.19.11,10.30.19.12,10.30.19.13,10.30.19.14,10.30.19.15,10.30.19.16,10.30.19.17,10.30.19.18,1
+0.30.19.19,10.30.19.7,10.30.19.9   80, 443   242d
+glx          keycloak-ingress                          nginx   glx-iam-uat.tigo.com.pa                                                                10.30.19.10,10.30.19.11,10.30.19.12,10.30.19.13,10.30.19.14,10.30.19.15,10.30.19.16,10.30.19.17,10.30.19.18,1
+0.30.19.19,10.30.19.7,10.30.19.9   80, 443   300d
+glx          maildev                                   nginx   glx-crm-uat.tigo.com.pa                                                                10.30.19.10,10.30.19.11,10.30.19.12,10.30.19.13,10.30.19.14,10.30.19.15,10.30.19.16,10.30.19.17,10.30.19.18,1
+0.30.19.19,10.30.19.7,10.30.19.9   80, 443   300d
+glx          notifications-service-ingress             nginx   glx-notifications-service-uat.tigo.com.pa                                              10.30.19.10,10.30.19.11,10.30.19.12,10.30.19.13,10.30.19.14,10.30.19.15,10.30.19.16,10.30.19.17,10.30.19.18,1
+0.30.19.19,10.30.19.7,10.30.19.9   80, 443   242d
+glx          notifications-ui-ingress                  nginx   glx-notifications-uat.tigo.com.pa                                                      10.30.19.10,10.30.19.11,10.30.19.12,10.30.19.13,10.30.19.14,10.30.19.15,10.30.19.16,10.30.19.17,10.30.19.18,1
+0.30.19.19,10.30.19.7,10.30.19.9   80, 443   242d
+glx          order-status-facade-pa-ingress            nginx   glx-order-status-facade-uat.tigo.com.pa                                                10.30.19.10,10.30.19.11,10.30.19.12,10.30.19.13,10.30.19.14,10.30.19.15,10.30.19.16,10.30.19.17,10.30.19.18,1
+0.30.19.19,10.30.19.7,10.30.19.9   80, 443   242d
+glx          otp-verification-service-ingress          nginx   glx-otp-verification-uat.tigo.com.pa                                                   10.30.19.10,10.30.19.11,10.30.19.12,10.30.19.13,10.30.19.14,10.30.19.15,10.30.19.16,10.30.19.17,10.30.19.18,1
+0.30.19.19,10.30.19.7,10.30.19.9   80, 443   242d
+glx          payment-plan-ingress                      nginx   glx-payment-plan-uat.tigo.com.pa                                                       10.30.19.10,10.30.19.11,10.30.19.12,10.30.19.13,10.30.19.14,10.30.19.15,10.30.19.16,10.30.19.17,10.30.19.18,1
+0.30.19.19,10.30.19.7,10.30.19.9   80, 443   242d
+glx          payments-service-ingress                  nginx   glx-payments-uat.tigo.com.pa                                                           10.30.19.10,10.30.19.11,10.30.19.12,10.30.19.13,10.30.19.14,10.30.19.15,10.30.19.16,10.30.19.17,10.30.19.18,1
+0.30.19.19,10.30.19.7,10.30.19.9   80, 443   242d
+glx          prospect-lead-ingress                     nginx   prospect-lead-service-uat.tigo.com.pa                                                  10.30.19.10,10.30.19.11,10.30.19.12,10.30.19.13,10.30.19.14,10.30.19.15,10.30.19.16,10.30.19.17,10.30.19.18,1
+0.30.19.19,10.30.19.7,10.30.19.9   80, 443   242d
+glx          recognize-mockup-ingress                  nginx   galaxion-recognize-mockup-uat.tigo.com.pa                                              10.30.19.10,10.30.19.11,10.30.19.12,10.30.19.13,10.30.19.14,10.30.19.15,10.30.19.16,10.30.19.17,10.30.19.18,1
+0.30.19.19,10.30.19.7,10.30.19.9   80, 443   242d
+glx          search-engine-service-ingress             nginx   glx-search-engine-uat.tigo.com.pa                                                      10.30.19.10,10.30.19.11,10.30.19.12,10.30.19.13,10.30.19.14,10.30.19.15,10.30.19.16,10.30.19.17,10.30.19.18,1
+0.30.19.19,10.30.19.7,10.30.19.9   80, 443   242d
+glx          service-coverage-mockup-ingress           nginx   galaxion-service-coverage-mockup-uat.tigo.com.pa                                       10.30.19.10,10.30.19.11,10.30.19.12,10.30.19.13,10.30.19.14,10.30.19.15,10.30.19.16,10.30.19.17,10.30.19.18,1
+0.30.19.19,10.30.19.7,10.30.19.9   80, 443   242d
+glx          tigo-api-gateway-ingress                  nginx   tigo-api-gateway-uat.tigo.com.pa                                                       10.30.19.10,10.30.19.11,10.30.19.12,10.30.19.13,10.30.19.14,10.30.19.15,10.30.19.16,10.30.19.17,10.30.19.18,1
+0.30.19.19,10.30.19.7,10.30.19.9   80, 443   242d
+glx          tigo-crm-ingress                          nginx   glx-crm-uat.tigo.com.pa                                                                10.30.19.10,10.30.19.11,10.30.19.12,10.30.19.13,10.30.19.14,10.30.19.15,10.30.19.16,10.30.19.17,10.30.19.18,1
+0.30.19.19,10.30.19.7,10.30.19.9   80, 443   242d
+glx          tigo-sales-facade-ingress                 nginx   glx-sales-facade-uat.tigo.com.pa                                                       10.30.19.10,10.30.19.11,10.30.19.12,10.30.19.13,10.30.19.14,10.30.19.15,10.30.19.16,10.30.19.17,10.30.19.18,1
+0.30.19.19,10.30.19.7,10.30.19.9   80, 443   242d
+glx          tigo-workflow-engine-facade               nginx   glx-wfe-facade-uat.tigo.com.pa                                                         10.30.19.10,10.30.19.11,10.30.19.12,10.30.19.13,10.30.19.14,10.30.19.15,10.30.19.16,10.30.19.17,10.30.19.18,1
+0.30.19.19,10.30.19.7,10.30.19.9   80, 443   242d
+glx          tigo-workflow-order-creator               nginx   tigo-workflow-order-creator-uat.tigo.com.pa                                            10.30.19.10,10.30.19.11,10.30.19.12,10.30.19.13,10.30.19.14,10.30.19.15,10.30.19.16,10.30.19.17,10.30.19.18,1
+0.30.19.19,10.30.19.7,10.30.19.9   80, 443   242d
+glx          unique-references-service-ingress         nginx   glx-unique-references-uat.tigo.com.pa                                                  10.30.19.10,10.30.19.11,10.30.19.12,10.30.19.13,10.30.19.14,10.30.19.15,10.30.19.16,10.30.19.17,10.30.19.18,1
+0.30.19.19,10.30.19.7,10.30.19.9   80, 443   242d
+glx          users-management-pa-ingress               nginx   glx-users-management-sit.tigo.cam                                                      10.30.19.10,10.30.19.11,10.30.19.12,10.30.19.13,10.30.19.14,10.30.19.15,10.30.19.16,10.30.19.17,10.30.19.18,1
+0.30.19.19,10.30.19.7,10.30.19.9   80, 443   242d
+glx          users-service-ingress                     nginx   glx-users-uat.tigo.com.pa                                                              10.30.19.10,10.30.19.11,10.30.19.12,10.30.19.13,10.30.19.14,10.30.19.15,10.30.19.16,10.30.19.17,10.30.19.18,1
+0.30.19.19,10.30.19.7,10.30.19.9   80, 443   242d
+glx          wfe-ingress                               nginx   glx-wfe-uat.tigo.com.pa                                                                10.30.19.10,10.30.19.11,10.30.19.12,10.30.19.13,10.30.19.14,10.30.19.15,10.30.19.16,10.30.19.17,10.30.19.18,1
+0.30.19.19,10.30.19.7,10.30.19.9   80, 443   242d
+glx          wfe-query-ingress                         nginx   glx-om-query-uat.tigo.com.pa                                                           10.30.19.10,10.30.19.11,10.30.19.12,10.30.19.13,10.30.19.14,10.30.19.15,10.30.19.16,10.30.19.17,10.30.19.18,1
+0.30.19.19,10.30.19.7,10.30.19.9   80, 443   242d
+glx          workflow-engine-ingress                   nginx   glx-wfe-query-uat.tigo.com.pa                                                          10.30.19.10,10.30.19.11,10.30.19.12,10.30.19.13,10.30.19.14,10.30.19.15,10.30.19.16,10.30.19.17,10.30.19.18,1
+0.30.19.19,10.30.19.7,10.30.19.9   80, 443   242d
+
+---
+
+kubectl -n glx get deploy -o 'custom-columns=NAME:.metadata.name,CPUREQ:.spec.template.spec.containers[0].resources.requests.cpu,CPULIM:.spec.template.spec.containers[0].resources.limits.cpu,MEMREQ:.spec.template.
+spec.containers[0].resources.requests.memory,MEMLIM:.spec.template.spec.containers[0].resources.limits.memory'
+NAME                                            CPUREQ   CPULIM   MEMREQ   MEMLIM
+account-receivable-facade                       150m     1        768Mi    2Gi
+account-receivable-service                      150m     1        768Mi    2Gi
+accounts-service                                150m     1        1Gi      2Gi
+acquisition-prospects-service                   150m     1        768Mi    2Gi
+add-ons-service                                 150m     1        768Mi    2Gi
+addresses-service                               150m     1        768Mi    2Gi
+adjustments-service                             500m     1        1Gi      2Gi
+appointments-service                            150m     1        758Mi    2Gi
+ar-payment-facade                               6m       400m     256Mi    768Mi
+barrings-service                                600m     1        768Mi    2Gi
+billing-api                                     150m     500m     1Gi      4000Mi
+billing-apigateway                              150m     500m     256Mi    512Mi
+billing-cycles-service                          150m     1        768Mi    2Gi
+billing-service                                 150m     500m     768Mi    1Gi
+billing-ui                                      150m     500m     384Mi    512Mi
+billing-worker                                  150m     500m     1Gi      4000Mi
+carts-service                                   300m     1        768Mi    2Gi
+case-management-pa-audit-worker                 150m     250m     768Mi    1Gi
+case-management-pa-service                      150m     250m     768Mi    1Gi
+case-management-pa-tasks                        150m     250m     768Mi    1Gi
+case-management-pa-ui                           150m     300m     128Mi    512Mi
+case-management-pa-users-worker                 150m     250m     768Mi    1Gi
+catalog-service                                 300m     1        768Mi    2Gi
+cdr-usage-consumption-service                   500m     500m     1Gi      1Gi
+change-offers-service                           150m     1        768Mi    2Gi
+collections-service                             500m     1        1Gi      2Gi
+contacts-service                                150m     1        768Mi    2Gi
+credit-scores-service                           150m     1        768Mi    2Gi
+customer-history-admin-ui                       150m     500m     384Mi    1025Mi
+customer-pa-management                          50m      500m     512Mi    1Gi
+deposits-service                                150m     1        768Mi    2Gi
+discounts-service                               600m     1        768Mi    2Gi
+email-sender-service                            150m     1        768Mi    2Gi
+equipments-pa-service                           150m     500m     512Mi    1Gi
+equipments-service                              150m     1        512Mi    2Gi
+financial-documents                             150m     500m     1152Mi   2Gi
+geographic-management                           150m     250m     512Mi    1Gi
+itsf-dbmdl                                      150m     500m     384Mi    512Mi
+maildev                                         <none>   <none>   <none>   <none>
+notifications-service                           150m     1        768Mi    2Gi
+notifications-ui                                150m     1        128Mi    2Gi
+order-status-facade                             150m     250m     768Mi    1Gi
+otp-verification-service                        150m     500m     768Mi    1Gi
+payment-plan                                    150m     500m     768Mi    2Gi
+payments-service                                600m     1        1152Mi   2Gi
+payments-ui                                     250m     500m     128Mi    1Gi
+prospect-lead                                   150m     500m     512Mi    1Gi
+search-engine-service                           300m     1        768Mi    2Gi
+security-questions-service                      500m     1        1Gi      2Gi
+service-coverage-mock-up                        500m     500m     1Gi      1Gi
+sms-sender-service                              150m     1        768Mi    2Gi
+tecrep-pa-equipments-management-webservice      50m      500m     256Mi    1Gi
+tigo-accounts-workflow-connector                150m     1        768Mi    2Gi
+tigo-addons-workflow-connector                  150m     1        768Mi    2Gi
+tigo-ar-workflow-connector                      150m     500m     768Mi    1Gi
+tigo-b2c-crm-ui                                 150m     300m     384Mi    512Mi
+tigo-bill-cycles-workflow-connector             150m     1        640Mi    2Gi
+tigo-cbs-workflow-connector                     50m      500m     256Mi    1Gi
+tigo-collection-management-workflow-connector   50m      500m     256Mi    1Gi
+tigo-contact-workflow-connector                 150m     500m     768Mi    1Gi
+tigo-credit-scores-workflow-connector           150m     1        1Gi      2Gi
+tigo-crm-api-gateway                            100m     150m     384Mi    512Mi
+tigo-equipments-workflow-connector              150m     500m     768Mi    1Gi
+tigo-field-service-workflow-connector           200m     500m     768Mi    1Gi
+tigo-order-helper-workflow-connector            300m     1        768Mi    1Gi
+tigo-order-status-workflow-connector            500m     1        512Mi    2Gi
+tigo-pa-adjustment-custom-service               6m       400m     256Mi    768Mi
+tigo-pa-barrings-workflow-connector             2m       1        1Gi      2Gi
+tigo-pa-notifications-workflow-connector        150m     1        768Mi    2Gi
+tigo-pa-oauth-adapter                           2m       500m     512Mi    1Gi
+tigo-pa-order-processor                         100m     500m     512Mi    1Gi
+tigo-sales-facade                               150m     300m     768Mi    1Gi
+tigo-symphonica-workflow-connector              300m     1        768Mi    2Gi
+unique-references-service                       200m     200m     768Mi    1Gi
+user-management-workflow-connector              150m     500m     768Mi    1Gi
+users-management-pa                             100m     500m     512Mi    2Gi
+users-service                                   150m     1        768Mi    2Gi
+workflow-engine                                 1        2        4Gi      9Gi
+workflow-engine-facade                          500m     500m     768Mi    1Gi
+workflow-engine-ui                              500m     1        512Mi    1Gi
+workflow-query                                  850m     2        2Gi      5Gi
+workflow-query-facade                           150m     500m     768Mi    1Gi
+
+---
+
+kubectl -n glx get deploy -o 'custom-columns=NAME:.metadata.name,IMAGE:.spec.template.spec.containers[0].image'

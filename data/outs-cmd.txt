@@ -1,0 +1,474 @@
+_djoliveira@tocpait-sat-dev-mstrs-k8s-01 tmp]$ kubectl get deploy  -n argocd | grep -iE 'cr-|iuc-|adminntt|digital|service-auth'
+adminntt-app-frontend-v1                           1/1     1            1           158d
+adminntt-etl-archivos-hfc-ftth-v1                  1/1     1            1           115d
+adminntt-etl-archivos-hfc-ftth-v1-canary           0/0     0            0           115d
+adminntt-etl-direcciones-tytan-v1                  1/1     1            1           115d
+adminntt-etl-direcciones-tytan-v1-canary           0/0     0            0           115d
+adminntt-etl-procesos-glx-v1                       1/1     1            1           115d
+adminntt-etl-procesos-glx-v1-canary                0/0     0            0           115d
+adminntt-etl-procesos-tytan-v1                     1/1     1            1           115d
+adminntt-etl-procesos-tytan-v1-canary              0/0     0            0           115d
+adminntt-notification-templates-v1                 1/1     1            1           67d
+adminntt-notification-templates-v1-canary          0/0     0            0           67d
+adminntt-service-auth-v1                           1/1     1            1           48d
+adminntt-service-consumer-email-v1                 1/1     1            1           95d
+adminntt-service-consumer-email-v1-canary          0/0     0            0           95d
+adminntt-service-consumer-sms-v1                   1/1     1            1           103d
+adminntt-service-consumer-sms-v1-canary            0/0     0            0           103d
+adminntt-service-dashboard-nttfilters-v1           1/1     1            1           138d
+adminntt-service-dashboard-nttfilters-v1-canary    0/0     0            0           138d
+adminntt-service-etl-logs-v1                       1/1     1            1           131d
+adminntt-service-etl-logs-v1-canary                0/0     0            0           131d
+adminntt-service-get-search-ntt-v1                 1/1     1            1           69d
+adminntt-service-get-search-ntt-v1-canary          0/0     0            0           69d
+adminntt-service-master-catalogs-v1                1/1     1            1           160d
+adminntt-service-master-catalogs-v1-canary         0/0     0            0           160d
+adminntt-service-notification-consumer-v1          1/1     1            1           69d
+adminntt-service-notification-consumer-v1-canary   0/0     0            0           69d
+adminntt-service-notificationondemand-v1           1/1     1            1           82d
+adminntt-service-notificationondemand-v1-canary    0/0     0            0           82d
+adminntt-service-nttdetails-v1                     1/1     1            1           137d
+adminntt-service-nttdetails-v1-canary              0/0     0            0           137d
+adminntt-service-nttreports-v1                     1/1     1            1           132d
+adminntt-service-nttreports-v1-canary              0/0     0            0           132d
+adminntt-service-ondemand-consumer-v1              1/1     1            1           69d
+adminntt-service-ondemand-consumer-v1-canary       0/0     0            0           69d
+adminntt-service-searchmonthntt-v1                 1/1     1            1           137d
+adminntt-service-searchmonthntt-v1-canary          0/0     0            0           137d
+cr-app-backend-v1                                  1/1     1            1           159d
+cr-app-backend-v1-canary                           0/0     0            0           159d
+cr-app-frontend-v1                                 1/1     1            1           157d
+cr-service-auth-v1                                 1/1     1            1           109d
+cr-service-cancel-payment-v1                       1/1     1            1           165d
+cr-service-cash-v1                                 1/1     1            1           158d
+cr-service-config-cajas-v1                         1/1     1            1           159d
+cr-service-config-metodos-pago-v1                  1/1     1            1           159d
+cr-service-config-sucursales-v1                    1/1     1            1           165d
+cr-service-getcashregisteramount-v1                1/1     1            1           165d
+cr-service-getcustomerdebt-v1                      1/1     1            1           165d
+cr-service-getpayments-v1                          1/1     1            1           165d
+cr-service-processpayments-v1                      1/1     1            1           159d
+digital-sale-closure-frontend-v1                   1/1     1            1           97d
+digital-sale-closure-services-v1                   1/1     1            1           93d
+eov-service-auth-v1                                1/1     1            1           19d
+eov-service-auth-v1-canary                         0/0     0            0           19d
+internal-digital-sale-closure-frontend-v1          1/1     1            1           10d
+internal-digital-sale-closure-services-v1          1/1     1            1           62d
+iuc-app-backend-v1                                 1/1     1            1           159d
+iuc-app-backend-v1-canary                          0/0     0            0           159d
+iuc-app-frontend-v1                                1/1     1            1           165d
+iuc-elt-service-processdata-v1                     1/1     1            1           165d
+iuc-service-auth-v1                                1/1     1            1           165d
+iuc-service-auth-v1-canary                         0/0     0            0           165d
+iuc-service-checkdata-v1                           1/1     1            1           159d
+iuc-service-checkdata-v1-canary                    0/0     0            0           159d
+iuc-service-exporttofile-v1                        1/1     1            1           153d
+iuc-service-get-auxiliar-v1                        1/1     1            1           153d
+iuc-service-get-summary-v1                         1/1     1            1           153d
+iuc-service-processsap-v1                          1/1     1            1           158d
+iuc-service-processsap-v1-canary                   0/0     0            0           158d
+
+----
+
+
+[outs_djoliveira@tocpait-sat-dev-mstrs-k8s-01 tmp]$ kubectl get hpa     -n argocd | grep -iE 'cr-|iuc-|adminntt|digital|service-auth'
+adminntt-app-frontend-v1                    Deployment/adminntt-app-frontend-v1                    cpu: 1%/70%, memory: 2%/75%                 1         1         1          158d
+adminntt-etl-archivos-hfc-ftth-v1           Deployment/adminntt-etl-archivos-hfc-ftth-v1           cpu: 2%/70%, memory: 29%/75%                1         1         1          115d
+adminntt-etl-direcciones-tytan-v1           Deployment/adminntt-etl-direcciones-tytan-v1           cpu: 2%/70%, memory: 29%/75%                1         1         1          115d
+adminntt-etl-procesos-glx-v1                Deployment/adminntt-etl-procesos-glx-v1                cpu: 2%/70%, memory: 26%/75%                1         1         1          115d
+adminntt-etl-procesos-tytan-v1              Deployment/adminntt-etl-procesos-tytan-v1              cpu: 0%/70%, memory: 6%/75%                 1         1         1          115d
+adminntt-notification-templates-v1          Deployment/adminntt-notification-templates-v1          cpu: 2%/70%, memory: 96%/75%                1         1         1          67d
+adminntt-service-auth-v1                    Deployment/adminntt-service-auth-v1                    cpu: 2%/70%, memory: 89%/75%                1         1         1          48d
+adminntt-service-consumer-email-v1          Deployment/adminntt-service-consumer-email-v1          cpu: 2%/70%, memory: 113%/75%               1         1         1          95d
+adminntt-service-consumer-sms-v1            Deployment/adminntt-service-consumer-sms-v1            cpu: 2%/70%, memory: 109%/75%               1         1         1          103d
+adminntt-service-dashboard-nttfilters-v1    Deployment/adminntt-service-dashboard-nttfilters-v1    cpu: 1%/70%, memory: 123%/75%               1         1         1          138d
+adminntt-service-etl-logs-v1                Deployment/adminntt-service-etl-logs-v1                cpu: 2%/70%, memory: 13%/75%                1         1         1          131d
+adminntt-service-get-search-ntt-v1          Deployment/adminntt-service-get-search-ntt-v1          cpu: 1%/70%, memory: 97%/75%                1         1         1          69d
+adminntt-service-master-catalogs-v1         Deployment/adminntt-service-master-catalogs-v1         cpu: 1%/70%, memory: 94%/75%                1         1         1          160d
+adminntt-service-notification-consumer-v1   Deployment/adminntt-service-notification-consumer-v1   cpu: 2%/70%, memory: 101%/75%               1         1         1          69d
+adminntt-service-notificationondemand-v1    Deployment/adminntt-service-notificationondemand-v1    cpu: 2%/70%, memory: 98%/75%                1         1         1          82d
+adminntt-service-nttdetails-v1              Deployment/adminntt-service-nttdetails-v1              cpu: 2%/70%, memory: 91%/75%                1         1         1          137d
+adminntt-service-nttreports-v1              Deployment/adminntt-service-nttreports-v1              cpu: 1%/70%, memory: 92%/75%                1         1         1          132d
+adminntt-service-ondemand-consumer-v1       Deployment/adminntt-service-ondemand-consumer-v1       cpu: 2%/70%, memory: 95%/75%                1         1         1          69d
+adminntt-service-searchmonthntt-v1          Deployment/adminntt-service-searchmonthntt-v1          cpu: 2%/70%, memory: 116%/75%               1         1         1          137d
+cr-app-backend-v1                           Deployment/cr-app-backend-v1                           cpu: 2%/70%, memory: 89%/75%                1         1         1          159d
+cr-app-frontend-v1                          Deployment/cr-app-frontend-v1                          cpu: 1%/70%, memory: 2%/75%                 1         1         1          157d
+cr-service-auth-v1                          Deployment/cr-service-auth-v1                          cpu: 1%/70%, memory: 96%/75%                1         1         1          109d
+cr-service-cancel-payment-v1                Deployment/cr-service-cancel-payment-v1                cpu: 1%/70%, memory: 123%/75%               1         1         1          165d
+cr-service-cash-v1                          Deployment/cr-service-cash-v1                          cpu: 1%/70%, memory: 101%/75%               1         1         1          158d
+cr-service-config-cajas-v1                  Deployment/cr-service-config-cajas-v1                  cpu: 2%/70%, memory: 100%/75%               1         1         1          159d
+cr-service-config-metodos-pago-v1           Deployment/cr-service-config-metodos-pago-v1           cpu: 2%/70%, memory: 99%/75%                1         1         1          159d
+cr-service-config-sucursales-v1             Deployment/cr-service-config-sucursales-v1             cpu: 2%/70%, memory: 121%/75%               1         1         1          165d
+cr-service-getcashregisteramount-v1         Deployment/cr-service-getcashregisteramount-v1         cpu: 2%/70%, memory: 102%/75%               1         1         1          165d
+cr-service-getcustomerdebt-v1               Deployment/cr-service-getcustomerdebt-v1               cpu: 2%/70%, memory: 116%/75%               1         1         1          165d
+cr-service-getpayments-v1                   Deployment/cr-service-getpayments-v1                   cpu: 1%/70%, memory: 124%/75%               1         1         1          165d
+cr-service-processpayments-v1               Deployment/cr-service-processpayments-v1               cpu: 2%/70%, memory: 117%/75%               1         1         1          159d
+digital-sale-closure-frontend-v1            Deployment/digital-sale-closure-frontend-v1            cpu: 1%/70%, memory: 2%/75%                 1         1         1          97d
+digital-sale-closure-services-v1            Deployment/digital-sale-closure-services-v1            cpu: 3%/70%, memory: 25%/75%                1         1         1          93d
+eov-service-auth-v1                         Deployment/eov-service-auth-v1                         cpu: 1%/70%, memory: 91%/75%                1         1         1          19d
+internal-digital-sale-closure-frontend-v1   Deployment/internal-digital-sale-closure-frontend-v1   cpu: 1%/70%, memory: 4%/75%                 1         1         1          10d
+internal-digital-sale-closure-services-v1   Deployment/internal-digital-sale-closure-services-v1   cpu: 4%/70%, memory: 31%/75%                1         1         1          62d
+iuc-app-backend-v1                          Deployment/iuc-app-backend-v1                          cpu: 1%/70%, memory: 106%/75%               1         1         1          159d
+iuc-app-frontend-v1                         Deployment/iuc-app-frontend-v1                         cpu: 1%/70%, memory: 3%/75%                 1         1         1          165d
+iuc-elt-service-processdata-v1              Deployment/iuc-elt-service-processdata-v1              cpu: 3%/70%, memory: 32%/75%                1         1         1          165d
+iuc-service-auth-v1                         Deployment/iuc-service-auth-v1                         cpu: 2%/70%, memory: 89%/75%                1         1         1          165d
+iuc-service-checkdata-v1                    Deployment/iuc-service-checkdata-v1                    cpu: 2%/70%, memory: 107%/75%               1         1         1          159d
+iuc-service-exporttofile-v1                 Deployment/iuc-service-exporttofile-v1                 cpu: 1%/70%, memory: 118%/75%               1         1         1          153d
+iuc-service-get-auxiliar-v1                 Deployment/iuc-service-get-auxiliar-v1                 cpu: 1%/70%, memory: 90%/75%                1         1         1          153d
+iuc-service-get-summary-v1                  Deployment/iuc-service-get-summary-v1                  cpu: 1%/70%, memory: 91%/75%                1         1         1          153d
+iuc-service-processsap-v1                   Deployment/iuc-service-processsap-v1                   cpu: 1%/70%, memory: 120%/75%               1         1         1          158d
+
+---
+
+
+[outs_djoliveira@tocpait-sat-dev-mstrs-k8s-01 tmp]$ kubectl top pods    -n argocd | grep -iE 'cr-|iuc-|adminntt|digital|service-auth'
+adminntt-app-frontend-v1-566ff8bf4d-zlzmz                    1m           5Mi
+adminntt-etl-archivos-hfc-ftth-v1-599749869b-lh7fk           2m           74Mi
+adminntt-etl-direcciones-tytan-v1-597d4d9cd7-g8xzg           2m           76Mi
+adminntt-etl-procesos-glx-v1-5d4cff9cd6-wt2qx                2m           69Mi
+adminntt-etl-procesos-tytan-v1-67ffd4c8d6-p556s              2m           70Mi
+adminntt-notification-templates-v1-84fb54fb46-2jdjx          2m           246Mi
+adminntt-service-auth-v1-7f4f4f7495-p2ldv                    2m           228Mi
+adminntt-service-consumer-email-v1-64c89878f8-phl5p          2m           290Mi
+adminntt-service-consumer-sms-v1-95595668b-pzlrs             1m           279Mi
+adminntt-service-dashboard-nttfilters-v1-797df754d6-6k6zz    1m           316Mi
+adminntt-service-etl-logs-v1-7c79458cdf-86tqk                2m           35Mi
+adminntt-service-get-search-ntt-v1-57bd778f67-bkrzn          1m           250Mi
+adminntt-service-master-catalogs-v1-58bd5787d7-qx4jl         1m           241Mi
+adminntt-service-notification-consumer-v1-848ffdf8d4-fb4p5   2m           260Mi
+adminntt-service-notificationondemand-v1-5c78bfd4f4-d4bhc    2m           252Mi
+adminntt-service-nttdetails-v1-5bc579668-vnk9g               2m           233Mi
+adminntt-service-nttreports-v1-866ddf7777-jn75t              2m           236Mi
+adminntt-service-ondemand-consumer-v1-784b5984cb-5hfmv       2m           243Mi
+adminntt-service-searchmonthntt-v1-748975686-jfzj5           1m           297Mi
+cr-app-backend-v1-5b86df77ff-5v9s8                           2m           228Mi
+cr-app-frontend-v1-fb7f4bb5f-zqxvh                           1m           5Mi
+cr-service-auth-v1-6b7f9dd6d4-hqzm7                          2m           248Mi
+cr-service-cancel-payment-v1-6c697bb6fc-sbtx5                1m           314Mi
+cr-service-cash-v1-6f9cd9b66c-wv9lg                          2m           263Mi
+cr-service-config-cajas-v1-ddfd5cd4f-sbm8l                   2m           258Mi
+cr-service-config-metodos-pago-v1-9c896b79b-tpfsk            2m           255Mi
+cr-service-config-sucursales-v1-8fd96bf54-s5ldd              2m           309Mi
+cr-service-getcashregisteramount-v1-7d5979dd44-2cnjb         2m           262Mi
+cr-service-getcustomerdebt-v1-5c58576747-lsdv9               2m           298Mi
+cr-service-getpayments-v1-676d6c6b97-cjh9h                   2m           319Mi
+cr-service-processpayments-v1-5bb645bc4-cd7ks                2m           300Mi
+digital-sale-closure-frontend-v1-7d444c756d-xfsgb            1m           5Mi
+digital-sale-closure-services-v1-7dcff8c6d8-nk5vf            5m           65Mi
+eov-service-auth-v1-7784cff7d7-5ksn9                         1m           235Mi
+internal-digital-sale-closure-frontend-v1-6d67595ccb-lj279   1m           12Mi
+internal-digital-sale-closure-services-v1-788c99d898-qcbkq   2m           81Mi
+iuc-app-backend-v1-59f8d46bbf-9qdb9                          1m           271Mi
+iuc-app-frontend-v1-665dddf578-m6862                         1m           7Mi
+iuc-elt-service-processdata-v1-764dbdb49b-82z9s              3m           82Mi
+iuc-service-auth-v1-6644dfcb45-5ws5z                         1m           228Mi
+iuc-service-checkdata-v1-65b458df85-26qnf                    2m           274Mi
+iuc-service-exporttofile-v1-8668d45d8d-76258                 1m           303Mi
+iuc-service-get-auxiliar-v1-64c5b5559b-tnk6w                 1m           230Mi
+iuc-service-get-summary-v1-bbdd8488c-jnjk9                   1m           234Mi
+iuc-service-processsap-v1-65b847dfdf-ntdsw                   1m           308Mi
+
+---
+
+
+[outs_djoliveira@tocpait-sat-dev-mstrs-k8s-01 tmp]$
+[outs_djoliveira@tocpait-sat-dev-mstrs-k8s-01 tmp]$ kubectl get pvc     -n argocd | grep -iE 'cr-|iuc-|adminntt|digital|service-auth'
+adminntt-app-frontend                    Bound    pvc-c1695e73-97b7-44e3-ae50-f2e4b3e2892b   10Gi       RWX            nfs-storage    <unset>                 158d
+adminntt-etl-archivos-hfc-ftth           Bound    pvc-2eff811f-bbd1-4758-9fed-8bfd33f1a105   10Gi       RWX            nfs-storage    <unset>                 115d
+adminntt-etl-direcciones-tytan           Bound    pvc-82b3b62c-a1d2-4ca4-a3d0-0cd383d64268   10Gi       RWX            nfs-storage    <unset>                 115d
+adminntt-etl-procesos-glx                Bound    pvc-fe2563e0-c327-4c47-a84a-9f7ed898ba2c   10Gi       RWX            nfs-storage    <unset>                 115d
+adminntt-etl-procesos-tytan              Bound    pvc-e411e48f-6a4f-4505-9e2c-4c9acf7b7f54   10Gi       RWX            nfs-storage    <unset>                 115d
+adminntt-notification-templates          Bound    pvc-83173fab-6486-42ec-b44a-8ecedb7d02a0   10Gi       RWX            nfs-storage    <unset>                 67d
+adminntt-service-auth                    Bound    pvc-ef845050-a350-45e5-af3f-f4e88f4873d0   10Gi       RWX            nfs-storage    <unset>                 48d
+adminntt-service-consumer-email          Bound    pvc-40d76051-447c-401e-b305-48b2c1d2e3f2   10Gi       RWX            nfs-storage    <unset>                 95d
+adminntt-service-consumer-sms            Bound    pvc-104839aa-e345-45a0-bf2b-a3c539f06866   10Gi       RWX            nfs-storage    <unset>                 103d
+adminntt-service-dashboard-nttfilters    Bound    pvc-659fc42b-67ea-4de0-b682-2823e6a7e5ed   10Gi       RWX            nfs-storage    <unset>                 138d
+adminntt-service-etl-logs                Bound    pvc-ee91e6b2-a7d3-421b-88da-e663e61ca8cd   10Gi       RWX            nfs-storage    <unset>                 131d
+adminntt-service-get-search-ntt          Bound    pvc-47e5d7cc-437e-411c-9c5b-d72183b3cd3a   10Gi       RWX            nfs-storage    <unset>                 69d
+adminntt-service-master-catalogs         Bound    pvc-c1c342f0-734d-4fbd-9264-56b3c4134700   10Gi       RWX            nfs-storage    <unset>                 160d
+adminntt-service-notification-consumer   Bound    pvc-3638b72f-1ae7-4c38-a29f-5d3072b79c82   10Gi       RWX            nfs-storage    <unset>                 69d
+adminntt-service-notificationondemand    Bound    pvc-a0f7f352-b839-4269-b836-bd9b422dea4d   10Gi       RWX            nfs-storage    <unset>                 82d
+adminntt-service-nttdetails              Bound    pvc-9fe9d9cf-b25a-4e04-8c82-e7735a78c412   10Gi       RWX            nfs-storage    <unset>                 137d
+adminntt-service-nttreports              Bound    pvc-9ab2b622-a0a3-4d2c-b7f6-8fc92e6811fc   10Gi       RWX            nfs-storage    <unset>                 132d
+adminntt-service-ondemand-consumer       Bound    pvc-a005aaba-aaf8-4138-9f22-f2a335fb35e0   10Gi       RWX            nfs-storage    <unset>                 69d
+adminntt-service-searchmonthntt          Bound    pvc-0e90fa16-8c87-4fa8-a43c-38701a0b848a   10Gi       RWX            nfs-storage    <unset>                 137d
+cr-app-backend                           Bound    pvc-5fcbb926-ea25-45f5-8185-d0ccbd35e105   10Gi       RWX            nfs-storage    <unset>                 159d
+cr-app-frontend                          Bound    pvc-49559473-a230-46c1-a8de-bb18ac4ddc81   10Gi       RWX            nfs-storage    <unset>                 157d
+cr-service-auth                          Bound    pvc-2323b5d4-2bc3-40a3-bb2e-93acd2822c3c   10Gi       RWX            nfs-storage    <unset>                 109d
+cr-service-cancel-payment                Bound    pvc-878a8374-fd27-4075-b7cb-3a005463a6ea   10Gi       RWX            nfs-storage    <unset>                 165d
+cr-service-cash                          Bound    pvc-b304f1ca-1032-4f12-bfc5-81438574818b   10Gi       RWX            nfs-storage    <unset>                 158d
+cr-service-config-cajas                  Bound    pvc-da7aff9c-2a02-4737-ae04-2110c8ff6c15   10Gi       RWX            nfs-storage    <unset>                 159d
+cr-service-config-metodos-pago           Bound    pvc-cfbe8763-8d52-4300-925a-48d4f82b10ee   10Gi       RWX            nfs-storage    <unset>                 159d
+cr-service-config-sucursales             Bound    pvc-059d6f8b-482e-466a-81a2-fdc7a7b34c1f   10Gi       RWX            nfs-storage    <unset>                 165d
+cr-service-getcashregisteramount         Bound    pvc-e6f0df72-00b3-4727-90be-70a064ad65f5   10Gi       RWX            nfs-storage    <unset>                 165d
+cr-service-getcustomerdebt               Bound    pvc-93bdad6e-4c04-44c1-a5fc-98641f9d656b   10Gi       RWX            nfs-storage    <unset>                 165d
+cr-service-getpayments                   Bound    pvc-255b165d-c23d-46a5-8984-74d203cc8d99   10Gi       RWX            nfs-storage    <unset>                 165d
+cr-service-processpayments               Bound    pvc-51243790-63ae-4b09-b4a9-cecd62b02021   10Gi       RWX            nfs-storage    <unset>                 159d
+digital-sale-closure-frontend            Bound    pvc-80e15178-2578-4a8b-84c2-acfe1392ee0b   10Gi       RWX            nfs-storage    <unset>                 97d
+digital-sale-closure-services            Bound    pv-digital-sale-closure-services           10Gi       RWX            nfs-storage    <unset>                 93d
+eov-service-auth                         Bound    pvc-2d1a4172-4e19-4bdb-ae7c-a15efb7fd808   10Gi       RWX            nfs-storage    <unset>                 19d
+internal-digital-sale-closure-frontend   Bound    pvc-55e61033-5e98-45e9-b8ab-db1dd61c725c   10Gi       RWX            nfs-storage    <unset>                 10d
+internal-digital-sale-closure-services   Bound    pvc-1187f2b9-0803-4f21-be10-6eeb699c68d5   10Gi       RWX            nfs-storage    <unset>                 62d
+iuc-app-backend                          Bound    pvc-ca51bcf3-23aa-42be-b5d6-b8fae368a3f2   10Gi       RWX            nfs-storage    <unset>                 159d
+iuc-app-frontend                         Bound    pvc-7df0daac-ef5c-40ee-9b33-0890389704ce   10Gi       RWX            nfs-storage    <unset>                 165d
+iuc-elt-service-processdata              Bound    pvc-f51cbb34-7330-4ea6-8a09-9200083c799b   10Gi       RWX            nfs-storage    <unset>                 165d
+iuc-service-auth                         Bound    pvc-ac7ecf64-9fd0-4c2a-8b1b-a75828180f06   10Gi       RWX            nfs-storage    <unset>                 165d
+iuc-service-checkdata                    Bound    pvc-2c058b14-6850-4702-b7d1-0df20e110df9   10Gi       RWX            nfs-storage    <unset>                 159d
+iuc-service-exporttofile                 Bound    pvc-ef248967-b50b-4f7c-8749-e4223a5cba85   10Gi       RWX            nfs-storage    <unset>                 153d
+iuc-service-get-auxiliar                 Bound    pvc-393507fe-a0c7-421a-908c-aea15d78e9d0   10Gi       RWX            nfs-storage    <unset>                 153d
+iuc-service-get-summary                  Bound    pvc-39c5985b-9097-4bf4-a03c-63bd29695be8   10Gi       RWX            nfs-storage    <unset>                 153d
+iuc-service-processsap                   Bound    pvc-44efd1d3-b19a-4412-833a-d365290966cf   10Gi       RWX            nfs-storage    <unset>                 158d
+
+
+---
+
+
+[outs_djoliveira@tocpait-sat-dev-mstrs-k8s-01 tmp]$
+[outs_djoliveira@tocpait-sat-dev-mstrs-k8s-01 tmp]$ kubectl get svc     -n argocd | grep -iE 'cr-|iuc-|adminntt|digital|service-auth'
+adminntt-app-frontend-v1-services                    ClusterIP   10.43.23.82     <none>        80/TCP                                  158d
+adminntt-etl-archivos-hfc-ftth-v1-canary             ClusterIP   10.43.11.231    <none>        80/TCP                                  115d
+adminntt-etl-archivos-hfc-ftth-v1-services           ClusterIP   10.43.23.239    <none>        80/TCP                                  115d
+adminntt-etl-direcciones-tytan-v1-canary             ClusterIP   10.43.205.105   <none>        80/TCP                                  115d
+adminntt-etl-direcciones-tytan-v1-services           ClusterIP   10.43.252.116   <none>        80/TCP                                  115d
+adminntt-etl-procesos-glx-v1-canary                  ClusterIP   10.43.90.207    <none>        80/TCP                                  115d
+adminntt-etl-procesos-glx-v1-services                ClusterIP   10.43.172.143   <none>        80/TCP                                  115d
+adminntt-etl-procesos-tytan-v1-canary                ClusterIP   10.43.84.67     <none>        80/TCP                                  115d
+adminntt-etl-procesos-tytan-v1-services              ClusterIP   10.43.183.198   <none>        80/TCP                                  115d
+adminntt-notification-templates-v1-canary            ClusterIP   10.43.171.235   <none>        80/TCP                                  67d
+adminntt-notification-templates-v1-services          ClusterIP   10.43.249.84    <none>        80/TCP                                  67d
+adminntt-service-auth-v1-services                    ClusterIP   10.43.240.155   <none>        80/TCP                                  48d
+adminntt-service-consumer-email-v1-canary            ClusterIP   10.43.108.108   <none>        80/TCP                                  95d
+adminntt-service-consumer-email-v1-services          ClusterIP   10.43.68.3      <none>        80/TCP                                  95d
+adminntt-service-consumer-sms-v1-canary              ClusterIP   10.43.75.77     <none>        80/TCP                                  103d
+adminntt-service-consumer-sms-v1-services            ClusterIP   10.43.70.123    <none>        80/TCP                                  103d
+adminntt-service-dashboard-nttfilters-v1-canary      ClusterIP   10.43.47.48     <none>        80/TCP                                  138d
+adminntt-service-dashboard-nttfilters-v1-services    ClusterIP   10.43.71.243    <none>        80/TCP                                  138d
+adminntt-service-etl-logs-v1-canary                  ClusterIP   10.43.26.108    <none>        80/TCP                                  131d
+adminntt-service-etl-logs-v1-services                ClusterIP   10.43.110.141   <none>        80/TCP                                  131d
+adminntt-service-get-search-ntt-v1-canary            ClusterIP   10.43.133.184   <none>        80/TCP                                  69d
+adminntt-service-get-search-ntt-v1-services          ClusterIP   10.43.228.192   <none>        80/TCP                                  69d
+adminntt-service-master-catalogs-v1-canary           ClusterIP   10.43.3.97      <none>        80/TCP                                  160d
+adminntt-service-master-catalogs-v1-services         ClusterIP   10.43.247.64    <none>        80/TCP                                  160d
+adminntt-service-notification-consumer-v1-canary     ClusterIP   10.43.225.191   <none>        80/TCP                                  69d
+adminntt-service-notification-consumer-v1-services   ClusterIP   10.43.190.15    <none>        80/TCP                                  69d
+adminntt-service-notificationondemand-v1-canary      ClusterIP   10.43.231.34    <none>        80/TCP                                  82d
+adminntt-service-notificationondemand-v1-services    ClusterIP   10.43.6.91      <none>        80/TCP                                  82d
+adminntt-service-nttdetails-v1-canary                ClusterIP   10.43.248.165   <none>        80/TCP                                  137d
+adminntt-service-nttdetails-v1-services              ClusterIP   10.43.105.45    <none>        80/TCP                                  137d
+adminntt-service-nttreports-v1-canary                ClusterIP   10.43.60.74     <none>        80/TCP                                  132d
+adminntt-service-nttreports-v1-services              ClusterIP   10.43.195.111   <none>        80/TCP                                  132d
+adminntt-service-ondemand-consumer-v1-canary         ClusterIP   10.43.51.202    <none>        80/TCP                                  69d
+adminntt-service-ondemand-consumer-v1-services       ClusterIP   10.43.9.212     <none>        80/TCP                                  69d
+adminntt-service-searchmonthntt-v1-canary            ClusterIP   10.43.22.29     <none>        80/TCP                                  137d
+adminntt-service-searchmonthntt-v1-services          ClusterIP   10.43.202.48    <none>        80/TCP                                  137d
+cr-app-backend-v1-canary                             ClusterIP   10.43.16.158    <none>        80/TCP                                  159d
+cr-app-backend-v1-services                           ClusterIP   10.43.159.143   <none>        80/TCP                                  159d
+cr-app-frontend-v1-services                          ClusterIP   10.43.2.12      <none>        80/TCP                                  157d
+cr-service-auth-v1-services                          ClusterIP   10.43.10.136    <none>        80/TCP                                  109d
+cr-service-cancel-payment-v1-services                ClusterIP   10.43.123.120   <none>        80/TCP                                  165d
+cr-service-cash-v1-services                          ClusterIP   10.43.109.226   <none>        80/TCP                                  158d
+cr-service-config-cajas-v1-services                  ClusterIP   10.43.8.251     <none>        80/TCP                                  159d
+cr-service-config-metodos-pago-v1-services           ClusterIP   10.43.207.10    <none>        80/TCP                                  159d
+cr-service-config-sucursales-v1-services             ClusterIP   10.43.186.248   <none>        80/TCP                                  165d
+cr-service-getcashregisteramount-v1-services         ClusterIP   10.43.196.43    <none>        80/TCP                                  165d
+cr-service-getcustomerdebt-v1-services               ClusterIP   10.43.58.1      <none>        80/TCP                                  165d
+cr-service-getpayments-v1-services                   ClusterIP   10.43.246.19    <none>        80/TCP                                  165d
+cr-service-processpayments-v1-services               ClusterIP   10.43.140.221   <none>        80/TCP                                  159d
+digital-sale-closure-frontend-v1-services            ClusterIP   10.43.253.178   <none>        80/TCP                                  97d
+digital-sale-closure-services-v1-services            ClusterIP   10.43.206.5     <none>        80/TCP                                  93d
+eov-service-auth-v1-canary                           ClusterIP   10.43.47.54     <none>        80/TCP                                  19d
+eov-service-auth-v1-services                         ClusterIP   10.43.154.55    <none>        80/TCP                                  19d
+internal-digital-sale-closure-frontend-v1-services   ClusterIP   10.43.92.139    <none>        80/TCP                                  10d
+internal-digital-sale-closure-services-v1-services   ClusterIP   10.43.124.239   <none>        80/TCP                                  62d
+iuc-app-backend-v1-canary                            ClusterIP   10.43.107.179   <none>        80/TCP                                  159d
+iuc-app-backend-v1-services                          ClusterIP   10.43.255.109   <none>        80/TCP                                  159d
+iuc-app-frontend-v1-services                         ClusterIP   10.43.80.44     <none>        80/TCP                                  165d
+iuc-elt-service-processdata-v1-services              ClusterIP   10.43.239.226   <none>        80/TCP                                  165d
+iuc-service-auth-v1-canary                           ClusterIP   10.43.244.37    <none>        80/TCP                                  165d
+iuc-service-auth-v1-services                         ClusterIP   10.43.141.181   <none>        80/TCP                                  165d
+iuc-service-checkdata-v1-canary                      ClusterIP   10.43.191.76    <none>        80/TCP                                  159d
+iuc-service-checkdata-v1-services                    ClusterIP   10.43.112.42    <none>        80/TCP                                  159d
+iuc-service-exporttofile-v1-services                 ClusterIP   10.43.81.99     <none>        80/TCP                                  153d
+iuc-service-get-auxiliar-v1-services                 ClusterIP   10.43.213.66    <none>        80/TCP                                  153d
+iuc-service-get-summary-v1-services                  ClusterIP   10.43.111.52    <none>        80/TCP                                  153d
+iuc-service-processsap-v1-canary                     ClusterIP   10.43.53.35     <none>        80/TCP                                  158d
+iuc-service-processsap-v1-services                   ClusterIP   10.43.181.157   <none>        80/TCP                                  158d
+
+---
+
+
+[outs_djoliveira@tocpait-sat-dev-mstrs-k8s-01 tmp]$
+[outs_djoliveira@tocpait-sat-dev-mstrs-k8s-01 tmp]$ kubectl get ingress -n argocd | grep -iE 'cr-|iuc-|adminntt|digital|service-auth'
+adminntt-app-frontend-v1                                   <none>   k8s-dev-sat.tigo.com.pa   10.30.13.10,10.30.13.11,10.30.13.12,10.30.13.13,10.30.13.17,10.30.13.20,10.30.13.22,10.30.13.23,10.30.13.24,10.30.13.25,10.30.13.27,10.30.13.6,10.30.13.7,10.30.13.8
+  80, 443   158d
+adminntt-etl-archivos-hfc-ftth-v1                          <none>   k8s-dev-sat.tigo.com.pa   10.30.13.10,10.30.13.11,10.30.13.12,10.30.13.13,10.30.13.17,10.30.13.20,10.30.13.22,10.30.13.23,10.30.13.24,10.30.13.25,10.30.13.27,10.30.13.6,10.30.13.7,10.30.13.8
+  80, 443   115d
+adminntt-etl-archivos-hfc-ftth-v1-ingress-canary           <none>   k8s-dev-sat.tigo.com.pa   10.30.13.10,10.30.13.11,10.30.13.12,10.30.13.13,10.30.13.17,10.30.13.20,10.30.13.22,10.30.13.23,10.30.13.24,10.30.13.25,10.30.13.27,10.30.13.6,10.30.13.7,10.30.13.8
+  80        115d
+adminntt-etl-direcciones-tytan-v1                          <none>   k8s-dev-sat.tigo.com.pa   10.30.13.10,10.30.13.11,10.30.13.12,10.30.13.13,10.30.13.17,10.30.13.20,10.30.13.22,10.30.13.23,10.30.13.24,10.30.13.25,10.30.13.27,10.30.13.6,10.30.13.7,10.30.13.8
+  80, 443   115d
+adminntt-etl-direcciones-tytan-v1-ingress-canary           <none>   k8s-dev-sat.tigo.com.pa   10.30.13.10,10.30.13.11,10.30.13.12,10.30.13.13,10.30.13.17,10.30.13.20,10.30.13.22,10.30.13.23,10.30.13.24,10.30.13.25,10.30.13.27,10.30.13.6,10.30.13.7,10.30.13.8
+  80        115d
+adminntt-etl-procesos-glx-v1                               <none>   k8s-dev-sat.tigo.com.pa   10.30.13.10,10.30.13.11,10.30.13.12,10.30.13.13,10.30.13.17,10.30.13.20,10.30.13.22,10.30.13.23,10.30.13.24,10.30.13.25,10.30.13.27,10.30.13.6,10.30.13.7,10.30.13.8
+  80, 443   115d
+adminntt-etl-procesos-glx-v1-ingress-canary                <none>   k8s-dev-sat.tigo.com.pa   10.30.13.10,10.30.13.11,10.30.13.12,10.30.13.13,10.30.13.17,10.30.13.20,10.30.13.22,10.30.13.23,10.30.13.24,10.30.13.25,10.30.13.27,10.30.13.6,10.30.13.7,10.30.13.8
+  80        115d
+adminntt-etl-procesos-tytan-v1                             <none>   k8s-dev-sat.tigo.com.pa   10.30.13.10,10.30.13.11,10.30.13.12,10.30.13.13,10.30.13.17,10.30.13.20,10.30.13.22,10.30.13.23,10.30.13.24,10.30.13.25,10.30.13.27,10.30.13.6,10.30.13.7,10.30.13.8
+  80, 443   115d
+adminntt-etl-procesos-tytan-v1-ingress-canary              <none>   k8s-dev-sat.tigo.com.pa   10.30.13.10,10.30.13.11,10.30.13.12,10.30.13.13,10.30.13.17,10.30.13.20,10.30.13.22,10.30.13.23,10.30.13.24,10.30.13.25,10.30.13.27,10.30.13.6,10.30.13.7,10.30.13.8
+  80        115d
+adminntt-notification-templates-v1                         <none>   k8s-dev-sat.tigo.com.pa   10.30.13.10,10.30.13.11,10.30.13.12,10.30.13.13,10.30.13.17,10.30.13.20,10.30.13.22,10.30.13.23,10.30.13.24,10.30.13.25,10.30.13.27,10.30.13.6,10.30.13.7,10.30.13.8
+  80, 443   67d
+adminntt-notification-templates-v1-ingress-canary          <none>   k8s-dev-sat.tigo.com.pa   10.30.13.10,10.30.13.11,10.30.13.12,10.30.13.13,10.30.13.17,10.30.13.20,10.30.13.22,10.30.13.23,10.30.13.24,10.30.13.25,10.30.13.27,10.30.13.6,10.30.13.7,10.30.13.8
+  80        67d
+adminntt-service-auth-v1                                   <none>   k8s-dev-sat.tigo.com.pa   10.30.13.10,10.30.13.11,10.30.13.12,10.30.13.13,10.30.13.17,10.30.13.20,10.30.13.22,10.30.13.23,10.30.13.24,10.30.13.25,10.30.13.27,10.30.13.6,10.30.13.7,10.30.13.8
+  80, 443   48d
+adminntt-service-consumer-email-v1                         <none>   k8s-dev-sat.tigo.com.pa   10.30.13.10,10.30.13.11,10.30.13.12,10.30.13.13,10.30.13.17,10.30.13.20,10.30.13.22,10.30.13.23,10.30.13.24,10.30.13.25,10.30.13.27,10.30.13.6,10.30.13.7,10.30.13.8
+  80, 443   95d
+adminntt-service-consumer-email-v1-ingress-canary          <none>   k8s-dev-sat.tigo.com.pa   10.30.13.10,10.30.13.11,10.30.13.12,10.30.13.13,10.30.13.17,10.30.13.20,10.30.13.22,10.30.13.23,10.30.13.24,10.30.13.25,10.30.13.27,10.30.13.6,10.30.13.7,10.30.13.8
+  80        95d
+adminntt-service-consumer-sms-v1                           <none>   k8s-dev-sat.tigo.com.pa   10.30.13.10,10.30.13.11,10.30.13.12,10.30.13.13,10.30.13.17,10.30.13.20,10.30.13.22,10.30.13.23,10.30.13.24,10.30.13.25,10.30.13.27,10.30.13.6,10.30.13.7,10.30.13.8
+  80, 443   103d
+adminntt-service-consumer-sms-v1-ingress-canary            <none>   k8s-dev-sat.tigo.com.pa   10.30.13.10,10.30.13.11,10.30.13.12,10.30.13.13,10.30.13.17,10.30.13.20,10.30.13.22,10.30.13.23,10.30.13.24,10.30.13.25,10.30.13.27,10.30.13.6,10.30.13.7,10.30.13.8
+  80        103d
+adminntt-service-dashboard-nttfilters-v1                   <none>   k8s-dev-sat.tigo.com.pa   10.30.13.10,10.30.13.11,10.30.13.12,10.30.13.13,10.30.13.17,10.30.13.20,10.30.13.22,10.30.13.23,10.30.13.24,10.30.13.25,10.30.13.27,10.30.13.6,10.30.13.7,10.30.13.8
+  80, 443   138d
+adminntt-service-dashboard-nttfilters-v1-ingress-canary    <none>   k8s-dev-sat.tigo.com.pa   10.30.13.10,10.30.13.11,10.30.13.12,10.30.13.13,10.30.13.17,10.30.13.20,10.30.13.22,10.30.13.23,10.30.13.24,10.30.13.25,10.30.13.27,10.30.13.6,10.30.13.7,10.30.13.8
+  80        138d
+adminntt-service-etl-logs-v1                               <none>   k8s-dev-sat.tigo.com.pa   10.30.13.10,10.30.13.11,10.30.13.12,10.30.13.13,10.30.13.17,10.30.13.20,10.30.13.22,10.30.13.23,10.30.13.24,10.30.13.25,10.30.13.27,10.30.13.6,10.30.13.7,10.30.13.8
+  80, 443   131d
+adminntt-service-etl-logs-v1-ingress-canary                <none>   k8s-dev-sat.tigo.com.pa   10.30.13.10,10.30.13.11,10.30.13.12,10.30.13.13,10.30.13.17,10.30.13.20,10.30.13.22,10.30.13.23,10.30.13.24,10.30.13.25,10.30.13.27,10.30.13.6,10.30.13.7,10.30.13.8
+  80        131d
+adminntt-service-get-search-ntt-v1                         <none>   k8s-dev-sat.tigo.com.pa   10.30.13.10,10.30.13.11,10.30.13.12,10.30.13.13,10.30.13.17,10.30.13.20,10.30.13.22,10.30.13.23,10.30.13.24,10.30.13.25,10.30.13.27,10.30.13.6,10.30.13.7,10.30.13.8
+  80, 443   69d
+adminntt-service-get-search-ntt-v1-ingress-canary          <none>   k8s-dev-sat.tigo.com.pa   10.30.13.10,10.30.13.11,10.30.13.12,10.30.13.13,10.30.13.17,10.30.13.20,10.30.13.22,10.30.13.23,10.30.13.24,10.30.13.25,10.30.13.27,10.30.13.6,10.30.13.7,10.30.13.8
+  80        69d
+adminntt-service-master-catalogs-v1                        <none>   k8s-dev-sat.tigo.com.pa   10.30.13.10,10.30.13.11,10.30.13.12,10.30.13.13,10.30.13.17,10.30.13.20,10.30.13.22,10.30.13.23,10.30.13.24,10.30.13.25,10.30.13.27,10.30.13.6,10.30.13.7,10.30.13.8
+  80, 443   160d
+adminntt-service-master-catalogs-v1-ingress-canary         <none>   k8s-dev-sat.tigo.com.pa   10.30.13.10,10.30.13.11,10.30.13.12,10.30.13.13,10.30.13.17,10.30.13.20,10.30.13.22,10.30.13.23,10.30.13.24,10.30.13.25,10.30.13.27,10.30.13.6,10.30.13.7,10.30.13.8
+  80        160d
+adminntt-service-notification-consumer-v1                  <none>   k8s-dev-sat.tigo.com.pa   10.30.13.10,10.30.13.11,10.30.13.12,10.30.13.13,10.30.13.17,10.30.13.20,10.30.13.22,10.30.13.23,10.30.13.24,10.30.13.25,10.30.13.27,10.30.13.6,10.30.13.7,10.30.13.8
+  80, 443   69d
+adminntt-service-notification-consumer-v1-ingress-canary   <none>   k8s-dev-sat.tigo.com.pa   10.30.13.10,10.30.13.11,10.30.13.12,10.30.13.13,10.30.13.17,10.30.13.20,10.30.13.22,10.30.13.23,10.30.13.24,10.30.13.25,10.30.13.27,10.30.13.6,10.30.13.7,10.30.13.8
+  80        69d
+adminntt-service-notificationondemand-v1                   <none>   k8s-dev-sat.tigo.com.pa   10.30.13.10,10.30.13.11,10.30.13.12,10.30.13.13,10.30.13.17,10.30.13.20,10.30.13.22,10.30.13.23,10.30.13.24,10.30.13.25,10.30.13.27,10.30.13.6,10.30.13.7,10.30.13.8
+  80, 443   82d
+adminntt-service-notificationondemand-v1-ingress-canary    <none>   k8s-dev-sat.tigo.com.pa   10.30.13.10,10.30.13.11,10.30.13.12,10.30.13.13,10.30.13.17,10.30.13.20,10.30.13.22,10.30.13.23,10.30.13.24,10.30.13.25,10.30.13.27,10.30.13.6,10.30.13.7,10.30.13.8
+  80        82d
+adminntt-service-nttdetails-v1                             <none>   k8s-dev-sat.tigo.com.pa   10.30.13.10,10.30.13.11,10.30.13.12,10.30.13.13,10.30.13.17,10.30.13.20,10.30.13.22,10.30.13.23,10.30.13.24,10.30.13.25,10.30.13.27,10.30.13.6,10.30.13.7,10.30.13.8
+  80, 443   137d
+adminntt-service-nttdetails-v1-ingress-canary              <none>   k8s-dev-sat.tigo.com.pa   10.30.13.10,10.30.13.11,10.30.13.12,10.30.13.13,10.30.13.17,10.30.13.20,10.30.13.22,10.30.13.23,10.30.13.24,10.30.13.25,10.30.13.27,10.30.13.6,10.30.13.7,10.30.13.8
+  80        137d
+adminntt-service-nttreports-v1                             <none>   k8s-dev-sat.tigo.com.pa   10.30.13.10,10.30.13.11,10.30.13.12,10.30.13.13,10.30.13.17,10.30.13.20,10.30.13.22,10.30.13.23,10.30.13.24,10.30.13.25,10.30.13.27,10.30.13.6,10.30.13.7,10.30.13.8
+  80, 443   132d
+adminntt-service-nttreports-v1-ingress-canary              <none>   k8s-dev-sat.tigo.com.pa   10.30.13.10,10.30.13.11,10.30.13.12,10.30.13.13,10.30.13.17,10.30.13.20,10.30.13.22,10.30.13.23,10.30.13.24,10.30.13.25,10.30.13.27,10.30.13.6,10.30.13.7,10.30.13.8
+  80        132d
+adminntt-service-ondemand-consumer-v1                      <none>   k8s-dev-sat.tigo.com.pa   10.30.13.10,10.30.13.11,10.30.13.12,10.30.13.13,10.30.13.17,10.30.13.20,10.30.13.22,10.30.13.23,10.30.13.24,10.30.13.25,10.30.13.27,10.30.13.6,10.30.13.7,10.30.13.8
+  80, 443   69d
+adminntt-service-ondemand-consumer-v1-ingress-canary       <none>   k8s-dev-sat.tigo.com.pa   10.30.13.10,10.30.13.11,10.30.13.12,10.30.13.13,10.30.13.17,10.30.13.20,10.30.13.22,10.30.13.23,10.30.13.24,10.30.13.25,10.30.13.27,10.30.13.6,10.30.13.7,10.30.13.8
+  80        69d
+adminntt-service-searchmonthntt-v1                         <none>   k8s-dev-sat.tigo.com.pa   10.30.13.10,10.30.13.11,10.30.13.12,10.30.13.13,10.30.13.17,10.30.13.20,10.30.13.22,10.30.13.23,10.30.13.24,10.30.13.25,10.30.13.27,10.30.13.6,10.30.13.7,10.30.13.8
+  80, 443   137d
+adminntt-service-searchmonthntt-v1-ingress-canary          <none>   k8s-dev-sat.tigo.com.pa   10.30.13.10,10.30.13.11,10.30.13.12,10.30.13.13,10.30.13.17,10.30.13.20,10.30.13.22,10.30.13.23,10.30.13.24,10.30.13.25,10.30.13.27,10.30.13.6,10.30.13.7,10.30.13.8
+  80        137d
+cr-app-backend-v1                                          <none>   k8s-dev-sat.tigo.com.pa   10.30.13.10,10.30.13.11,10.30.13.12,10.30.13.13,10.30.13.17,10.30.13.20,10.30.13.22,10.30.13.23,10.30.13.24,10.30.13.25,10.30.13.27,10.30.13.6,10.30.13.7,10.30.13.8
+  80, 443   159d
+cr-app-backend-v1-ingress-canary                           <none>   k8s-dev-sat.tigo.com.pa   10.30.13.10,10.30.13.11,10.30.13.12,10.30.13.13,10.30.13.17,10.30.13.20,10.30.13.22,10.30.13.23,10.30.13.24,10.30.13.25,10.30.13.27,10.30.13.6,10.30.13.7,10.30.13.8
+  80        159d
+cr-app-frontend-v1                                         <none>   k8s-dev-sat.tigo.com.pa   10.30.13.10,10.30.13.11,10.30.13.12,10.30.13.13,10.30.13.17,10.30.13.20,10.30.13.22,10.30.13.23,10.30.13.24,10.30.13.25,10.30.13.27,10.30.13.6,10.30.13.7,10.30.13.8
+  80, 443   157d
+cr-service-auth-v1                                         <none>   k8s-dev-sat.tigo.com.pa   10.30.13.10,10.30.13.11,10.30.13.12,10.30.13.13,10.30.13.17,10.30.13.20,10.30.13.22,10.30.13.23,10.30.13.24,10.30.13.25,10.30.13.27,10.30.13.6,10.30.13.7,10.30.13.8
+  80, 443   109d
+cr-service-cancel-payment-v1                               <none>   k8s-dev-sat.tigo.com.pa   10.30.13.10,10.30.13.11,10.30.13.12,10.30.13.13,10.30.13.17,10.30.13.20,10.30.13.22,10.30.13.23,10.30.13.24,10.30.13.25,10.30.13.27,10.30.13.6,10.30.13.7,10.30.13.8
+  80, 443   165d
+cr-service-cash-v1                                         <none>   k8s-dev-sat.tigo.com.pa   10.30.13.10,10.30.13.11,10.30.13.12,10.30.13.13,10.30.13.17,10.30.13.20,10.30.13.22,10.30.13.23,10.30.13.24,10.30.13.25,10.30.13.27,10.30.13.6,10.30.13.7,10.30.13.8
+  80, 443   158d
+cr-service-config-cajas-v1                                 <none>   k8s-dev-sat.tigo.com.pa   10.30.13.10,10.30.13.11,10.30.13.12,10.30.13.13,10.30.13.17,10.30.13.20,10.30.13.22,10.30.13.23,10.30.13.24,10.30.13.25,10.30.13.27,10.30.13.6,10.30.13.7,10.30.13.8
+  80, 443   159d
+cr-service-config-metodos-pago-v1                          <none>   k8s-dev-sat.tigo.com.pa   10.30.13.10,10.30.13.11,10.30.13.12,10.30.13.13,10.30.13.17,10.30.13.20,10.30.13.22,10.30.13.23,10.30.13.24,10.30.13.25,10.30.13.27,10.30.13.6,10.30.13.7,10.30.13.8
+  80, 443   159d
+cr-service-config-sucursales-v1                            <none>   k8s-dev-sat.tigo.com.pa   10.30.13.10,10.30.13.11,10.30.13.12,10.30.13.13,10.30.13.17,10.30.13.20,10.30.13.22,10.30.13.23,10.30.13.24,10.30.13.25,10.30.13.27,10.30.13.6,10.30.13.7,10.30.13.8
+  80, 443   165d
+cr-service-getcashregisteramount-v1                        <none>   k8s-dev-sat.tigo.com.pa   10.30.13.10,10.30.13.11,10.30.13.12,10.30.13.13,10.30.13.17,10.30.13.20,10.30.13.22,10.30.13.23,10.30.13.24,10.30.13.25,10.30.13.27,10.30.13.6,10.30.13.7,10.30.13.8
+  80, 443   165d
+cr-service-getcustomerdebt-v1                              <none>   k8s-dev-sat.tigo.com.pa   10.30.13.10,10.30.13.11,10.30.13.12,10.30.13.13,10.30.13.17,10.30.13.20,10.30.13.22,10.30.13.23,10.30.13.24,10.30.13.25,10.30.13.27,10.30.13.6,10.30.13.7,10.30.13.8
+  80, 443   165d
+cr-service-getpayments-v1                                  <none>   k8s-dev-sat.tigo.com.pa   10.30.13.10,10.30.13.11,10.30.13.12,10.30.13.13,10.30.13.17,10.30.13.20,10.30.13.22,10.30.13.23,10.30.13.24,10.30.13.25,10.30.13.27,10.30.13.6,10.30.13.7,10.30.13.8
+  80, 443   165d
+cr-service-processpayments-v1                              <none>   k8s-dev-sat.tigo.com.pa   10.30.13.10,10.30.13.11,10.30.13.12,10.30.13.13,10.30.13.17,10.30.13.20,10.30.13.22,10.30.13.23,10.30.13.24,10.30.13.25,10.30.13.27,10.30.13.6,10.30.13.7,10.30.13.8
+  80, 443   159d
+digital-sale-closure-frontend-v1                           <none>   k8s-dev-sat.tigo.com.pa   10.30.13.10,10.30.13.11,10.30.13.12,10.30.13.13,10.30.13.17,10.30.13.20,10.30.13.22,10.30.13.23,10.30.13.24,10.30.13.25,10.30.13.27,10.30.13.6,10.30.13.7,10.30.13.8
+  80, 443   97d
+digital-sale-closure-services-v1                           <none>   k8s-dev-sat.tigo.com.pa   10.30.13.10,10.30.13.11,10.30.13.12,10.30.13.13,10.30.13.17,10.30.13.20,10.30.13.22,10.30.13.23,10.30.13.24,10.30.13.25,10.30.13.27,10.30.13.6,10.30.13.7,10.30.13.8
+  80, 443   93d
+eov-service-auth-v1                                        <none>   k8s-dev-sat.tigo.com.pa   10.30.13.10,10.30.13.11,10.30.13.12,10.30.13.13,10.30.13.17,10.30.13.20,10.30.13.22,10.30.13.23,10.30.13.24,10.30.13.25,10.30.13.27,10.30.13.6,10.30.13.7,10.30.13.8
+  80, 443   19d
+eov-service-auth-v1-ingress-canary                         <none>   k8s-dev-sat.tigo.com.pa   10.30.13.10,10.30.13.11,10.30.13.12,10.30.13.13,10.30.13.17,10.30.13.20,10.30.13.22,10.30.13.23,10.30.13.24,10.30.13.25,10.30.13.27,10.30.13.6,10.30.13.7,10.30.13.8
+  80        19d
+internal-digital-sale-closure-frontend-v1                  <none>   k8s-dev-sat.tigo.com.pa   10.30.13.10,10.30.13.11,10.30.13.12,10.30.13.13,10.30.13.17,10.30.13.20,10.30.13.22,10.30.13.23,10.30.13.24,10.30.13.25,10.30.13.27,10.30.13.6,10.30.13.7,10.30.13.8
+  80, 443   10d
+internal-digital-sale-closure-services-v1                  <none>   k8s-dev-sat.tigo.com.pa   10.30.13.10,10.30.13.11,10.30.13.12,10.30.13.13,10.30.13.17,10.30.13.20,10.30.13.22,10.30.13.23,10.30.13.24,10.30.13.25,10.30.13.27,10.30.13.6,10.30.13.7,10.30.13.8
+  80, 443   62d
+iuc-app-backend-v1                                         <none>   k8s-dev-sat.tigo.com.pa   10.30.13.10,10.30.13.11,10.30.13.12,10.30.13.13,10.30.13.17,10.30.13.20,10.30.13.22,10.30.13.23,10.30.13.24,10.30.13.25,10.30.13.27,10.30.13.6,10.30.13.7,10.30.13.8
+  80, 443   159d
+iuc-app-backend-v1-ingress-canary                          <none>   k8s-dev-sat.tigo.com.pa   10.30.13.10,10.30.13.11,10.30.13.12,10.30.13.13,10.30.13.17,10.30.13.20,10.30.13.22,10.30.13.23,10.30.13.24,10.30.13.25,10.30.13.27,10.30.13.6,10.30.13.7,10.30.13.8
+  80        159d
+iuc-app-frontend-v1                                        <none>   k8s-dev-sat.tigo.com.pa   10.30.13.10,10.30.13.11,10.30.13.12,10.30.13.13,10.30.13.17,10.30.13.20,10.30.13.22,10.30.13.23,10.30.13.24,10.30.13.25,10.30.13.27,10.30.13.6,10.30.13.7,10.30.13.8
+  80, 443   165d
+iuc-elt-service-processdata-v1                             <none>   k8s-dev-sat.tigo.com.pa   10.30.13.10,10.30.13.11,10.30.13.12,10.30.13.13,10.30.13.17,10.30.13.20,10.30.13.22,10.30.13.23,10.30.13.24,10.30.13.25,10.30.13.27,10.30.13.6,10.30.13.7,10.30.13.8
+  80, 443   165d
+iuc-service-auth-v1                                        <none>   k8s-dev-sat.tigo.com.pa   10.30.13.10,10.30.13.11,10.30.13.12,10.30.13.13,10.30.13.17,10.30.13.20,10.30.13.22,10.30.13.23,10.30.13.24,10.30.13.25,10.30.13.27,10.30.13.6,10.30.13.7,10.30.13.8
+  80, 443   165d
+iuc-service-auth-v1-ingress-canary                         <none>   k8s-dev-sat.tigo.com.pa   10.30.13.10,10.30.13.11,10.30.13.12,10.30.13.13,10.30.13.17,10.30.13.20,10.30.13.22,10.30.13.23,10.30.13.24,10.30.13.25,10.30.13.27,10.30.13.6,10.30.13.7,10.30.13.8
+  80        165d
+iuc-service-checkdata-v1                                   <none>   k8s-dev-sat.tigo.com.pa   10.30.13.10,10.30.13.11,10.30.13.12,10.30.13.13,10.30.13.17,10.30.13.20,10.30.13.22,10.30.13.23,10.30.13.24,10.30.13.25,10.30.13.27,10.30.13.6,10.30.13.7,10.30.13.8
+  80, 443   159d
+iuc-service-checkdata-v1-ingress-canary                    <none>   k8s-dev-sat.tigo.com.pa   10.30.13.10,10.30.13.11,10.30.13.12,10.30.13.13,10.30.13.17,10.30.13.20,10.30.13.22,10.30.13.23,10.30.13.24,10.30.13.25,10.30.13.27,10.30.13.6,10.30.13.7,10.30.13.8
+  80        159d
+iuc-service-exporttofile-v1                                <none>   k8s-dev-sat.tigo.com.pa   10.30.13.10,10.30.13.11,10.30.13.12,10.30.13.13,10.30.13.17,10.30.13.20,10.30.13.22,10.30.13.23,10.30.13.24,10.30.13.25,10.30.13.27,10.30.13.6,10.30.13.7,10.30.13.8
+  80, 443   153d
+iuc-service-get-auxiliar-v1                                <none>   k8s-dev-sat.tigo.com.pa   10.30.13.10,10.30.13.11,10.30.13.12,10.30.13.13,10.30.13.17,10.30.13.20,10.30.13.22,10.30.13.23,10.30.13.24,10.30.13.25,10.30.13.27,10.30.13.6,10.30.13.7,10.30.13.8
+  80, 443   153d
+iuc-service-get-summary-v1                                 <none>   k8s-dev-sat.tigo.com.pa   10.30.13.10,10.30.13.11,10.30.13.12,10.30.13.13,10.30.13.17,10.30.13.20,10.30.13.22,10.30.13.23,10.30.13.24,10.30.13.25,10.30.13.27,10.30.13.6,10.30.13.7,10.30.13.8
+  80, 443   153d
+iuc-service-processsap-v1                                  <none>   k8s-dev-sat.tigo.com.pa   10.30.13.10,10.30.13.11,10.30.13.12,10.30.13.13,10.30.13.17,10.30.13.20,10.30.13.22,10.30.13.23,10.30.13.24,10.30.13.25,10.30.13.27,10.30.13.6,10.30.13.7,10.30.13.8
+  80, 443   158d
+iuc-service-processsap-v1-ingress-canary                   <none>   k8s-dev-sat.tigo.com.pa   10.30.13.10,10.30.13.11,10.30.13.12,10.30.13.13,10.30.13.17,10.30.13.20,10.30.13.22,10.30.13.23,10.30.13.24,10.30.13.25,10.30.13.27,10.30.13.6,10.30.13.7,10.30.13.8
+  80        158d
+
+  ---
+
+
+[outs_djoliveira@tocpait-sat-dev-mstrs-k8s-01 tmp]$ kubectl get pods -A | grep -i rabbit
+argocd           rabbitmq-0                                                                1/1     Running            0                   47d
+argocd           rabbitmq-1                                                                1/1     Running            0                   47d
+argocd           rabbitmq-2                                                                1/1     Running            0                   47d
+kube-system      kube-proxy-tocpait-sat-dev-rabbitmq-01.openstack.internal                 1/1     Running            0                   52d
+kube-system      kube-proxy-tocpait-sat-dev-rabbitmq-02.openstack.internal                 1/1     Running            0                   52d
+kube-system      kube-proxy-tocpait-sat-dev-rabbitmq-03.openstack.internal                 1/1     Running            0                   52d
+
+---
+
+  kubectl logs -n argocd deploy/cr-service-getpayments-v1 --tail=15
+2026-06-22 08:03:54.267 [http-nio-8080-exec-5] DEBUG o.s.web.servlet.DispatcherServlet - GET "/health", parameters={}
+2026-06-22 08:03:54.267 [http-nio-8080-exec-5] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to pa.com.tigo.satelite.base.controller.HealthController#checkHealth()
+2026-06-22 08:03:54.267 [http-nio-8080-exec-5] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Using 'text/plain', given [*/*] and supported [text/plain, */*, application/json, application/*+json]
+2026-06-22 08:03:54.267 [http-nio-8080-exec-5] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Writing ["Status: UP | Version: unknown | Environment: dev (unset)"]
+2026-06-22 08:03:54.267 [http-nio-8080-exec-5] DEBUG o.s.web.servlet.DispatcherServlet - Completed 200 OK
+2026-06-22 08:03:59.962 [http-nio-8080-exec-4] DEBUG o.s.web.servlet.DispatcherServlet - GET "/health", parameters={}
+2026-06-22 08:03:59.962 [http-nio-8080-exec-4] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to pa.com.tigo.satelite.base.controller.HealthController#checkHealth()
+2026-06-22 08:03:59.962 [http-nio-8080-exec-4] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Using 'text/plain', given [*/*] and supported [text/plain, */*, application/json, application/*+json]
+2026-06-22 08:03:59.962 [http-nio-8080-exec-4] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Writing ["Status: UP | Version: unknown | Environment: dev (unset)"]
+2026-06-22 08:03:59.963 [http-nio-8080-exec-4] DEBUG o.s.web.servlet.DispatcherServlet - Completed 200 OK
+2026-06-22 08:04:04.267 [http-nio-8080-exec-6] DEBUG o.s.web.servlet.DispatcherServlet - GET "/health", parameters={}
+2026-06-22 08:04:04.267 [http-nio-8080-exec-6] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to pa.com.tigo.satelite.base.controller.HealthController#checkHealth()
+2026-06-22 08:04:04.267 [http-nio-8080-exec-6] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Using 'text/plain', given [*/*] and supported [text/plain, */*, application/json, application/*+json]
+2026-06-22 08:04:04.267 [http-nio-8080-exec-6] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Writing ["Status: UP | Version: unknown | Environment: dev (unset)"]
+2026-06-22 08:04:04.267 [http-nio-8080-exec-6] DEBUG o.s.web.servlet.DispatcherServlet - Completed 200 OK
+
+---
+
+ kubectl exec -n argocd deploy/cr-service-getpayments-v1 -- ls -la /data
+total 0
+drwxrwxrwx. 2 root root  6 Nov 26  2025 .
+drwxr-xr-x. 1 root root 40 Jun  3 15:25 ..

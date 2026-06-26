@@ -1,0 +1,16 @@
+# Project Zeus — SAT runtime probe (paste line-by-line; namespace = argocd)
+# Run on each bastion, let all print, copy the screen into zeus_out.txt.
+
+# --- D2/D3 core ---
+kubectl get deploy  -n argocd | grep -iE 'cr-|iuc-|adminntt|digital|service-auth'
+kubectl get hpa     -n argocd | grep -iE 'cr-|iuc-|adminntt|digital|service-auth'
+kubectl top pods    -n argocd | grep -iE 'cr-|iuc-|adminntt|digital|service-auth'
+kubectl get pvc     -n argocd | grep -iE 'cr-|iuc-|adminntt|digital|service-auth'
+kubectl get svc     -n argocd | grep -iE 'cr-|iuc-|adminntt|digital|service-auth'
+kubectl get ingress -n argocd | grep -iE 'cr-|iuc-|adminntt|digital|service-auth'
+
+# --- RabbitMQ: first find the pod + namespace ---
+kubectl get pods -A | grep -i rabbit
+# then (fill RNS/RPOD from above):
+# kubectl exec -n RNS RPOD -- rabbitmqctl list_vhosts
+# kubectl exec -n RNS RPOD -- rabbitmqctl list_queues -p VHOST name messages consumers

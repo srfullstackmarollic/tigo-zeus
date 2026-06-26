@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Plan de Implementación de Observabilidad — Istio (Ambient) + Kiali · SAT dev</title>
+<style>
+  :root{
+    --ink:#1a1f29; --muted:#5b6472; --line:#dfe3e9;
+    --brand:#0a3d62; --brand2:#1565a8;
+    --crit:#c0392b; --high:#d97706; --med:#b8860b; --low:#2e7d32;
+    --bg-soft:#f4f6f9;
+  }
+  *{box-sizing:border-box;}
+  html{-webkit-print-color-adjust:exact; print-color-adjust:exact;}
+  body{font-family:"Helvetica Neue",Arial,"Segoe UI",sans-serif;color:var(--ink);font-size:10.5pt;line-height:1.5;margin:0;}
+  h1,h2,h3{color:var(--brand);line-height:1.25;font-weight:700;}
+  h2{font-size:15pt;margin:26px 0 10px;padding-bottom:6px;border-bottom:2px solid var(--brand);page-break-after:avoid;}
+  h3{font-size:11.5pt;margin:18px 0 6px;color:var(--brand2);page-break-after:avoid;}
+  p{margin:7px 0;}
+  a{color:var(--brand2);text-decoration:none;}
+  code{font-family:"SF Mono",Menlo,Consolas,monospace;font-size:9pt;background:var(--bg-soft);padding:1px 5px;border-radius:4px;color:#324;border:1px solid var(--line);}
+  strong{color:#10151d;}
+  hr{border:none;border-top:1px solid var(--line);margin:22px 0;}
+  blockquote{margin:12px 0;padding:10px 16px;background:#fff8e8;border-left:4px solid var(--high);border-radius:0 6px 6px 0;color:#5a4a1a;}
+  blockquote p{margin:0;}
+  .cover{height:100vh;display:flex;flex-direction:column;justify-content:center;padding:0 64px;page-break-after:always;
+    background:linear-gradient(135deg,#0a3d62 0%,#10557f 55%,#1565a8 100%);color:#fff;}
+  .cover .kicker{font-size:11pt;letter-spacing:3px;text-transform:uppercase;opacity:.8;margin-bottom:18px;}
+  .cover h1{color:#fff;font-size:32pt;margin:0 0 6px;line-height:1.1;}
+  .cover .sub{font-size:14pt;opacity:.92;font-weight:300;margin-bottom:40px;}
+  .cover .meta{border-top:1px solid rgba(255,255,255,.25);padding-top:24px;font-size:10.5pt;line-height:1.9;max-width:600px;}
+  .cover .meta b{display:inline-block;width:175px;opacity:.75;font-weight:400;}
+  .cover .tag{display:inline-block;margin-top:34px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.35);padding:6px 14px;border-radius:20px;font-size:9.5pt;}
+  .wrap{padding:0 46px 40px;}
+  table{border-collapse:collapse;width:100%;margin:12px 0;font-size:9.5pt;page-break-inside:avoid;}
+  th,td{border:1px solid var(--line);padding:7px 10px;text-align:left;vertical-align:top;}
+  th{background:var(--brand);color:#fff;font-weight:600;}
+  tbody tr:nth-child(even){background:var(--bg-soft);}
+  td.c,th.c{text-align:center;}
+  .card{border:1px solid var(--line);border-left-width:5px;border-radius:6px;padding:12px 16px;margin:14px 0;page-break-inside:avoid;background:#fff;}
+  .card.crit{border-left-color:var(--crit);} .card.high{border-left-color:var(--high);}
+  .card .tt{font-weight:700;color:var(--brand);margin-bottom:4px;}
+  .pill{display:inline-block;font-size:8pt;font-weight:700;color:#fff;padding:2px 8px;border-radius:10px;vertical-align:middle;}
+  .pill.crit{background:var(--crit);} .pill.high{background:var(--high);} .pill.med{background:var(--med);} .pill.low{background:var(--low);} .pill.info{background:var(--brand2);}
+  .lead{font-size:11pt;color:var(--muted);}
+  ol li,ul li{margin:4px 0;}
+  .sev-crit{color:var(--crit);font-weight:700;} .sev-high{color:var(--high);font-weight:700;}
+  .footer{margin-top:30px;padding-top:14px;border-top:1px solid var(--line);font-size:8.5pt;color:var(--muted);font-style:italic;}
+  .flow{background:var(--bg-soft);border:1px solid var(--line);border-radius:6px;padding:12px 16px;margin:12px 0;
+        font-family:"SF Mono",Menlo,Consolas,monospace;font-size:9pt;line-height:1.7;color:#324;white-space:pre;}
+  h2,h3,.card,table,blockquote{page-break-inside:avoid;}
+</style>
+</head>
+<body>
+<section class="cover">
+  <div class="kicker">Informe Técnico · Confidencial</div>
+  <h1>Plan de Implementación de Observabilidad</h1>
+  <div class="sub">Istio (Ambient) + Kiali en <code style="background:rgba(255,255,255,.18);color:#fff;border-color:rgba(255,255,255,.3)">tocpait-sat-dev</code></div>
+  <div class="sub" style="margin-top:-30px;font-size:12pt;">Service Mesh sin modificar las aplicaciones · Entrega GitOps vía ArgoCD</div>
+  <div class="meta">
+    <div><b>Entorno</b> SAT dev — cluster RKE2</div>
+    <div><b>Cluster</b> <code style="background:rgba(255,255,255,.18);color:#fff;border-color:rgba(255,255,255,.3)">tocpait-sat-dev</code></div>
+    <div><b>Acceso</b> SSH al master <code style="background:rgba(255,255,255,.18);color:#fff;border-color:rgba(255,255,255,.3)">tocpait-sat-dev-mstrs-k8s-01</code></div>
+    <div><b>Identificación</b> pa = Panamá</div>
+    <div><b>Repo GitOps</b> tigo-devops-panama</div>
+    <div><b>Fecha del análisis</b> 25 de junio de 2026</div>
+  </div>
+  <span class="tag">Telemetría máxima · cero cambios en las apps · Ambient data-plane</span>
+</section>
+<div class="wrap">
+
+  <h2>1. Contexto y problema</h2>
+  <p class="lead">El cluster SAT dev no tiene service mesh ni observabilidad de tráfico: hoy no se sabe
+  quién llama a quién, ni latencia, ni tasa de error, ni mTLS entre servicios.</p>
+
+  <p>El cluster <strong>SAT dev</strong> (<code>tocpait-sat-dev</code>, RKE2, acceso por SSH al master
+  <code>tocpait-sat-dev-mstrs-k8s-01</code>) concentra todo su workload en un único namespace. Hoy
+  conviven <strong>56 deployments de negocio + el propio ArgoCD + RabbitMQ</strong>, todos en el
+  namespace <code>argocd</code>, expuestos por un único ingress nginx.</p>
+
+  <table>
+    <thead><tr><th>Lo que más importa</th><th>Situación actual</th></tr></thead>
+    <tbody>
+      <tr><td>Aislamiento de workloads</td><td>56 apps + ArgoCD + RabbitMQ en el mismo ns <code>argocd</code> — anti-pattern, sin aislamiento de blast-radius</td></tr>
+      <tr><td>Exposición</td><td>Un único ingress nginx para todo</td></tr>
+      <tr><td>Visibilidad de tráfico</td><td>Inexistente — no se conoce el grafo de llamadas servicio-a-servicio</td></tr>
+      <tr><td>Métricas L4/L7</td><td>Sin latencia, sin tasa de error, sin RPS</td></tr>
+      <tr><td>Seguridad de tránsito</td><td>Sin mTLS ni identidad entre servicios</td></tr>
+      <tr><td>Diagramas existentes</td><td>En gran parte <strong>inferidos, no evidenciados</strong></td></tr>
+    </tbody>
+  </table>
+
+  <div class="card crit">
+    <div class="tt"><span class="pill crit">CRÍTICO</span> &nbsp;Namespace <code>argocd</code> compartido</div>
+    <p>Tener 56 deployments de negocio junto al control-plane de ArgoCD y a RabbitMQ en un mismo
+    namespace elimina cualquier aislamiento de blast-radius. Esto condiciona directamente la
+    estrategia de habilitación de la telemetría (ver Fase 3) — no se puede enrolar el ns completo de
+    una sola vez sin arriesgar al propio ArgoCD/RabbitMQ.</p>
+  </div>
+
+  <h2>2. Objetivo</h2>
+  <p>Subir <strong>Istio + Kiali</strong> en SAT dev siguiendo el patrón GitOps del repo
+  <code>tigo-devops-panama</code>, con tres metas concretas:</p>
+  <ol>
+    <li>Obtener el <strong>máximo de telemetría sin modificar ninguna aplicación</strong>.</li>
+    <li>Exponer Kiali por un <strong>listener del propio mesh</strong> (no por nginx).</li>
+    <li>Tener el <strong>dashboard de Kiali funcionando</strong> con grafo, health y badges de mTLS.</li>
+  </ol>
+
+  <h2>3. Decisiones confirmadas con el cliente</h2>
+  <table>
+    <thead><tr><th style="width:24%">Decisión</th><th>Detalle</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Modo de data-plane: Ambient</strong></td><td>ztunnel + istio-cni, activado por <em>label de namespace</em>. No inyecta sidecar, no reinicia ni altera los pods de las apps. Entrega grafo L4 + mTLS + identidad en Kiali. L7 (HTTP/RPS/latencia) queda para fase opcional vía waypoint.</td></tr>
+      <tr><td><strong>Entrega: GitOps vía ArgoCD</strong></td><td>Versionar todo en <code>cluster-resources/</code> y dejar que el App-of-Apps existente sincronice.</td></tr>
+      <tr><td><strong>Prometheus</strong></td><td>Verificar en pre-flight; si no existe, provisionar uno dedicado a Istio.</td></tr>
+      <tr><td><strong>Ubicación de Kiali</strong></td><td>Fijado en el nodo del ArgoCD vía <code>nodeSelector</code>/affinity — ubicación determinística en dev.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>4. Por qué Ambient y no Sidecar</h2>
+  <p>Istio sólo genera telemetría si hay <strong>data-plane</strong>. La elección del modo de
+  data-plane es la decisión de diseño más importante de este plan, porque determina si las apps se
+  tocan o no.</p>
+
+  <table>
+    <thead><tr><th style="width:20%">Aspecto</th><th>Sidecar</th><th>Ambient <span class="pill low">ELEGIDO</span></th></tr></thead>
+    <tbody>
+      <tr><td>Mecanismo</td><td>Inyecta un Envoy en cada pod</td><td>istio-cni + ztunnel (DaemonSet por nodo) interceptan el tráfico</td></tr>
+      <tr><td>Activación</td><td>Recrear/reiniciar cada pod</td><td>Sólo etiquetar el namespace</td></tr>
+      <tr><td>Impacto en las apps</td><td><span class="sev-crit">Exige restart</span> — viola "no alterar las aplicaciones"</td><td><span class="sev-high" style="color:var(--low)">Cero</span> — sin contenedor extra, sin restart, manifiesto intacto</td></tr>
+      <tr><td>Telemetría inmediata</td><td>L7 completo (HTTP/RPS/latencia)</td><td>L4 + mTLS + identidad; L7 después vía waypoint (tampoco toca los pods)</td></tr>
+      <tr><td>Riesgo en ns <code>argocd</code></td><td><span class="sev-crit">Alto</span> — recrear pods de ArgoCD + RabbitMQ</td><td>Bajo — no se recrean pods</td></tr>
+    </tbody>
+  </table>
+
+  <div class="card high">
+    <div class="tt"><span class="pill high">ALTO</span> &nbsp;Riesgo a validar: madurez de Ambient sobre el CNI del RKE2</div>
+    <p>Ambient corre sobre el CNI del cluster. RKE2 trae <strong>Canal</strong> por defecto, y la
+    compatibilidad de <code>istio-cni</code>/<code>ztunnel</code> debe validarse en el pre-flight
+    (Fase 0, paso 3). <strong>Fallback:</strong> si resulta incompatible, sidecar únicamente en un ns
+    canary (cobertura parcial) — a confirmar con el cliente antes de aplicarlo.</p>
+  </div>
+
+  <h2>5. Patrón del repo tigo-devops-panama (hallazgos)</h2>
+  <ul>
+    <li><strong>Estructura:</strong> Kustomize + ArgoCD <strong>App-of-Apps + ApplicationSet</strong>
+      (<code>applicationsets/roots.yaml</code>, generator <code>apps/overlays/*/*/api/*</code>).</li>
+    <li><strong>Add-ons de plataforma</strong> en <code>cluster-resources/</code>: <code>keycloak</code>,
+      <code>redis</code>, <code>rabbitmq</code>, <code>nfs</code>, <code>namespace-hardening</code>.</li>
+    <li>El repo <strong>ya está "istio-ready"</strong>: existe
+      <code>cluster-resources/namespace-hardening/argocd/networkpolicy-allow-istio.yaml</code> que
+      referencia <code>istio-system</code>, pero <strong>nada de Istio está instalado</strong>.</li>
+    <li><strong>Ingress:</strong> <code>ingressClassName: nginx</code>; TLS termina en HAProxy externo
+      (<code>ssl-redirect: false</code>); secret <code>tigo-tls-secret</code>; host
+      <code>k8s-&lt;env&gt;-sat.tigo.com.pa</code>.</li>
+  </ul>
+
+  <h2>6. Fases de ejecución</h2>
+
+  <h3>Fase 0 — Pre-flight (sólo lectura, en el bastion vía SSH al master)</h3>
+  <p>Se ejecuta en <code>tocpait-sat-dev-mstrs-k8s-01</code> con el kubeconfig del RKE2. No muta nada.</p>
+  <ol>
+    <li>¿Existe <strong>Prometheus/Grafana</strong>? Define si se reaprovecha o se provisiona uno nuevo.</li>
+    <li><strong>Nodo del ArgoCD</strong> — para el <code>nodeSelector</code> de Kiali.</li>
+    <li><strong>CNI del RKE2</strong> (Canal) — validar compatibilidad de <code>istio-cni</code>/<code>ztunnel</code>.</li>
+    <li><strong>StorageClass / IngressClass</strong> (confirmar <code>nginx</code>).</li>
+    <li><strong>Egress de imágenes</strong>: <code>docker.io/istio/*</code>, <code>quay.io/kiali/*</code>, o mirror interno si airgapped.</li>
+    <li><strong>Versión de K8s/RKE2</strong> — compatibilidad de la versión de Istio a fijar.</li>
+  </ol>
+  <blockquote><p>Si el cluster es airgapped, espejar las imágenes <code>istio/{pilot,install-cni,ztunnel,proxyv2}</code>, <code>quay.io/kiali/kiali</code> y Prometheus en el registry interno antes de la Fase 2.</p></blockquote>
+
+  <h3>Fase 1 — Estructura GitOps (sin aplicar nada aún)</h3>
+  <p>Crear <code>cluster-resources/istio/</code> siguiendo el estilo de <code>cluster-resources/keycloak/</code>:</p>
+  <div class="flow">cluster-resources/istio/
+├── istio-base/           CRDs + base (chart istio/base, versión fija)
+├── istiod/               control-plane, profile=ambient
+├── istio-cni/            necesario para ambient
+├── ztunnel/              DaemonSet, data-plane ambient
+├── istio-ingressgateway/ gateway para exponer Kiali por el mesh
+├── prometheus/           SÓLO si la Fase 0 indica que falta
+└── kiali/                CR + nodeSelector del nodo ArgoCD + external_services.prometheus.url</div>
+  <ul>
+    <li><strong>AppProject <code>istio</code></strong> con permiso para <code>istio-system</code>, <code>istio-cni</code>, <code>kiali</code>.</li>
+    <li><strong>Incluir</strong> el nuevo directorio en <code>cluster-resources/kustomization.yaml</code>.</li>
+    <li><strong>Ampliar NetworkPolicies</strong> (la base <code>networkpolicy-allow-istio.yaml</code> ya existe) para Kiali↔Prometheus↔istiod.</li>
+  </ul>
+
+  <h3>Fase 2 — Bootstrap del mesh (control-plane + data-plane), sin tocar las apps</h3>
+  <ol>
+    <li>ArgoCD sincroniza <code>istio-base</code> → <code>istiod (ambient)</code> → <code>istio-cni</code> → <code>ztunnel</code>. Ningún namespace de app está enrolado todavía → <strong>impacto cero</strong> en los workloads.</li>
+    <li>Validar: <code>istioctl x precheck</code>, <code>istioctl version</code>, ztunnel <code>Running</code> en todos los nodos.</li>
+    <li>(Si aplica) subir el Prometheus dedicado a Istio y confirmar el scrape de los componentes del mesh.</li>
+  </ol>
+
+  <h3>Fase 3 — Habilitar telemetría ambient (label de namespace, sin restart)</h3>
+  <ol>
+    <li>Empezar por <strong>1 namespace de bajo riesgo (canary)</strong>; preferir un ns dedicado (p.ej. <code>sat-apps</code>) o un ns de prueba antes de tocar <code>argocd</code>.</li>
+    <li><code>kubectl label namespace &lt;ns&gt; istio.io/dataplane-mode=ambient</code> → ztunnel captura el tráfico L4. Los pods <strong>no reinician</strong>.</li>
+    <li>Validar en Kiali que aparecen nodos/aristas L4 + candado mTLS para ese namespace.</li>
+    <li>Expandir gradualmente. mTLS permisivo primero; <code>PeerAuthentication STRICT</code> por namespace sólo después de validar.</li>
+  </ol>
+  <div class="card crit">
+    <div class="tt"><span class="pill crit">CRÍTICO</span> &nbsp;No enrolar el ns <code>argocd</code> de una sola vez</div>
+    <p>Como el ns <code>argocd</code> aloja el propio ArgoCD y RabbitMQ además de las 56 apps,
+    etiquetarlo entero sin validación previa arriesga el control-plane de GitOps y la mensajería.
+    Validar primero en un ns dedicado/canary y medir el impacto antes de expandir.</p>
+  </div>
+
+  <h3>Fase 4 — Exponer Kiali + dashboard</h3>
+  <ol>
+    <li><strong>Listener service-mesh:</strong> <code>Gateway</code> + <code>VirtualService</code> (istio-ingressgateway), host <code>kiali-dev-sat.tigo.com.pa</code> apuntando al Service de Kiali. Reusar <code>tigo-tls-secret</code>; SSL termina en HAProxy externo (<code>ssl-redirect: false</code>). Coexiste con nginx (no lo sustituye).</li>
+    <li><strong>Auth de Kiali:</strong> <code>anonymous</code>/<code>token</code> en dev para acceso rápido; <code>openid</code> con el Keycloak existente en una fase posterior.</li>
+    <li><strong>Dashboard:</strong> validar la UI de Kiali (grafo, health, mTLS badges). Opcional: importar los dashboards Grafana oficiales de Istio si hay Grafana, apuntando al mismo Prometheus.</li>
+  </ol>
+
+  <h2>7. Verificación end-to-end</h2>
+  <table>
+    <thead><tr><th style="width:32%">Comprobación</th><th>Criterio de éxito</th></tr></thead>
+    <tbody>
+      <tr><td><code>istioctl x precheck</code> / <code>istioctl version</code></td><td>Sin errores</td></tr>
+      <tr><td>Pods del mesh</td><td>istiod, istio-cni y ztunnel en <code>Running</code></td></tr>
+      <tr><td>Namespace enrolado</td><td><code>kubectl get ns --show-labels | grep ambient</code> lista el/los ns</td></tr>
+      <tr><td>Dashboard Kiali</td><td>Grafo con <strong>aristas L4</strong> + <strong>candado mTLS</strong>, sin warnings de "missing Prometheus"</td></tr>
+      <tr><td><strong>Prueba de que las apps no cambiaron</strong></td><td><code>kubectl get pods -n &lt;ns&gt;</code>: <code>RESTARTS</code> inalterado y <code>READY</code> sigue <code>1/1</code> (no <code>2/2</code>) — sin contenedor extra</td></tr>
+      <tr><td>ArgoCD</td><td>Applications de Istio/Kiali <code>Synced</code>/<code>Healthy</code></td></tr>
+      <tr><td>Ubicación de Kiali</td><td>Agendado en el nodo del ArgoCD</td></tr>
+    </tbody>
+  </table>
+
+  <h2>8. Riesgos y notas</h2>
+  <table>
+    <thead><tr><th class="c" style="width:14%">Severidad</th><th style="width:34%">Riesgo</th><th>Mitigación</th></tr></thead>
+    <tbody>
+      <tr><td class="c"><span class="pill high">ALTO</span></td><td>Ambient sobre RKE2/Canal — madurez/compatibilidad del data-plane</td><td>Validar en pre-flight (Fase 0, paso 3); fallback a sidecar sólo en ns canary, previa confirmación del cliente</td></tr>
+      <tr><td class="c"><span class="pill crit">CRÍTICO</span></td><td>ns <code>argocd</code> compartido (apps + ArgoCD + RabbitMQ)</td><td>No enrolar de una vez; ns dedicado/canary primero, medir impacto, expandir gradual</td></tr>
+      <tr><td class="c"><span class="pill med">MED</span></td><td>Egress / airgap de imágenes Istio/Kiali/Prometheus</td><td>Mirror interno antes de la Fase 2</td></tr>
+      <tr><td class="c"><span class="pill med">MED</span></td><td>Versión de Istio vs K8s del RKE2</td><td>Fijar versión compatible (pre-flight, paso 6)</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Anexo — Archivos de referencia (repo tigo-devops-panama)</h2>
+  <ul>
+    <li><code>applicationsets/roots.yaml</code> — modelo de Application / App-of-Apps.</li>
+    <li><code>cluster-resources/kustomization.yaml</code> — dónde incluir <code>istio/</code>.</li>
+    <li><code>cluster-resources/keycloak/stable/</code> — ejemplo de add-on bien estructurado.</li>
+    <li><code>cluster-resources/namespace-hardening/argocd/networkpolicy-allow-istio.yaml</code> — NetPol Istio existente, a ampliar.</li>
+    <li><code>cluster-resources/argocd-projects/argocd-projects.yaml</code> — dónde declarar el AppProject del mesh.</li>
+  </ul>
+
+  <div class="footer">Tigo Panamá — Plan de Implementación de Observabilidad · Istio (Ambient) + Kiali · SAT dev (<code>tocpait-sat-dev</code>) · 25 de junio de 2026. Documento confidencial, uso interno. Relacionado con el análisis del cluster SAT dev y la topología de observabilidad de los clusters Tigo.</div>
+</div>
+</body>
+</html>

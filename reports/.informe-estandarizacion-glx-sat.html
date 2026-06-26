@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Informe de Estandarización de Plataforma — Galaxion (GLX) + SAT</title>
+<style>
+  :root{
+    --ink:#1a1f29; --muted:#5b6472; --line:#dfe3e9;
+    --brand:#0a3d62; --brand2:#1565a8;
+    --crit:#c0392b; --high:#d97706; --med:#b8860b; --low:#2e7d32;
+    --bg-soft:#f4f6f9;
+  }
+  *{box-sizing:border-box;}
+  html{-webkit-print-color-adjust:exact; print-color-adjust:exact;}
+  body{font-family:"Helvetica Neue",Arial,"Segoe UI",sans-serif;color:var(--ink);font-size:10.5pt;line-height:1.5;margin:0;}
+  h1,h2,h3{color:var(--brand);line-height:1.25;font-weight:700;}
+  h2{font-size:15pt;margin:26px 0 10px;padding-bottom:6px;border-bottom:2px solid var(--brand);page-break-after:avoid;}
+  h3{font-size:11.5pt;margin:18px 0 6px;color:var(--brand2);page-break-after:avoid;}
+  p{margin:7px 0;}
+  a{color:var(--brand2);text-decoration:none;}
+  code{font-family:"SF Mono",Menlo,Consolas,monospace;font-size:9pt;background:var(--bg-soft);padding:1px 5px;border-radius:4px;color:#324;border:1px solid var(--line);}
+  strong{color:#10151d;}
+  hr{border:none;border-top:1px solid var(--line);margin:22px 0;}
+  blockquote{margin:12px 0;padding:10px 16px;background:#fff8e8;border-left:4px solid var(--high);border-radius:0 6px 6px 0;color:#5a4a1a;}
+  blockquote p{margin:0;}
+  .cover{height:100vh;display:flex;flex-direction:column;justify-content:center;padding:0 64px;page-break-after:always;
+    background:linear-gradient(135deg,#0a3d62 0%,#10557f 55%,#1565a8 100%);color:#fff;}
+  .cover .kicker{font-size:11pt;letter-spacing:3px;text-transform:uppercase;opacity:.8;margin-bottom:18px;}
+  .cover h1{color:#fff;font-size:32pt;margin:0 0 6px;line-height:1.1;}
+  .cover .sub{font-size:14pt;opacity:.92;font-weight:300;margin-bottom:40px;}
+  .cover .meta{border-top:1px solid rgba(255,255,255,.25);padding-top:24px;font-size:10.5pt;line-height:1.9;max-width:600px;}
+  .cover .meta b{display:inline-block;width:175px;opacity:.75;font-weight:400;}
+  .cover .tag{display:inline-block;margin-top:34px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.35);padding:6px 14px;border-radius:20px;font-size:9.5pt;}
+  .wrap{padding:0 46px 40px;}
+  table{border-collapse:collapse;width:100%;margin:12px 0;font-size:9.5pt;page-break-inside:avoid;}
+  th,td{border:1px solid var(--line);padding:7px 10px;text-align:left;vertical-align:top;}
+  th{background:var(--brand);color:#fff;font-weight:600;}
+  tbody tr:nth-child(even){background:var(--bg-soft);}
+  td.c,th.c{text-align:center;}
+  .card{border:1px solid var(--line);border-left-width:5px;border-radius:6px;padding:12px 16px;margin:14px 0;page-break-inside:avoid;background:#fff;}
+  .card.crit{border-left-color:var(--crit);} .card.high{border-left-color:var(--high);}
+  .card .tt{font-weight:700;color:var(--brand);margin-bottom:4px;}
+  .pill{display:inline-block;font-size:8pt;font-weight:700;color:#fff;padding:2px 8px;border-radius:10px;vertical-align:middle;}
+  .pill.crit{background:var(--crit);} .pill.high{background:var(--high);} .pill.med{background:var(--med);} .pill.low{background:var(--low);} .pill.info{background:var(--brand2);}
+  .lead{font-size:11pt;color:var(--muted);}
+  ol li,ul li{margin:4px 0;}
+  .sev-crit{color:var(--crit);font-weight:700;} .sev-high{color:var(--high);font-weight:700;}
+  .footer{margin-top:30px;padding-top:14px;border-top:1px solid var(--line);font-size:8.5pt;color:var(--muted);font-style:italic;}
+  .flow{background:var(--bg-soft);border:1px solid var(--line);border-radius:6px;padding:12px 16px;margin:12px 0;
+        font-family:"SF Mono",Menlo,Consolas,monospace;font-size:9pt;line-height:1.7;color:#324;white-space:pre;}
+  h2,h3,.card,table,blockquote{page-break-inside:avoid;}
+</style>
+</head>
+<body>
+<section class="cover">
+  <div class="kicker">Análisis de Plataforma · Confidencial</div>
+  <h1>Informe de Estandarización de Plataforma</h1>
+  <div class="sub">Galaxion (GLX) + SAT · convergencia hacia un estándar común <code style="background:rgba(255,255,255,.18);color:#fff;border-color:rgba(255,255,255,.3)">tocpait-glx</code></div>
+  <div class="meta">
+    <div><b>Proyecto</b> Zeus · Galaxion</div>
+    <div><b>Entorno</b> GLX SIT / UAT / PROD · SAT dev</div>
+    <div><b>Clústeres</b> <code style="background:rgba(255,255,255,.14);color:#fff;border-color:rgba(255,255,255,.25)">tocpait-glx-sit</code> · <code style="background:rgba(255,255,255,.14);color:#fff;border-color:rgba(255,255,255,.25)">tocpait-glx-uat</code> · <code style="background:rgba(255,255,255,.14);color:#fff;border-color:rgba(255,255,255,.25)">tocpait-glx</code> · <code style="background:rgba(255,255,255,.14);color:#fff;border-color:rgba(255,255,255,.25)">tocpait-sat-dev</code></div>
+    <div><b>Recolección</b> 2026-06-23 (GLX) / 2026-06-22 (SAT dev) — solo lectura</div>
+    <div><b>Identificación</b> pa = Panamá</div>
+    <div><b>Fecha del informe</b> 2026-06-24</div>
+  </div>
+  <span class="tag">Estado actual → estándar común deseado → acción</span>
+</section>
+<div class="wrap">
+
+  <h2>Objetivo</h2>
+  <p class="lead">Este informe no es solo un inventario del estado actual: para cada dimensión declara <strong>qué está mal, en qué entorno y cuál es la configuración deseada</strong>, de modo que la brecha y la acción queden explícitas.</p>
+  <p>El propósito es definir un <strong>único estándar de configuración común</strong> hacia el cual converjan Galaxion (SIT/UAT/PROD) y SAT. La orientación es <strong>estado actual → estándar común deseado → acción</strong>, para armonizar los entornos en lugar de mapearlos por separado.</p>
+  <blockquote><p>El objetivo es <strong>un solo estándar</strong> a través de GLX y SAT. El cliente quiere los entornos armonizados, no tratados como mundos separados. SAT ejecuta un conjunto de aplicaciones distinto (<code>cr-*</code> / <code>iuc-*</code> / <code>adminntt-*</code>), pero le aplican las <strong>mismas reglas de plataforma</strong> (§5).</p></blockquote>
+
+  <h2>0. Resumen ejecutivo — qué corregir</h2>
+  <p class="lead">Tabla accionable: problema, entorno, acción objetivo y severidad. Los puntos que más importan, ordenados por prioridad.</p>
+  <table>
+    <thead><tr><th class="c">#</th><th>Problema</th><th>Entorno</th><th>Acción (objetivo)</th><th class="c">Severidad</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="c">1</td>
+        <td><strong>Descarga de imágenes fallando — TLS del registry no confiable</strong> (<code>x509: certificate signed by unknown authority</code>) → 14 rollouts/migraciones congelados</td>
+        <td><strong>Galaxion PROD</strong> (<code>tocpait-glx</code>)</td>
+        <td>Restaurar la confianza de la CA de <code>glx-registry.tigo.com.pa</code> en los nodos; alertar sobre <code>ImagePullBackOff</code></td>
+        <td class="c"><span class="pill crit">CRÍTICO</span></td>
+      </tr>
+      <tr>
+        <td class="c">2</td>
+        <td><strong><code>maildev</code> descargado desde Docker Hub público</strong></td>
+        <td>UAT + <strong>PROD</strong></td>
+        <td>Replicar al registry interno o eliminar de producción</td>
+        <td class="c"><span class="pill high">ALTO</span></td>
+      </tr>
+      <tr>
+        <td class="c">3</td>
+        <td><strong>Imágenes <code>-SNAPSHOT</code> en producción</strong></td>
+        <td>PROD</td>
+        <td>Prohibir tags mutables/SNAPSHOT en UAT/PROD; promover releases inmutables</td>
+        <td class="c"><span class="pill high">ALTO</span></td>
+      </tr>
+      <tr>
+        <td class="c">4</td>
+        <td><strong>Sin autoescalado / sin HA</strong> (1 réplica en todos lados)</td>
+        <td>Los 4</td>
+        <td>HPA para APIs stateless, KEDA para consumidores de cola, <code>minReplicas ≥ 2</code></td>
+        <td class="c"><span class="pill high">ALTO</span></td>
+      </tr>
+      <tr>
+        <td class="c">5</td>
+        <td><strong>Istio instalado pero sin uso</strong></td>
+        <td>GLX SIT</td>
+        <td>Elegir un único estándar de malla para todos los entornos (quitar de SIT o adoptar en todos)</td>
+        <td class="c"><span class="pill med">MED</span></td>
+      </tr>
+      <tr>
+        <td class="c">6</td>
+        <td><strong>Acoplamiento de registry</strong> (UAT descarga del registry de SIT)</td>
+        <td>SIT + UAT</td>
+        <td>Registry por entorno o pipeline de promoción claro</td>
+        <td class="c"><span class="pill med">MED</span></td>
+      </tr>
+      <tr>
+        <td class="c">7</td>
+        <td><strong>Observabilidad inconsistente</strong> (Prometheus apagado en SIT; logging de PROD desconocido)</td>
+        <td>SIT + PROD</td>
+        <td>Prometheus+Grafana común + logging unificado en GLX/SAT</td>
+        <td class="c"><span class="pill med">MED</span></td>
+      </tr>
+      <tr>
+        <td class="c">8</td>
+        <td><strong>Cargas de trabajo en el namespace <code>argocd</code></strong></td>
+        <td>SAT</td>
+        <td>Namespace de aplicación dedicado</td>
+        <td class="c"><span class="pill med">MED</span></td>
+      </tr>
+      <tr>
+        <td class="c">9</td>
+        <td><strong>Errores tipográficos en hosts de ingress</strong> (<code>.cam</code>, host de entorno equivocado)</td>
+        <td>Todos</td>
+        <td>Corregir los hosts a <code>*.tigo.com.pa</code></td>
+        <td class="c"><span class="pill low">BAJO</span></td>
+      </tr>
+      <tr>
+        <td class="c">10</td>
+        <td><strong>Sobre-asignación de CPU en SIT</strong> (500m vs 150m)</td>
+        <td>SIT</td>
+        <td>Ajustar al perfil de UAT/PROD</td>
+        <td class="c"><span class="pill low">BAJO</span></td>
+      </tr>
+      <tr>
+        <td class="c">11</td>
+        <td><strong>Deriva del conjunto de aplicaciones</strong> entre entornos</td>
+        <td>SIT/UAT/PROD</td>
+        <td>Reconciliar el conjunto de componentes por entorno</td>
+        <td class="c"><span class="pill low">BAJO</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>1. Comparación de plataforma (estado actual)</h2>
+  <table>
+    <thead><tr><th>Dimensión</th><th>GLX <strong>SIT</strong></th><th>GLX <strong>UAT</strong></th><th>GLX <strong>PROD</strong></th><th><strong>SAT dev</strong></th></tr></thead>
+    <tbody>
+      <tr><td>Clúster</td><td><code>tocpait-glx-sit</code></td><td><code>tocpait-glx-uat</code></td><td><code>tocpait-glx</code></td><td><code>tocpait-sat-dev</code></td></tr>
+      <tr><td>Distribución K8s</td><td>RKE2 v1.33.0+rke2r1</td><td>RKE2 v1.33.0+rke2r1</td><td>RKE2 <strong>v1.33.5+rke2r1</strong></td><td>RKE2 <strong>v1.32.8+rke2r1</strong> — ⚠️ versiones de nodo dispares (1.28.15 / 1.32.8 / 1.34.1)</td></tr>
+      <tr><td>Topología</td><td>3 mstr + 6 wrk + 2 spark (11)</td><td>3 mstr + 10 wrk + 2 spark (15)</td><td>3 mstr + <strong>22 wrk (z1/z2)</strong> + 2 spark (27)</td><td>3 mstr + pools dedicados: 2 NFS, 3 RabbitMQ, 1 SLB, 1 jobs, 4 ws-node (~14); 2 nodos acordonados</td></tr>
+      <tr><td>Namespace de app</td><td><code>glx</code> (~78)</td><td><code>glx</code> (~77)</td><td><code>glx</code> (~77)</td><td><strong><code>argocd</code></strong> (compartido — anti-patrón), 45</td></tr>
+      <tr><td>Portafolio de apps</td><td>Galaxion</td><td>Galaxion</td><td>Galaxion</td><td>NTT/satélite (<code>cr-*</code>/<code>iuc-*</code>/<code>adminntt-*</code>)</td></tr>
+      <tr><td>Istio</td><td>Instalado 1.26.1, sidecar 2/2, <strong>sin CRs de malla</strong></td><td>No instalado</td><td>No instalado</td><td>No instalado</td></tr>
+      <tr><td>Kiali</td><td>Ausente</td><td>Ausente</td><td>Ausente</td><td>Ausente</td></tr>
+      <tr><td>Autoescalado</td><td>solo HPA de <code>istiod</code></td><td><strong>ninguno</strong></td><td><strong>ninguno</strong></td><td><strong>45 HPAs, todos <code>min=max=1</code></strong></td></tr>
+      <tr><td>Réplicas</td><td>1</td><td>1</td><td>1</td><td>1 (canaries 0/0)</td></tr>
+      <tr><td>Prometheus/Grafana</td><td><strong>Deshabilitado (0/0)</strong></td><td>En ejecución</td><td>En ejecución</td><td>sin Prometheus; Grafana (Loki)</td></tr>
+      <tr><td>Logging</td><td>no observado</td><td>ns <code>logging</code> (fluent-bit)</td><td><strong>no observado</strong></td><td>Loki + Promtail + Grafana</td></tr>
+      <tr><td>Registry</td><td><code>glx-registry-sit</code></td><td><code>glx-registry-sit</code> (compartido)</td><td><code>glx-registry</code> (propio)</td><td><code>registry-local</code></td></tr>
+      <tr><td>Ingress</td><td>nginx <code>glx-&lt;app&gt;-sit…</code> (10.30.15.x)</td><td>nginx <code>glx-&lt;app&gt;-uat…</code> (10.30.19.x)</td><td>nginx <code>glx-&lt;app&gt;…</code> (10.30.14.x)</td><td>nginx host único <code>k8s-dev-sat…</code></td></tr>
+    </tbody>
+  </table>
+
+  <h2>2. Estado actual vs deseado — el estándar común</h2>
+  <p>Para cada dimensión: <strong>qué está mal → dónde → la configuración deseada (estándar).</strong> Los fragmentos de configuración muestran el <em>objetivo</em>, no los manifiestos completos.</p>
+
+  <h3>2.1 Autoescalado y resiliencia — <em>el punto esencial</em></h3>
+  <blockquote><p>Esto se trata de <strong>autoescalado</strong>, que es distinto de la configuración de recursos del pod en §2.2. Hoy nada escala y nada tiene alta disponibilidad.</p></blockquote>
+  <table>
+    <thead><tr><th>Qué está mal</th><th>Dónde</th><th>Estándar deseado</th></tr></thead>
+    <tbody>
+      <tr><td>Sin HPA en absoluto → no puede escalar</td><td>GLX SIT/UAT/PROD</td><td>HPA real en servicios stateless</td></tr>
+      <tr><td>45 HPAs pero <code>min=max=1</code> (decorativos)</td><td>SAT dev</td><td>Reemplazar con min/max reales o KEDA</td></tr>
+      <tr><td>Réplica única → punto único de fallo</td><td>Los 4</td><td><code>minReplicas ≥ 2</code> (línea base de HA)</td></tr>
+      <tr><td>Consumidores de cola/ETL nunca escalan según la carga</td><td>conectores GLX, consumidores SAT</td><td><strong>KEDA</strong> sobre la profundidad de la cola</td></tr>
+    </tbody>
+  </table>
+  <p><strong>Deseado — API/servicio stateless (HPA):</strong></p>
+  <div class="flow">apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+spec:
+  minReplicas: 2          # línea base de HA — hoy: 1
+  maxReplicas: 6
+  metrics:
+    - type: Resource
+      resource: { name: cpu, target: { type: Utilization, averageUtilization: 65 } }</div>
+  <p><strong>Deseado — consumidor orientado a eventos (KEDA sobre RabbitMQ):</strong> para los consumidores <code>adminntt</code> de SAT (email/sms/notification/ondemand) y los conectores GLX de payment/mediation/workflow.</p>
+  <div class="flow">apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+spec:
+  minReplicaCount: 1
+  maxReplicaCount: 10
+  triggers:
+    - type: rabbitmq
+      metadata: { queueName: mail_queue, mode: QueueLength, value: "20" }</div>
+
+  <h3>2.2 Recursos del pod (right-sizing)</h3>
+  <blockquote><p>Esto es la <strong>configuración del pod</strong> (requests/limits). En la revisión se notó que se estaba mostrando <em>en lugar de</em> el autoescalado. Ambos importan; manténgalos separados.</p></blockquote>
+  <table>
+    <thead><tr><th>Qué está mal</th><th>Dónde</th><th>Estándar deseado</th></tr></thead>
+    <tbody>
+      <tr><td>CPU sobre-asignada (core/backend 500m, ~98% ocioso)</td><td>GLX <strong>SIT</strong></td><td>Alinear al perfil de UAT/PROD (≈150m)</td></tr>
+      <tr><td>CPU sobre-asignada (100m × 45 = 4.5 cores, ~76m usados)</td><td>SAT</td><td>Solicitar 25–50m donde esté ocioso</td></tr>
+      <tr><td>Memoria infradimensionada: req 256Mi / limit 512Mi, JVM <code>-Xmx512m</code> == limit → riesgo de OOM en 17 svcs</td><td>SAT</td><td>req 384Mi, limit 768Mi, <code>-Xmx</code> ≈ 70% del limit</td></tr>
+      <tr><td><code>maildev</code> sin requests/limits (BestEffort)</td><td>UAT/PROD</td><td>Establecer requests/limits mínimos</td></tr>
+    </tbody>
+  </table>
+  <p><strong>Deseado — servicio Java:</strong></p>
+  <div class="flow">resources:
+  requests: { cpu: 50m,  memory: 384Mi }   # SAT hoy: 100m / 256Mi
+  limits:   { cpu: 500m, memory: 768Mi }   # SAT hoy: ...  / 512Mi
+env:
+  - name: JAVA_TOOL_OPTIONS
+    value: "-Xmx512m"   # ≈70% del limit de 768Mi (hoy -Xmx512m == limit → sin holgura)</div>
+
+  <h3>2.3 Malla de servicios (Istio)</h3>
+  <table>
+    <thead><tr><th>Qué está mal</th><th>Dónde</th><th>Estándar deseado</th></tr></thead>
+    <tbody>
+      <tr><td>Istio instalado, sidecar en cada pod, pero cero CRs de malla, mTLS permissive, sin Kiali → costo, sin beneficio</td><td>solo GLX SIT</td><td><strong>Un único estándar para todos los entornos</strong></td></tr>
+    </tbody>
+  </table>
+  <p>Elija una y aplíquela a los cuatro entornos:</p>
+  <ul>
+    <li><strong>Opción A (recomendada, bajo esfuerzo):</strong> quitar la inyección no utilizada de SIT → paridad con UAT/PROD/SAT (sin malla).</li>
+    <li><strong>Opción B (mayor valor):</strong> adoptar Istio en todos lados con <strong>mTLS STRICT + Kiali + políticas base</strong>.</li>
+  </ul>
+  <p>El medio-estado actual (malla en un entorno, sin hacer nada) es el único resultado a evitar.</p>
+
+  <h3>2.4 Registry e imágenes</h3>
+  <table>
+    <thead><tr><th>Qué está mal</th><th>Dónde</th><th>Estándar deseado</th></tr></thead>
+    <tbody>
+      <tr><td>Las nuevas descargas de imágenes fallan — certificado <strong>TLS del registry no confiable</strong> (x509), ver §3</td><td>PROD</td><td>Restaurar la confianza de la CA del registry en los nodos; alertar sobre <code>ImagePullBackOff</code></td></tr>
+      <tr><td><code>maildev</code> desde Docker Hub público</td><td>UAT + PROD</td><td>Replicar internamente o eliminar de producción</td></tr>
+      <tr><td>Tags <code>-SNAPSHOT</code> (mutables) en producción</td><td>PROD (<code>customer-pa-management</code>, <code>tigo-pa-adjustment-custom-service</code>)</td><td>Solo tags de release inmutables; <strong>prohibir <code>*-SNAPSHOT</code> en UAT/PROD</strong></td></tr>
+      <tr><td>UAT descarga desde el registry de <strong>SIT</strong></td><td>SIT + UAT</td><td>Registry por entorno o pipeline de promoción explícito</td></tr>
+      <tr><td>PROD adelantado respecto a entornos inferiores (<code>geographic-management</code>, <code>tigo-ar-workflow-connector</code>)</td><td>mixto</td><td>Forzar la dirección de promoción SIT → UAT → PROD</td></tr>
+    </tbody>
+  </table>
+
+  <h3>2.5 Observabilidad</h3>
+  <table>
+    <thead><tr><th>Qué está mal</th><th>Dónde</th><th>Estándar deseado</th></tr></thead>
+    <tbody>
+      <tr><td>Prometheus/Grafana escalados a 0/0</td><td>GLX SIT</td><td>Prometheus + Grafana <strong>activos</strong> en cada entorno</td></tr>
+      <tr><td>No se observa el namespace <code>logging</code></td><td>GLX PROD</td><td>Confirmar + estandarizar el envío de logs</td></tr>
+      <tr><td>Tres enfoques de logging distintos (ninguno / fluent-bit→ES / Loki)</td><td>GLX vs SAT</td><td><strong>Un único stack de logging unificado</strong> en GLX + SAT</td></tr>
+    </tbody>
+  </table>
+
+  <h3>2.6 Aislamiento de namespaces e higiene de ingress</h3>
+  <table>
+    <thead><tr><th>Qué está mal</th><th>Dónde</th><th>Estándar deseado</th></tr></thead>
+    <tbody>
+      <tr><td>Las cargas de trabajo comparten el namespace <code>argocd</code> (sin aislamiento de radio de impacto)</td><td>SAT</td><td>Namespace de aplicación dedicado</td></tr>
+      <tr><td>Error tipográfico de TLD <code>.cam</code></td><td>todos (<code>...tasks-pa-stg.tigo.cam</code>, <code>glx-users-management.tigo.cam</code>)</td><td><code>*.tigo.com.pa</code></td></tr>
+      <tr><td>El ingress de UAT apunta a un host <code>sit</code></td><td>UAT (<code>glx-users-management-sit.tigo.cam</code>)</td><td>Corregir al host de UAT</td></tr>
+      <tr><td>Error tipográfico en nombre de recurso <code>equipments-seravice-ingress</code></td><td>todos</td><td>Renombrar</td></tr>
+    </tbody>
+  </table>
+
+  <h2>3. Incidente — Galaxion PROD (<code>tocpait-glx</code>): descarga de imágenes fallando por confianza TLS del registry</h2>
+  <div class="card crit">
+    <div class="tt"><span class="pill crit">CRÍTICO</span> &nbsp;Incidente en PRODUCCIÓN — causa raíz: confianza de CA / certificado TLS (no es imagen ausente)</div>
+    <p><strong>Entorno:</strong> clúster de Galaxion <strong>PRODUCCIÓN</strong> <code>tocpait-glx</code>, namespace <code>glx</code>, registry <code>glx-registry.tigo.com.pa</code>. Inicio ~2026-06-18 (errores con ~5 días de antigüedad al 2026-06-23). <strong>14 pods</strong> afectados.</p>
+    <p><strong>Causa raíz (confirmada vía <code>kubectl describe</code>):</strong> los nodos no pueden verificar el certificado TLS del registry de producción —<br>
+    <code>tls: failed to verify certificate: x509: certificate signed by unknown authority</code>.<br>
+    Por lo tanto, <strong>toda nueva descarga de imagen desde <code>glx-registry.tigo.com.pa</code> falla</strong>. Esto es un <strong>problema de confianza de CA / certificado del registry — NO son imágenes ausentes.</strong> Las imágenes existen; los nodos simplemente ya no confían en el certificado del registry (lo más probable: el certificado fue renovado/rotado sin distribuir la CA emisora a los nodos / a la configuración de registry de containerd).</p>
+  </div>
+  <p><strong>Evidencia (verbatim, desde el clúster):</strong></p>
+  <div class="flow">Failed to pull image "glx-registry.tigo.com.pa/glx/itsf-team/itsf-dbmdl:1.1.0-SNAPSHOT":
+  Head "https://glx-registry.tigo.com.pa/v2/glx/itsf-team/itsf-dbmdl/manifests/1.1.0-SNAPSHOT":
+  tls: failed to verify certificate: x509: certificate signed by unknown authority
+
+Failed to pull image "glx-registry.tigo.com.pa/galaxion-docker/core/backend/collections-service:8.1.2":
+  ... tls: failed to verify certificate: x509: certificate signed by unknown authority</div>
+  <p><strong>Mecanismo:</strong> los pods ya en ejecución siguen sirviendo porque su imagen está <strong>en caché en el nodo</strong>; solo los <strong>nuevos</strong> pods necesitan descargar. Así, la ola golpea a (a) los helpers de migración de BD de un solo uso <code>*-dbmdl</code> y (b) los nuevos ReplicaSets — mientras el Deployment todavía muestra el RS <strong>antiguo</strong> en <code>1/1</code>, enmascarando un rollout que silenciosamente nunca se completa. Nótese que <code>account-receivable-facade</code> (6.4.0) y <code>payments-ui</code> (1.5.3) fallan con el <strong>mismo tag</strong> que ya está corriendo — confirmando que es la ruta de descarga/TLS, no la versión de la imagen.</p>
+  <p><strong>Afectados (14):</strong></p>
+  <table>
+    <thead><tr><th>Pod</th><th>Imagen</th><th>Estado / error</th></tr></thead>
+    <tbody>
+      <tr><td><code>itsf-dbmdl-*</code></td><td><code>…/glx/itsf-team/itsf-dbmdl:1.1.0-SNAPSHOT</code></td><td>ImagePullBackOff — <strong>x509 unknown authority</strong></td></tr>
+      <tr><td><code>collections-service-dbmdl-8.1.2-*</code></td><td><code>…/core/backend/collections-service:8.1.2</code></td><td>ImagePullBackOff — <strong>x509 unknown authority</strong></td></tr>
+      <tr><td><code>account-receivable-facade-*</code> (RS nuevo)</td><td><code>…/core/backend/account-receivable-facade:6.4.0</code></td><td>ImagePullBackOff (RS antiguo 6.4.0 sigue 1/1)</td></tr>
+      <tr><td><code>payments-ui-*</code> (RS nuevo)</td><td><code>…/core/frontend/payments-ui:1.5.3</code></td><td>ErrImagePull (RS antiguo sigue 1/1)</td></tr>
+      <tr><td><code>cdr-usage-consumption-service-*</code></td><td><code>…/eirie/backend/cdr-usage-consumption-service:2.0.4</code></td><td>ImagePullBackOff, 138 reinicios</td></tr>
+      <tr><td><code>sms-sender-service-*</code> (RS nuevo)</td><td><code>…/core/backend/sms-sender-service</code></td><td>ImagePullBackOff (RS antiguo sigue 1/1)</td></tr>
+      <tr><td>+ 8 helpers <code>*-dbmdl</code> (add-ons, addresses, appointments, customer-history, discounts, order-status, otp-verification, security-questions)</td><td>varios <code>…:&lt;versión&gt;</code></td><td>ImagePullBackOff — x509</td></tr>
+    </tbody>
+  </table>
+  <p>Todos los fallos son contra el <strong>mismo host de registry</strong> <code>glx-registry.tigo.com.pa</code> con el <strong>mismo error x509</strong>.</p>
+  <p><strong>Acción:</strong> (1) <strong>restaurar la confianza de la CA de <code>glx-registry.tigo.com.pa</code> en los nodos</strong> — agregar la CA del registry a RKE2/containerd (<code>/etc/rancher/rke2/registries.yaml</code>) o al almacén de confianza del SO, o reemitir el certificado del registry con una cadena en la que los nodos ya confíen; (2) verificar que las descargas se recuperen (los nuevos pods se programan); (3) <strong>alertar sobre <code>ImagePullBackOff</code></strong> para que un cambio de certificado/registry no pueda volver a congelar silenciosamente los rollouts de producción durante días.</p>
+
+  <h2>4. Mapeo por aplicación — GLX (apps bajo nuestra responsabilidad)</h2>
+  <p>Constante hoy (todos los entornos GLX): réplica = 1, sin HPA (estado objetivo en §2.1). SIT añade un sidecar istio-proxy (2/2).</p>
+
+  <h3>4.1 Presencia y tags de imagen (SIT × UAT × PROD)</h3>
+  <p>Registry: SIT/UAT = <code>glx-registry-sit.tigo.com.pa</code>, PROD = <code>glx-registry.tigo.com.pa</code>.</p>
+  <table>
+    <thead><tr><th>App</th><th class="c">SIT</th><th class="c">UAT</th><th class="c">PROD</th><th>Nota</th></tr></thead>
+    <tbody>
+      <tr><td>acquisition-prospects-service</td><td class="c">5.1.1</td><td class="c">5.1.1</td><td class="c">4.5.4</td><td></td></tr>
+      <tr><td>adjustments-service</td><td class="c">8.1.0</td><td class="c">8.1.0</td><td class="c">7.3.0</td><td></td></tr>
+      <tr><td>barrings-service</td><td class="c">4.3.2</td><td class="c">4.3.2</td><td class="c">4.3.2</td><td>alineado</td></tr>
+      <tr><td>billing-service</td><td class="c">2.4.0</td><td class="c">2.4.0</td><td class="c">2.2.0</td><td></td></tr>
+      <tr><td>case-management-pa-audit-worker</td><td class="c">release-4.3.0</td><td class="c">release-4.3.0</td><td class="c">release-4.3.0</td><td>⚠️ worker expuesto vía ingress</td></tr>
+      <tr><td>case-management-pa-users-worker</td><td class="c">release-4.0.1</td><td class="c">release-4.0.1</td><td class="c">release-4.0.1</td><td>⚠️ worker expuesto vía ingress</td></tr>
+      <tr><td>collections-service</td><td class="c">8.1.8</td><td class="c">8.1.2</td><td class="c">7.3.3</td><td>promoción atascada en PROD (§3)</td></tr>
+      <tr><td>customer-pa-management</td><td class="c">release-1.0.0</td><td class="c">release-1.0.0</td><td class="c"><strong>1.0.0-SNAPSHOT</strong></td><td>⚠️ SNAPSHOT en producción</td></tr>
+      <tr><td>email-sender-service</td><td class="c">3.4.0</td><td class="c">3.4.0</td><td class="c">3.2.0</td><td></td></tr>
+      <tr><td>geographic-management</td><td class="c">1.0.1-SNAPSHOT</td><td class="c">1.0.1-SNAPSHOT</td><td class="c"><strong>1.0.3</strong></td><td>⚠️ producción adelantada + SNAPSHOT abajo</td></tr>
+      <tr><td>maildev</td><td class="c">ausente</td><td class="c">maildev/maildev</td><td class="c">maildev/maildev</td><td>⚠️ Docker Hub público</td></tr>
+      <tr><td>otp-verification-service</td><td class="c">6.1.0</td><td class="c">6.1.0</td><td class="c">5.3.0</td><td></td></tr>
+      <tr><td>prospect-lead</td><td class="c">2.0.0</td><td class="c">release-1.1.0</td><td class="c">1.1.0</td><td>⚠️ el esquema de tags difiere</td></tr>
+      <tr><td>sms-sender-service</td><td class="c">3.3.0</td><td class="c">3.3.0</td><td class="c">3.3.0</td><td>alineado; RS nuevo atascado (§3)</td></tr>
+      <tr><td>tigo-ar-workflow-connector</td><td class="c">1.0.0</td><td class="c">1.0.0</td><td class="c"><strong>1.0.1</strong></td><td>⚠️ producción más nueva</td></tr>
+      <tr><td>tigo-collection-management-workflow-connector</td><td class="c">ausente</td><td class="c">1.0.0-SNAPSHOT</td><td class="c">ausente</td><td>solo en UAT</td></tr>
+      <tr><td>tigo-equipments-workflow-connector</td><td class="c">1.12.0</td><td class="c">1.10.1</td><td class="c">1.8.1</td><td></td></tr>
+      <tr><td>tigo-pa-adjustment-custom-service</td><td class="c">1.0.0-SNAPSHOT</td><td class="c">release-3.1.24</td><td class="c">1.0.0-SNAPSHOT</td><td>⚠️ inconsistente en 3 vías</td></tr>
+      <tr><td>tigo-pa-order-processor</td><td class="c">1.2.0</td><td class="c">1.2.0</td><td class="c">1.1.0</td><td></td></tr>
+      <tr><td>user-management-workflow-connector</td><td class="c">ausente</td><td class="c">2.0.1</td><td class="c">2.0.1</td><td>falta en SIT</td></tr>
+      <tr><td>workflow-engine-facade</td><td class="c">3.1.0</td><td class="c">2.3.0</td><td class="c">2.1.0</td><td></td></tr>
+    </tbody>
+  </table>
+
+  <h3>4.2 Recursos (SIT vs UAT=PROD)</h3>
+  <p>UAT y PROD comparten dimensionamiento idéntico; SIT es el caso atípico (sobre-asigna CPU en core/backend). Se conservan las cifras completas por app de la recolección; el objetivo de estandarización está en §2.2.</p>
+  <table>
+    <thead><tr><th>Perfil</th><th>SIT</th><th>UAT = PROD</th></tr></thead>
+    <tbody>
+      <tr><td>core/backend (ej. acquisition, email-sender, sms-sender)</td><td>500m/1 · 1Gi/2Gi</td><td>150m/1 · 768Mi/2Gi</td></tr>
+      <tr><td>PA/custom (ej. otp, geographic, ar-connector)</td><td>50m/500m · 256Mi/1Gi</td><td>150m/500m · 768Mi/1Gi</td></tr>
+      <tr><td>guaranteed (billing-service, workflow-engine-facade)</td><td>req == limit</td><td>req == limit</td></tr>
+    </tbody>
+  </table>
+
+  <h2>5. SAT bajo el estándar común</h2>
+  <p>SAT dev es un portafolio de aplicaciones diferente (POS/caja <code>cr-*</code>, IUC/SAP <code>iuc-*</code>, admin/ETL NTT <code>adminntt-*</code>, <code>digital-sale-closure</code>), <strong>pero le aplica el mismo estándar</strong>. SAT no es un stack separado: forma parte de la misma convergencia GLX + SAT. Hoy diverge en cada eje:</p>
+  <table>
+    <thead><tr><th>Estándar (§2)</th><th>SAT actual</th><th>Objetivo</th></tr></thead>
+    <tbody>
+      <tr><td>Autoescalado</td><td>45 HPAs decorativos (<code>min=max=1</code>)</td><td>HPA (stateless) + KEDA (los consumidores adminntt/payment); <code>minReplicas ≥ 2</code></td></tr>
+      <tr><td>Recursos</td><td>CPU 100m (~98% ocioso), mem 256/512 + <code>-Xmx512m</code>==limit (OOM en 17 svcs)</td><td>right-size según §2.2</td></tr>
+      <tr><td>Namespace</td><td>cargas de trabajo en el ns <code>argocd</code></td><td>namespace dedicado</td></tr>
+      <tr><td>Registry/imágenes</td><td>imágenes base desde <code>registry-local</code></td><td>mismas reglas de promoción/inmutabilidad</td></tr>
+      <tr><td>Observabilidad</td><td>solo Loki</td><td>stack unificado con GLX</td></tr>
+    </tbody>
+  </table>
+  <p><strong>Elementos específicos de SAT a converger:</strong></p>
+  <ul>
+    <li><strong>Versiones de nodo dispares</strong> — el clúster mezcla versiones de RKE2/K8s entre nodos (<code>v1.28.15</code>, <code>v1.32.8</code>, <code>v1.34.1</code>) con el plano de control en <code>v1.32.8</code>, y <strong>2 nodos acordonados</strong> (<code>SchedulingDisabled</code>: <code>nfs-01</code> en el viejo 1.28.15, <code>wsnode-04</code> en 1.34.1). Los clústeres GLX son uniformes por entorno (1.33.0 / 1.33.5). → alinear versiones de nodo; drenar/reemplazar los rezagados.</li>
+    <li><strong>PVCs NFS vacíos</strong> — los 45 servicios montan un PVC NFS RWX de 10Gi que está <strong>sin usar</strong> (~450 GiB asignados para nada) y una dependencia dura de NFS sin beneficio → quitar del overlay base.</li>
+    <li><strong>Mala configuración de split-vhost de RabbitMQ</strong> (<code>/</code> vs <code>/sat</code>) deja mensajes NTT de create/close atascados sin consumidor; <strong>DLQ/backlog sin drenador</strong> (3 SMS muertos, 2 emails atascados).</li>
+    <li><strong>Logging no apto para soporte</strong> — DEBUG efectivo a pesar de <code>LOG_LEVEL=INFO</code>, ~100% de ruido de sondas <code>/health</code>, sin correlation IDs, sin JSON.</li>
+    <li>Autenticación duplicada (un servicio de auth por dominio).</li>
+  </ul>
+  <blockquote><p>Detalle: <code>sat-dev-analysis.md</code>, <code>sat-observability-logging-report.md</code>, <code>sat-dev-observability-plan.md</code>.</p></blockquote>
+
+  <h2>6. Plan de acción (priorizado)</h2>
+  <ol>
+    <li><span class="pill crit">CRÍTICO</span> <strong>TLS del registry de PROD (§3):</strong> restaurar la CA de <code>glx-registry.tigo.com.pa</code> en los nodos (RKE2/containerd o almacén de confianza del SO) para que los 14 rollouts/migraciones congelados se recuperen; añadir una alerta de <code>ImagePullBackOff</code>.</li>
+    <li><span class="pill high">ALTO</span> <strong>Gobierno de imágenes:</strong> eliminar/replicar <code>maildev</code>; prohibir <code>-SNAPSHOT</code> y referencias públicas en UAT/PROD; forzar la promoción SIT→UAT→PROD.</li>
+    <li><span class="pill high">ALTO</span> <strong>Autoescalado y HA (§2.1):</strong> introducir HPA (stateless) + KEDA (consumidores), <code>minReplicas ≥ 2</code>; reemplazar los HPAs decorativos de SAT.</li>
+    <li><span class="pill med">MED</span> <strong>Decisión de malla (§2.3):</strong> elegir un único estándar de Istio para todos los entornos.</li>
+    <li><span class="pill med">MED</span> <strong>Desacoplamiento de registry (§2.4)</strong> y <strong>paridad de observabilidad (§2.5)</strong> (Prometheus activo en SIT; confirmar logging de PROD; unificar GLX+SAT).</li>
+    <li><span class="pill med">MED</span> <strong>Namespace de SAT</strong> fuera de <code>argocd</code>; quitar los PVCs NFS vacíos; corregir el split-vhost de RabbitMQ + drenador de DLQ.</li>
+    <li><span class="pill low">BAJO</span> <strong>Right-size de CPU en SIT (§2.2)</strong>, corregir errores tipográficos de ingress (§2.6), reconciliar la deriva del conjunto de aplicaciones.</li>
+  </ol>
+
+  <div class="footer">Proyecto Zeus · Galaxion — Informe de Estandarización de Plataforma GLX + SAT · Tigo Panamá · 2026-06-24. Documento confidencial, uso interno. Relacionado: análisis SAT dev, informe de observabilidad y logging de SAT.</div>
+</div>
+</body>
+</html>

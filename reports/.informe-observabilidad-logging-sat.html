@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Evaluación de Logging y Observabilidad — SAT</title>
+<style>
+  :root{
+    --ink:#1a1f29; --muted:#5b6472; --line:#dfe3e9;
+    --brand:#0a3d62; --brand2:#1565a8;
+    --crit:#c0392b; --high:#d97706; --med:#b8860b; --low:#2e7d32;
+    --bg-soft:#f4f6f9;
+  }
+  *{box-sizing:border-box;}
+  html{-webkit-print-color-adjust:exact; print-color-adjust:exact;}
+  body{font-family:"Helvetica Neue",Arial,"Segoe UI",sans-serif;color:var(--ink);font-size:10.5pt;line-height:1.5;margin:0;}
+  h1,h2,h3{color:var(--brand);line-height:1.25;font-weight:700;}
+  h2{font-size:15pt;margin:26px 0 10px;padding-bottom:6px;border-bottom:2px solid var(--brand);page-break-after:avoid;}
+  h3{font-size:11.5pt;margin:18px 0 6px;color:var(--brand2);page-break-after:avoid;}
+  p{margin:7px 0;}
+  a{color:var(--brand2);text-decoration:none;}
+  code{font-family:"SF Mono",Menlo,Consolas,monospace;font-size:9pt;background:var(--bg-soft);padding:1px 5px;border-radius:4px;color:#324;border:1px solid var(--line);}
+  strong{color:#10151d;}
+  hr{border:none;border-top:1px solid var(--line);margin:22px 0;}
+  blockquote{margin:12px 0;padding:10px 16px;background:#fff8e8;border-left:4px solid var(--high);border-radius:0 6px 6px 0;color:#5a4a1a;}
+  blockquote p{margin:0;}
+  .cover{height:100vh;display:flex;flex-direction:column;justify-content:center;padding:0 64px;page-break-after:always;
+    background:linear-gradient(135deg,#0a3d62 0%,#10557f 55%,#1565a8 100%);color:#fff;}
+  .cover .kicker{font-size:11pt;letter-spacing:3px;text-transform:uppercase;opacity:.8;margin-bottom:18px;}
+  .cover h1{color:#fff;font-size:32pt;margin:0 0 6px;line-height:1.1;}
+  .cover .sub{font-size:14pt;opacity:.92;font-weight:300;margin-bottom:40px;}
+  .cover .meta{border-top:1px solid rgba(255,255,255,.25);padding-top:24px;font-size:10.5pt;line-height:1.9;max-width:600px;}
+  .cover .meta b{display:inline-block;width:175px;opacity:.75;font-weight:400;}
+  .cover .tag{display:inline-block;margin-top:34px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.35);padding:6px 14px;border-radius:20px;font-size:9.5pt;}
+  .wrap{padding:0 46px 40px;}
+  table{border-collapse:collapse;width:100%;margin:12px 0;font-size:9.5pt;page-break-inside:avoid;}
+  th,td{border:1px solid var(--line);padding:7px 10px;text-align:left;vertical-align:top;}
+  th{background:var(--brand);color:#fff;font-weight:600;}
+  tbody tr:nth-child(even){background:var(--bg-soft);}
+  td.c,th.c{text-align:center;}
+  .card{border:1px solid var(--line);border-left-width:5px;border-radius:6px;padding:12px 16px;margin:14px 0;page-break-inside:avoid;background:#fff;}
+  .card.crit{border-left-color:var(--crit);} .card.high{border-left-color:var(--high);}
+  .card .tt{font-weight:700;color:var(--brand);margin-bottom:4px;}
+  .pill{display:inline-block;font-size:8pt;font-weight:700;color:#fff;padding:2px 8px;border-radius:10px;vertical-align:middle;}
+  .pill.crit{background:var(--crit);} .pill.high{background:var(--high);} .pill.med{background:var(--med);} .pill.low{background:var(--low);} .pill.info{background:var(--brand2);}
+  .lead{font-size:11pt;color:var(--muted);}
+  ol li,ul li{margin:4px 0;}
+  .sev-crit{color:var(--crit);font-weight:700;} .sev-high{color:var(--high);font-weight:700;}
+  .footer{margin-top:30px;padding-top:14px;border-top:1px solid var(--line);font-size:8.5pt;color:var(--muted);font-style:italic;}
+  .flow{background:var(--bg-soft);border:1px solid var(--line);border-radius:6px;padding:12px 16px;margin:12px 0;
+        font-family:"SF Mono",Menlo,Consolas,monospace;font-size:9pt;line-height:1.7;color:#324;white-space:pre;}
+  h2,h3,.card,table,blockquote{page-break-inside:avoid;}
+</style>
+</head>
+<body>
+<section class="cover">
+  <div class="kicker">Análisis de Observabilidad · Confidencial</div>
+  <h1>Evaluación de Logging y Observabilidad de Aplicaciones</h1>
+  <div class="sub">Clúster <code style="background:rgba(255,255,255,.18);color:#fff;border-color:rgba(255,255,255,.3)">SAT</code> — comenzando por <code style="background:rgba(255,255,255,.18);color:#fff;border-color:rgba(255,255,255,.3)">dev</code>, con clúster de referencia <code style="background:rgba(255,255,255,.18);color:#fff;border-color:rgba(255,255,255,.3)">GLX UAT</code></div>
+  <div class="meta">
+    <div><b>Proyecto</b> Tigo Panamá — Zeus</div>
+    <div><b>Entorno</b> SAT dev (referencia: GLX UAT)</div>
+    <div><b>Fecha del análisis</b> 23 de junio de 2026</div>
+    <div><b>Estado</b> Evaluación / propuesta — nada aplicado en ningún clúster</div>
+    <div><b>Identificación</b> lng = Longinus · pa = Panamá</div>
+  </div>
+  <span class="tag">Logs de aplicación primero · Service mesh y Kibana en fases posteriores</span>
+</section>
+<div class="wrap">
+
+<h2>1. Resumen ejecutivo</h2>
+<p class="lead">El logging de SAT se recolecta correctamente, pero no es de calidad para soporte: texto plano, nivel DEBUG efectivo y dominado por ruido de sondas. La buena noticia es que el comportamiento de logging está centralizado en las imágenes base compartidas, por lo que puede estandarizarse en una sola capa, sin tocar el código de ninguna aplicación.</p>
+
+<table>
+  <thead><tr><th style="width:38%">Lo que más importa</th><th>Conclusión</th></tr></thead>
+  <tbody>
+    <tr><td>Service mesh</td><td>Ni SAT ni GLX tienen <strong>Istio</strong> ni <strong>Kiali</strong>. Un mesh en SAT es una instalación <strong>greenfield</strong>, no "copiar GLX".</td></tr>
+    <tr><td>Aislamiento de clústeres</td><td>SAT y GLX están <strong>totalmente aislados</strong> (sin ruta de red). El ELK externo de GLX <strong>no</strong> puede reutilizarse: SAT necesita su <strong>propio</strong> backend de logs.</td></tr>
+    <tr><td>Formato de logs</td><td><strong>Todos los logs son texto plano — cero JSON en ningún lado.</strong> La recolección funciona (SAT: Promtail→Loki; GLX: fluent-bit→ELK externo), pero los logs <strong>no son de calidad para soporte</strong>: DEBUG efectivo, dominados por ruido de sondas, sin estructura consistente.</td></tr>
+    <tr><td>Hallazgo central</td><td>El comportamiento de logging está <strong>centralizado en las imágenes base compartidas</strong> (<code>tigo-spring-base</code>, <code>tigo-python-base</code>, <code>tigo-php-base</code>). Se puede estandarizar <strong>en la capa de imagen base</strong> — un solo cambio, heredado por todas las apps al reconstruir — <strong>sin editar el código fuente de ninguna aplicación</strong>. La base Spring (<code>sit-1.1.0</code>) <strong>ya implementa un <code>CorrelationIdFilter</code></strong> (genera/propaga un correlation_id).</td></tr>
+    <tr><td>Restricción respetada</td><td><strong>No se cambia código de aplicación.</strong> Dos vías complementarias y libres de código (L1 y L2).</td></tr>
+    <tr><td>Decisión</td><td>Backend de logs de SAT = <strong>Elastic + Kibana propios, en el clúster vía el operador ECK</strong>. Logs y el plan de Istio/Kiali corren <strong>en paralelo</strong>, logs primero.</td></tr>
+  </tbody>
+</table>
+
+<div class="card">
+  <div class="tt">Dos vías complementarias, ambas sin cambios de código</div>
+  <p><span class="pill info">L1 — PIPELINE</span> &nbsp;<strong>Sin reconstrucción.</strong> Normalizar en captura en <strong>fluent-bit</strong>: parsers por formato, unión de stack traces multilínea, descarte de ruido de sondas, índice por namespace.</p>
+  <p><span class="pill info">L2 — IMAGEN BASE</span> &nbsp;<strong>Reconstrucción, sin cambiar código fuente.</strong> Actualizar las imágenes <code>tigo-*-base</code> para emitir <strong>JSON</strong>, usar <strong>INFO</strong> por defecto, excluir <code>/health</code> de los logs y asegurar el filtro de correlación en todas. Las apps lo heredan en su próximo build de CI.</p>
+</div>
+
+<h2>2. Método</h2>
+<p>Recolección de <strong>solo lectura</strong> de ambos clústeres a través del bastión (kubeconfig de rke2 en <code>/etc/rancher/rke2/rke2.yaml</code>). Se capturó: inventario de clúster/namespace/workload, presencia de mesh y CRDs, los stacks de logging, la configuración de fluent-bit de GLX, y un <strong>relevamiento de formato de log por aplicación</strong> en SAT dev (20 apps representativas en Java/Spring, Python, PHP, nginx y consumidores). <strong>No se aplicó ningún cambio.</strong></p>
+
+<h2>3. Estado actual — SAT dev</h2>
+<h3>3.1 Workloads</h3>
+<ul>
+  <li>~30+ apps de negocio en el namespace <code>argocd</code> (antipatrón: los workloads comparten el namespace de ArgoCD + RabbitMQ — sin aislamiento de radio de impacto).</li>
+  <li>Nomenclatura: Deployment <code>…-v1</code>, Service <code>…-v1-services</code>, contenedor <code>app-container-…-v1</code>. <strong>Un contenedor por pod, sin sidecars.</strong></li>
+</ul>
+<h3>3.2 Service mesh</h3>
+<p><strong>Ninguno.</strong> Sin <code>istio-system</code>, sin CRDs <code>istio.io</code>, sin namespaces con <code>istio-injection</code>, sin Kiali, sin sidecars <code>istio-proxy</code>.</p>
+<h3>3.3 Stack de logging</h3>
+<ul>
+  <li>Namespace <code>observability</code>: <strong>Loki + Grafana + Promtail</strong> (DaemonSet, los 13 nodos). Promtail ya recolecta <strong>todo el stdout de los pods → Loki</strong>. <strong>La recolección no es el problema; la calidad sí.</strong></li>
+  <li><strong>Sin Elasticsearch / Kibana en ningún lugar de SAT.</strong></li>
+</ul>
+
+<h2>4. Estado actual — GLX UAT (referencia)</h2>
+<ul>
+  <li><strong>Service mesh: ninguno</strong> (igual que SAT). Si existe un mesh, sería en GLX <strong>prod</strong> — por confirmar.</li>
+  <li><strong>Logging — el patrón reutilizable:</strong> namespace <code>logging</code> con un <strong>DaemonSet de fluent-bit</strong> (13 nodos, imagen <code>registry-local.tigo.com.pa/fluent-bit:3.1.4</code>) → <strong>Elasticsearch externo</strong> (secret <code>elasticsearch-credentials</code>). Configuración confirmada:
+    <ul>
+      <li><strong>Input:</strong> <code>tail /var/log/containers/*.log</code>, parser <code>cri</code> (containerd/rke2), DB de offset, <code>Mem_Buf_Limit 10MB</code>.</li>
+      <li><strong>Filter:</strong> <code>kubernetes</code> estándar (metadata de pod/namespace) + <strong>allow-list de namespaces en Lua</strong> — solo se envían <code>cdr-pa</code>, <code>glx</code>, <code>argocd</code>, <code>cattle-system</code>; el resto se descarta.</li>
+      <li><strong>Output:</strong> <code>es</code> → <code>elk-mnt.tigo.com.pa:443</code>, <code>tls On</code> / <code>tls.verify Off</code>, credenciales por env (<code>ES_HTTP_USER</code>/<code>ES_HTTP_PASSWD</code>), <code>Logstash_Format On</code> con prefijo por namespace (<code>DateFormat %Y.%m.%d</code>), <code>Generate_ID On</code>, <code>Replace_Dots On</code>, <code>Retry_Limit False</code>. <strong>Un índice por namespace</strong> <code>fluent-bit-glx-uat-&lt;ns&gt;-YYYY.MM.DD</code>.</li>
+      <li><strong>Parsers definidos:</strong> solo <code>cri</code>, <code>json</code>, <code>docker</code>.</li>
+    </ul>
+  </li>
+</ul>
+<div class="card high">
+  <div class="tt">🔑 GLX NO normaliza los logs de aplicación</div>
+  <p>No hay <strong>parser por aplicación</strong> ni <strong>regla multilínea</strong> — el parser CRI solo separa <code>time/stream/message</code>, por lo que en Kibana el <code>message</code> es la <strong>línea de texto plano cruda</strong>: sin campos <code>level</code>/<code>logger</code>/<code>corr_id</code>, y los stack traces de Java quedan partidos en muchos documentos. GLX nos da un <strong>esqueleto probado, no una solución de normalización</strong>.</p>
+</div>
+<ul>
+  <li>Namespace <code>monitoring</code> = kube-prometheus-stack (métricas).</li>
+  <li><strong>Conclusión:</strong> reutilizar el <strong>esqueleto</strong> de fluent-bit (input CRI, output ES, filtro k8s, allow-list, índice por namespace, la imagen 3.1.4 ya espejada internamente); <strong>cambiar el destino</strong> (SAT → ES propio) y <strong>agregar el parseo/multilínea L1 que GLX no tiene</strong> (§6).</li>
+</ul>
+
+<h2>5. Análisis de formato de logs (relevamiento SAT dev)</h2>
+<p><strong>Cada app emite texto plano a stdout — sin JSON.</strong> Se encontraron cinco formatos distintos, todos determinados por el stack / la imagen base:</p>
+<table>
+  <thead><tr><th style="width:14%">Formato</th><th>Origen y apps</th></tr></thead>
+  <tbody>
+    <tr><td><strong>A</strong> — Spring "Satélite" (logback custom)</td><td>Opcionalmente con campo de correlación en la base más reciente. Apps: <code>cr-*</code>, <code>iuc-*</code>, <code>adminntt-*</code>, <code>billing</code>, <code>tigo-spring-base</code>.</td></tr>
+    <tr><td><strong>B</strong> — Spring Boot consola por defecto</td><td>Apps: <code>payments-*</code> (incl. variante WebFlux con <code>[reqId]</code>), <code>emailqueue-consumer</code>, <code>mainconsumer</code>, <code>tytan-tecrep-consumer</code>.</td></tr>
+    <tr><td><strong>C</strong> — Python / FastAPI (uvicorn)</td><td>Acceso uvicorn + avisos de arranque multilínea (pydantic). Apps: <code>tigo-python-base</code>, <code>ivrprocessapi</code>.</td></tr>
+    <tr><td><strong>D</strong> — PHP base (custom)</td><td>Principalmente pings de <code>/health</code>. Apps: <code>tigo-php-base</code>.</td></tr>
+    <tr><td><strong>E</strong> — nginx access (frontends)</td><td>Apps: <code>cr-app-frontend</code>, <code>adminntt-app-frontend</code>.</td></tr>
+  </tbody>
+</table>
+<p><strong>Subpatrón de logging de negocio (consumidores de notificación):</strong> <code>smsqueue-consumer</code> y <code>mainconsumer</code> usan un logger <code>LogEntry</code> con el formato <code>ApiName | UTI | Timestamp | Comment</code> — el <strong><code>UTI</code> es efectivamente un id de transacción/correlación</strong> ya presente en el cuerpo del mensaje.</p>
+
+<h3>Matriz por aplicación</h3>
+<table>
+  <thead><tr><th>App</th><th>Imagen / base</th><th>Stack</th><th class="c">Formato</th><th>Niveles</th><th>Corr ID</th><th>Contenido / ruido dominante</th></tr></thead>
+  <tbody>
+    <tr><td>cr-service-getpayments-v1</td><td>cash-register</td><td>Spring (satélite)</td><td class="c">A</td><td>DEBUG</td><td>no</td><td>~100% ruido de sonda <code>/health</code> DEBUG</td></tr>
+    <tr><td>cr-service-processpayments-v1</td><td>cash-register</td><td>Spring</td><td class="c">A</td><td>DEBUG</td><td>no</td><td>~100% ruido <code>/health</code> DEBUG</td></tr>
+    <tr><td>iuc-service-processsap-v1</td><td>iuc</td><td>Spring</td><td class="c">A</td><td>INFO</td><td>no</td><td><strong>buenos</strong> logs de negocio (uuid en msg), ops FTP/archivo</td></tr>
+    <tr><td>iuc-app-backend-v1</td><td>iuc</td><td>Spring</td><td class="c">A</td><td>DEBUG</td><td>no</td><td>ruido <code>/health</code> DEBUG</td></tr>
+    <tr><td>adminntt-service-consumer-sms-v1</td><td>admint-ntt</td><td>Spring</td><td class="c">A</td><td>WARN</td><td>no</td><td><strong>HikariCP</strong> "failed to validate connection" spam</td></tr>
+    <tr><td>adminntt-service-consumer-email-v1</td><td>admint-ntt</td><td>Spring</td><td class="c">A</td><td>WARN</td><td>no</td><td><strong>HikariCP</strong> spam (scheduling-1)</td></tr>
+    <tr><td>adminntt-service-notification-consumer-v1</td><td>admint-ntt</td><td>Spring</td><td class="c">A</td><td>DEBUG</td><td>no</td><td>ruido <code>/health</code> DEBUG</td></tr>
+    <tr><td>payments-processpaymentproducer-v1</td><td>integraciones</td><td>Spring</td><td class="c">B</td><td>INFO</td><td>UTI en msg</td><td><strong>Hibernate SQL echo ON</strong> (verboso), logs de publicación RMQ</td></tr>
+    <tr><td>payments-getcustomergeneralinfo-v1</td><td>integraciones</td><td>Spring WebFlux</td><td class="c">B</td><td>DEBUG</td><td>reqId <code>[…]</code></td><td>ruido <code>/health</code> DEBUG</td></tr>
+    <tr><td>billing-v1</td><td>digital</td><td>Spring</td><td class="c">A</td><td>INFO/WARN</td><td>no</td><td><strong>buenos</strong> logs de negocio (marcadores emoji)</td></tr>
+    <tr><td>emailqueue-consumer-v1</td><td>notificationmanager</td><td>Spring</td><td class="c">B</td><td>INFO</td><td>no</td><td>arranque/init Hibernate</td></tr>
+    <tr><td>smsqueue-consumer-v1</td><td>notificationmanager</td><td>Spring + LogEntry</td><td class="c">A</td><td>INFO/ERROR</td><td><strong>UTI</strong> (<code>NO_CORR_ID</code>)</td><td>SMPP, stack traces</td></tr>
+    <tr><td>mainconsumer-v1</td><td>notificationmanager</td><td>Spring + LogEntry</td><td class="c">B</td><td>INFO/WARN/ERROR</td><td><strong>UTI</strong></td><td>flujo de negocio, stack traces</td></tr>
+    <tr><td>tytan-tecrep-consumer-v1</td><td>tecrep</td><td>Spring</td><td class="c">B</td><td>INFO/ERROR</td><td>no</td><td><strong>stack traces</strong> (requiere unión multilínea)</td></tr>
+    <tr><td>tigo-spring-base-v1</td><td>base sit-1.1.0</td><td>Spring</td><td class="c">A + <strong>Filter</strong></td><td>DEBUG</td><td><strong>SÍ (generado)</strong></td><td>base de referencia; corr_id + version=1.0.0</td></tr>
+    <tr><td>tigo-python-base-v1</td><td>base sit-2.0.0</td><td>Python/uvicorn</td><td class="c">C</td><td>INFO</td><td>no</td><td>acceso uvicorn <code>/health</code></td></tr>
+    <tr><td>tigo-php-base-v1</td><td>base</td><td>PHP</td><td class="c">D</td><td>ninguno</td><td>no</td><td>solo log de ping <code>/health</code></td></tr>
+    <tr><td>cr-app-frontend-v1</td><td>cash-register</td><td>nginx</td><td class="c">E</td><td>n/a</td><td>no</td><td>acceso <code>/health</code> kube-probe</td></tr>
+    <tr><td>adminntt-app-frontend-v1</td><td>admint-ntt</td><td>nginx</td><td class="c">E</td><td>n/a</td><td>no</td><td>acceso <code>/health</code> kube-probe</td></tr>
+    <tr><td>ivrprocessapi-v1</td><td>notificationmanager</td><td>Python/FastAPI</td><td class="c">C</td><td>INFO</td><td>no</td><td>arranque uvicorn + aviso pydantic multilínea</td></tr>
+  </tbody>
+</table>
+
+<h3>Observaciones transversales</h3>
+<ul>
+  <li><strong>DEBUG es el nivel efectivo en varias apps Spring</strong> pese a <code>LOG_LEVEL=INFO</code> — la variable no está conectada a logback (el root logger queda en DEBUG → spam de DispatcherServlet/Mapping de Spring).</li>
+  <li><strong>El ruido de sondas <code>/health</code> es universal</strong> (en todos los stacks), a menudo ~100% del volumen en servicios de consulta.</li>
+  <li><strong>Sin JSON en ningún lado</strong>; los timestamps difieren (Formato A con espacio vs Formato B ISO8601+offset); niveles/campos están en posiciones distintas por formato.</li>
+  <li><strong>La correlación ya existe en dos lugares</strong>: el <code>CorrelationIdFilter</code> de la base Spring nueva, y el <code>UTI</code> de los consumidores. Simplemente <strong>no se adopta de forma consistente</strong> ni <strong>se extrae a un campo</strong>.</li>
+</ul>
+
+<h2>6. Estrategia de normalización (sin cambios de código de aplicación)</h2>
+<p>Dos vías complementarias. L1 es inmediata y libre de reconstrucción; L2 es la corrección duradera y aun así <strong>no toca código fuente</strong> (solo las imágenes base compartidas + una reconstrucción de CI).</p>
+
+<h3>Vía L1 — Normalización en el pipeline (fluent-bit, sin reconstrucción)</h3>
+<p>Se ejecuta enteramente en el colector; las apps no se tocan. <strong>Es la parte que GLX no tiene</strong> — SAT parte del esqueleto de GLX (input CRI + output ES + filtro k8s + allow-list + índice por namespace + la imagen 3.1.4 espejada) y agrega encima:</p>
+<ul>
+  <li><strong>Parsers (uno por formato A–E)</strong> para extraer <code>@timestamp</code>, <code>level</code>, <code>logger</code>, <code>thread</code>, <code>corr_id</code>/<code>UTI</code> y <code>message</code> a campos reales.</li>
+  <li><strong>Multilínea</strong> para unir los stack traces de Java (líneas de continuación: espacios iniciales, <code>at </code>, <code>Caused by</code>, <code>...</code>, <code>~[</code>) en un solo evento — aplica a A y B.</li>
+  <li><strong>Descarte de ruido de sondas</strong> (líneas <code>/health</code>) en todos los formatos → índices mucho más pequeños y legibles.</li>
+  <li><strong>Enriquecimiento</strong> con metadata de k8s (namespace, pod, contenedor, label de app); <strong>ruteo</strong> a ES; <strong>índice por namespace</strong> <code>fluent-bit-sat-dev-&lt;ns&gt;</code> (patrón GLX).</li>
+  <li><strong>Decisión necesaria</strong> sobre el spam WARN de <strong>HikariCP</strong>: es una <em>señal real de fiabilidad</em> (la BD/firewall cierra conexiones inactivas antes de <code>maxLifetime</code>), por lo que la recomendación es <strong>conservarlo pero corregir la causa raíz</strong>, no descartarlo en silencio.</li>
+</ul>
+<blockquote><p><strong>Límites de L1:</strong> puede parsear y descartar, pero no puede reducir lo que la app <em>emite</em> (las apps en DEBUG siguen inundando el nodo) ni inventar campos de negocio. Hace que los logs sean buscables y limpios en Kibana, pero la fuente sigue ruidosa.</p></blockquote>
+
+<h3>Vía L2 — Estandarización de imagen base (reconstrucción, sin cambiar código fuente)</h3>
+<p>Como el logging está centralizado en <code>tigo-spring-base</code> / <code>tigo-python-base</code> / <code>tigo-php-base</code>, un solo cambio por imagen base se propaga a todas las apps derivadas en su próximo build de pipeline:</p>
+<ul>
+  <li><strong>Emitir JSON</strong> (p. ej. <code>JsonEncoder</code> de logback / formateador estructurado) → logging estructurado nativo de punta a punta, sin regex de pipeline.</li>
+  <li><strong>Nivel INFO por defecto</strong> y conectar realmente <code>LOG_LEVEL</code> → elimina la inundación DEBUG en la fuente.</li>
+  <li><strong>Excluir <code>/health</code></strong> del logging de acceso/dispatcher → quita el ruido de sondas en la fuente.</li>
+  <li><strong>Asegurar <code>CorrelationIdFilter</code> en todas las bases</strong> (Spring ya lo tiene; agregar equivalentes a Python/PHP) y <strong>loguear <code>corr_id</code>/<code>UTI</code> como campo</strong>.</li>
+</ul>
+<blockquote><p><strong>Límites de L2:</strong> requiere reconstruir/redesplegar imágenes (CI), y la adopción depende de que las apps actualicen su tag de base (varias aún corren versiones de base antiguas).</p></blockquote>
+
+<h3>Secuenciación recomendada</h3>
+<ol>
+  <li><strong>L1 ahora</strong> (libre de reconstrucción) → los logs llegan suficientemente estructurados y limpios a Kibana de inmediato.</li>
+  <li><strong>L2 en paralelo</strong> sobre las imágenes base → a medida que las apps reconstruyen, pasan a JSON nativo y el regex L1 de ese formato se vuelve redundante (se conserva L1 como respaldo para las apps aún no reconstruidas).</li>
+</ol>
+
+<h2>7. Objetivo propuesto para SAT dev (sin aplicar aún)</h2>
+<blockquote><p><strong>Clúster airgapped (confirmado):</strong> SAT <strong>no tiene salida a Internet</strong> (download.elastic.co / docker.elastic.co / cr.fluentbit.io inalcanzables). Todas las <strong>imágenes y manifiestos de instalación</strong> de ECK / Elasticsearch / Kibana / fluent-bit <strong>deben espejarse al registro interno</strong> (<code>registry-local.tigo.com.pa</code> / <code>git.tigopa.local:5050</code>) y aplicarse <strong>offline</strong> — sin <code>kubectl apply -f https://…</code>. El despliegue es GitOps vía <strong><code>tigo-devops-panama</code></strong> (ArgoCD), el repo único que ya usan todas las apps.</p></blockquote>
+<p><strong>Hechos de entorno confirmados (SAT dev):</strong> StorageClass <code>nfs-storage</code> (default, <code>nfs-provisioner</code>, expansión habilitada) · IngressClass <code>nginx</code> (rke2-ingress-nginx) · <strong>sin Prometheus</strong> · repo GitOps <code>git.tigopa.local/kubernetes-panama/tigo-devops-panama.git</code>.</p>
+
+<div class="flow">SAT dev (airgapped)
+  registro interno  ──►  ECK (Elastic + Kibana, ns logging, PVC nfs-storage)
+                                ▲
+  fluent-bit DaemonSet ─[L1: parsers + multilínea + drop /health]─┘
+        │  índice por namespace  fluent-bit-sat-dev-&lt;ns&gt;
+        └─ (Promtail→Loki en paralelo durante la transición)
+
+  tigo-*-base ─[L2: JSON · INFO · sin /health · correlación]─► apps al reconstruir</div>
+
+<h3>Fase 1 — Captura + normalización</h3>
+<ol>
+  <li><strong>Espejar imágenes</strong> (operador ECK, Elasticsearch, Kibana, fluent-bit) al registro interno; vendorizar el manifiesto de instalación de ECK offline.</li>
+  <li>Desplegar <strong>Elastic + Kibana propios</strong> en el clúster vía <strong>ECK</strong> (ns <code>logging</code>; PVC en <code>nfs-storage</code>; <code>node.store.allow_mmap=false</code>), a través de ArgoCD/<code>tigo-devops-panama</code>.</li>
+  <li>Desplegar <strong>fluent-bit</strong> (patrón GLX) → ES en clúster, con <strong>L1</strong> (parsers/multilínea/drop) e índice por namespace <code>fluent-bit-sat-dev-&lt;ns&gt;</code>.</li>
+  <li>Exponer Kibana vía Ingress (clase <code>nginx</code>).</li>
+  <li>Mantener <strong>Promtail→Loki en paralelo</strong> durante la transición (sin regresión).</li>
+  <li>Iniciar el trabajo <strong>L2</strong> de imagen base en paralelo (JSON, INFO, drop <code>/health</code>, correlación en todas) — punto de control único: las imágenes <code>tigo-*-base</code> + <code>tigo-devops-panama</code>.</li>
+</ol>
+<h3>Fase 2 — Habilitación de Kibana</h3>
+<ul>
+  <li>Data views (<code>fluent-bit-sat-dev-*</code>), dashboards por dominio (cr-*, iuc-*, adminntt-*, payments-*), ciclo de vida/retención de índices, RBAC.</li>
+</ul>
+<h3>Fase 3 — Istio + Kiali (greenfield, por etapas)</h3>
+<ul>
+  <li>Instalar istiod + Kiali <strong>sin</strong> inyectar ningún sidecar (cero impacto en apps).</li>
+  <li>Requiere <strong>Prometheus en SAT</strong> para los grafos de tráfico de Kiali (hoy SAT solo tiene Loki/Grafana — por aprovisionar).</li>
+  <li>Habilitar inyección <strong>gradualmente</strong>, primero apps de bajo riesgo; <strong>excluir</strong> ArgoCD/RabbitMQ; considerar mover las apps de negocio a un namespace dedicado primero.</li>
+  <li>mTLS <code>PERMISSIVE</code> → <code>STRICT</code>. Bonus: el proxy puede estampar IDs de request/trace sin código de app, complementando §6.</li>
+</ul>
+
+<h2>8. Pendientes / datos por confirmar</h2>
+<table>
+  <thead><tr><th class="c" style="width:12%">Estado</th><th>Ítem</th></tr></thead>
+  <tbody>
+    <tr><td class="c"><span class="pill low">HECHO</span></td><td><strong>Config fluent-bit de GLX:</strong> imagen <code>fluent-bit:3.1.4</code> (registro interno); input CRI; output ES a <code>elk-mnt.tigo.com.pa:443</code> (TLS, verify off, creds por env, <code>Logstash_Prefix</code> por namespace, <code>%Y.%m.%d</code>); parsers <code>cri</code>/<code>json</code>/<code>docker</code> solamente. <strong>Sin parser por app, sin multilínea</strong> → confirma que SAT debe agregar L1 encima.</td></tr>
+    <tr><td class="c"><span class="pill low">HECHO</span></td><td><strong>Pre-flight de SAT:</strong> StorageClass <code>nfs-storage</code> (default) · IngressClass <code>nginx</code> (rke2-ingress-nginx) · <strong>SIN salida a Internet → airgapped</strong> (imágenes deben espejarse al registro interno; instalación offline). Repo GitOps de todas las apps = <code>tigo-devops-panama</code>.</td></tr>
+    <tr><td class="c"><span class="pill low">HECHO</span></td><td><strong>Prometheus en SAT:</strong> <strong>ninguno presente</strong> (solo Loki/Grafana). Debe aprovisionarse para Kiali (Fase 3).</td></tr>
+    <tr><td class="c"><span class="pill med">PENDIENTE</span></td><td><strong>Confirmar</strong> si GLX <strong>prod</strong> corre Istio/Kiali. <em>Pendiente — requiere acceso a GLX prod (no disponible desde GLX UAT); consultar al equipo de plataforma.</em></td></tr>
+    <tr><td class="c"><span class="pill med">PARCIAL</span></td><td><strong>Propiedad de imagen base / CI (Vía L2):</strong> todos los workloads — incluidos <code>tigo-spring-base-v1</code>, <code>tigo-python-base-v1</code>, <code>tigo-php-base-v1</code> — se despliegan desde el repo GitOps único <code>git.tigopa.local/kubernetes-panama/tigo-devops-panama.git</code>. El <strong>dueño del pipeline de build de imagen base / la cadencia de release</strong> sigue siendo una confirmación humana con el equipo de plataforma/CI.</td></tr>
+  </tbody>
+</table>
+
+<div class="footer">Tigo Panamá — Zeus · Evaluación de Logging y Observabilidad de Aplicaciones (SAT dev, referencia GLX UAT) · 23 de junio de 2026 · Identificación lng=Longinus·pa=Panamá · Documentos relacionados: sat-dev-analysis, sat-uat-analysis, sat-dev-observability-plan, sat-observability-logging-report. Documento confidencial, uso interno. Estado: evaluación / propuesta — nada aplicado en ningún clúster.</div>
+</div>
+</body>
+</html>

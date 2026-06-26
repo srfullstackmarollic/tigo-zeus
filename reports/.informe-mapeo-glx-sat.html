@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Informe de Mapeo de Plataforma y Aplicaciones — Galaxion (GLX) + SAT</title>
+<style>
+  :root{
+    --ink:#1a1f29; --muted:#5b6472; --line:#dfe3e9;
+    --brand:#0a3d62; --brand2:#1565a8;
+    --crit:#c0392b; --high:#d97706; --med:#b8860b; --low:#2e7d32;
+    --bg-soft:#f4f6f9;
+  }
+  *{box-sizing:border-box;}
+  html{-webkit-print-color-adjust:exact; print-color-adjust:exact;}
+  body{font-family:"Helvetica Neue",Arial,"Segoe UI",sans-serif;color:var(--ink);font-size:10.5pt;line-height:1.5;margin:0;}
+  h1,h2,h3{color:var(--brand);line-height:1.25;font-weight:700;}
+  h2{font-size:15pt;margin:26px 0 10px;padding-bottom:6px;border-bottom:2px solid var(--brand);page-break-after:avoid;}
+  h3{font-size:11.5pt;margin:18px 0 6px;color:var(--brand2);page-break-after:avoid;}
+  p{margin:7px 0;}
+  a{color:var(--brand2);text-decoration:none;}
+  code{font-family:"SF Mono",Menlo,Consolas,monospace;font-size:9pt;background:var(--bg-soft);padding:1px 5px;border-radius:4px;color:#324;border:1px solid var(--line);}
+  strong{color:#10151d;}
+  hr{border:none;border-top:1px solid var(--line);margin:22px 0;}
+  blockquote{margin:12px 0;padding:10px 16px;background:#fff8e8;border-left:4px solid var(--high);border-radius:0 6px 6px 0;color:#5a4a1a;}
+  blockquote p{margin:0;}
+  .cover{height:100vh;display:flex;flex-direction:column;justify-content:center;padding:0 64px;page-break-after:always;
+    background:linear-gradient(135deg,#0a3d62 0%,#10557f 55%,#1565a8 100%);color:#fff;}
+  .cover .kicker{font-size:11pt;letter-spacing:3px;text-transform:uppercase;opacity:.8;margin-bottom:18px;}
+  .cover h1{color:#fff;font-size:30pt;margin:0 0 6px;line-height:1.1;}
+  .cover .sub{font-size:14pt;opacity:.92;font-weight:300;margin-bottom:40px;}
+  .cover .meta{border-top:1px solid rgba(255,255,255,.25);padding-top:24px;font-size:10.5pt;line-height:1.9;max-width:640px;}
+  .cover .meta b{display:inline-block;width:185px;opacity:.75;font-weight:400;}
+  .cover .tag{display:inline-block;margin-top:34px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.35);padding:6px 14px;border-radius:20px;font-size:9.5pt;}
+  .wrap{padding:0 46px 40px;}
+  table{border-collapse:collapse;width:100%;margin:12px 0;font-size:9pt;page-break-inside:avoid;}
+  th,td{border:1px solid var(--line);padding:6px 9px;text-align:left;vertical-align:top;}
+  th{background:var(--brand);color:#fff;font-weight:600;}
+  tbody tr:nth-child(even){background:var(--bg-soft);}
+  td.c,th.c{text-align:center;}
+  .card{border:1px solid var(--line);border-left-width:5px;border-radius:6px;padding:12px 16px;margin:14px 0;page-break-inside:avoid;background:#fff;}
+  .card.crit{border-left-color:var(--crit);} .card.high{border-left-color:var(--high);}
+  .card.low{border-left-color:var(--low);} .card.info{border-left-color:var(--brand2);}
+  .card .tt{font-weight:700;color:var(--brand);margin-bottom:4px;}
+  .pill{display:inline-block;font-size:8pt;font-weight:700;color:#fff;padding:2px 8px;border-radius:10px;vertical-align:middle;}
+  .pill.crit{background:var(--crit);} .pill.high{background:var(--high);} .pill.med{background:var(--med);} .pill.low{background:var(--low);} .pill.info{background:var(--brand2);}
+  .lead{font-size:11pt;color:var(--muted);}
+  ol li,ul li{margin:4px 0;}
+  .sev-crit{color:var(--crit);font-weight:700;} .sev-high{color:var(--high);font-weight:700;}
+  .footer{margin-top:30px;padding-top:14px;border-top:1px solid var(--line);font-size:8.5pt;color:var(--muted);font-style:italic;}
+  .flow{background:var(--bg-soft);border:1px solid var(--line);border-radius:6px;padding:12px 16px;margin:12px 0;
+        font-family:"SF Mono",Menlo,Consolas,monospace;font-size:9pt;line-height:1.7;color:#324;white-space:pre;}
+  h2,h3,.card,table,blockquote{page-break-inside:avoid;}
+</style>
+</head>
+<body>
+<section class="cover">
+  <div class="kicker">Informe Técnico · Confidencial</div>
+  <h1>Mapeo de Plataforma y Aplicaciones</h1>
+  <div class="sub">Galaxion (GLX) — SIT · UAT · Master/PROD &nbsp;+&nbsp; SAT dev <code style="background:rgba(255,255,255,.18);color:#fff;border-color:rgba(255,255,255,.3)">proyecto Zeus</code></div>
+  <div class="meta">
+    <div><b>Entorno</b> GLX <code style="background:rgba(255,255,255,.18);color:#fff;border-color:rgba(255,255,255,.3)">tocpait-glx-sit / -uat / tocpait-glx</code> · SAT <code style="background:rgba(255,255,255,.18);color:#fff;border-color:rgba(255,255,255,.3)">tocpait-sat-dev</code></div>
+    <div><b>Identificación</b> pa = Panamá</div>
+    <div><b>Recolección</b> 2026-06-23 (GLX) / 2026-06-22 (SAT dev) — solo lectura</div>
+    <div><b>Acceso</b> nodos master bastión, kubeconfig RKE2</div>
+    <div><b>Fecha del informe</b> 2026-06-23</div>
+    <div><b>Alcance</b> GLX a nivel de aplicación y plataforma; SAT dev solo plataforma</div>
+  </div>
+  <span class="tag">Mapeo · Inventario · Topología Istio + Observabilidad · Riesgos</span>
+</section>
+<div class="wrap">
+
+<h2>Resumen ejecutivo</h2>
+<p class="lead">Este informe mapea <strong>qué se ejecuta y cómo está configurado</strong> (deployments, recursos, imágenes, HPA, ingress) y la topología de <strong>Istio + observabilidad</strong> en los entornos de Galaxion (GLX), con SAT dev comparado a nivel de plataforma. Las tablas por aplicación (§6) son específicas de GLX; SAT ejecuta un conjunto de aplicaciones distinto (<code>cr-*</code> / <code>iuc-*</code> / <code>adminntt-*</code>), resumido en §9.</p>
+
+<table>
+  <thead><tr><th style="width:34%">Lo que más importa</th><th>Detalle</th><th class="c" style="width:14%">Severidad</th></tr></thead>
+  <tbody>
+    <tr><td>Incidente de pull de imágenes en PROD</td><td>Múltiples pods de Master en <code>ImagePullBackOff</code> (~2026-06-19); rollouts atascados de servicios productivos.</td><td class="c"><span class="pill crit">CRÍTICO</span></td></tr>
+    <tr><td><code>maildev</code> desde Docker Hub público en PROD</td><td>Único workload que evita el registry corporativo; riesgo de cadena de suministro / disponibilidad.</td><td class="c"><span class="pill high">ALTO</span></td></tr>
+    <tr><td>Imágenes SNAPSHOT en PROD</td><td><code>customer-pa-management</code> y <code>tigo-pa-adjustment-custom-service</code> en <code>1.0.0-SNAPSHOT</code>; anomalías de flujo de versiones.</td><td class="c"><span class="pill high">ALTO</span></td></tr>
+    <tr><td>Sin resiliencia en ningún entorno</td><td>1 réplica + sin HPA para cada aplicación, en los tres entornos GLX (y SAT con HPAs decorativos).</td><td class="c"><span class="pill high">ALTO</span></td></tr>
+    <tr><td>Plataformas asimétricas</td><td>Istio solo en SIT (sin uso); Prometheus solo en UAT/Master; logging distinto por entorno; sin Kiali en ninguno.</td><td class="c"><span class="pill med">MED</span></td></tr>
+  </tbody>
+</table>
+
+<h2>0. Hallazgos principales</h2>
+
+<div class="card crit">
+  <div class="tt"><span class="pill crit">CRÍTICO</span> &nbsp;1. Incidente de pull de imágenes en PROD (~4 días)</div>
+  <p>Muchos pods de Master están en <code>ImagePullBackOff</code> (3d23h): helpers de migración de BD (<code>*-dbmdl</code>), <code>cdr-usage-consumption-service</code>, <code>itsf-dbmdl</code> (61.912 reinicios), y <strong>rollouts atascados</strong> de <code>account-receivable-facade</code>, <code>payments-ui</code> y <code>sms-sender-service</code> (el ReplicaSet antiguo sigue sirviendo 1/1, el nuevo no puede hacer pull). Indica imágenes referenciadas pero ausentes en el registry de producción, o una caída del registry alrededor del <strong>2026-06-19</strong>.</p>
+</div>
+
+<div class="card high">
+  <div class="tt"><span class="pill high">ALTO</span> &nbsp;2. Plataformas asimétricas</div>
+  <p>GLX SIT ejecuta Istio (sidecar en cada pod) pero con cero configuración de mesh y Prometheus apagado; GLX UAT y Master <strong>no ejecutan Istio</strong> pero tienen un stack de Prometheus activo. SAT dev es un stack separado (NTT/satélite) en el namespace compartido <code>argocd</code> con logging Loki. Ninguno de los cuatro tiene Kiali; ninguno tiene autoescalado funcional a nivel de aplicación (GLX: sin HPA; SAT: 45 HPAs decorativos fijados en 1); cada aplicación corre con una sola réplica.</p>
+</div>
+
+<div class="card high">
+  <div class="tt"><span class="pill high">ALTO</span> &nbsp;3. Topología de registry distinta por entorno</div>
+  <p>SIT y UAT hacen pull desde <code>glx-registry-sit.tigo.com.pa</code>; Master hace pull desde <code>glx-registry.tigo.com.pa</code>. <strong><code>maildev</code> hace pull de <code>maildev/maildev</code> desde Docker Hub público en UAT y PROD</strong> (riesgo de cadena de suministro / disponibilidad en producción).</p>
+</div>
+
+<div class="card high">
+  <div class="tt"><span class="pill high">ALTO</span> &nbsp;4. Sin resiliencia en ningún lugar</div>
+  <p>1 réplica + sin HPA para cada aplicación, en los tres entornos. Cada aplicación es un punto único de falla.</p>
+</div>
+
+<h2>1. Comparación de plataforma</h2>
+<table>
+  <thead><tr><th>Dimensión</th><th>GLX SIT</th><th>GLX UAT</th><th>GLX Master/PROD</th><th>SAT dev</th></tr></thead>
+  <tbody>
+    <tr><td>Cluster</td><td><code>tocpait-glx-sit</code></td><td><code>tocpait-glx-uat</code></td><td><code>tocpait-glx</code></td><td><code>tocpait-sat-dev</code></td></tr>
+    <tr><td>Distro K8s</td><td>RKE2 v1.33.0+rke2r1</td><td>RKE2 (Rancher)</td><td>RKE2 <strong>v1.33.5+rke2r1</strong></td><td>RKE2</td></tr>
+    <tr><td>Topología</td><td>3 mstr + 6 wrk + 2 spark</td><td>(4 nodos)</td><td>3 mstr + <strong>22 wrk (z1/z2)</strong> + 2 spark</td><td>cluster dev</td></tr>
+    <tr><td>Namespace de apps</td><td><code>glx</code> (~78 deploys)</td><td><code>glx</code> (~77)</td><td><code>glx</code> (~77)</td><td><strong><code>argocd</code></strong> (compartido con ArgoCD — anti-patrón), <strong>45 deploys</strong></td></tr>
+    <tr><td>Portafolio de apps</td><td>Galaxion</td><td>Galaxion</td><td>Galaxion</td><td><strong>NTT/satélite</strong> (cr-*/iuc-*/adminntt-*) — distinto</td></tr>
+    <tr><td><strong>Istio</strong></td><td>Instalado (pilot 1.26.1), sidecar <strong>2/2</strong>, <strong>sin CRs de mesh</strong></td><td><strong>No instalado</strong> (1/1)</td><td><strong>No instalado</strong> (1/1)</td><td><strong>No instalado</strong> (1 contenedor)</td></tr>
+    <tr><td><strong>Kiali</strong></td><td>Ausente</td><td>Ausente</td><td>Ausente</td><td>Ausente</td></tr>
+    <tr><td>mTLS</td><td>Permissive (sin uso)</td><td>n/a</td><td>n/a</td><td>n/a</td></tr>
+    <tr><td><strong>HPA</strong></td><td>solo <code>istiod</code></td><td><strong>ninguno</strong></td><td><strong>ninguno</strong></td><td><strong>45 HPAs, todos <code>min=max=1</code></strong> (decorativos)</td></tr>
+    <tr><td>Réplicas de app</td><td>1 (fijo)</td><td>1 (fijo)</td><td>1 (fijo)</td><td>1 (canaries 0/0)</td></tr>
+    <tr><td>metrics-server</td><td>1/1</td><td>1/1</td><td>1/1</td><td>presente (HPA con targets)</td></tr>
+    <tr><td><strong>Prometheus/Grafana</strong></td><td><strong>Deshabilitado (0/0)</strong></td><td><strong>Activo</strong> (kube-prometheus-stack)</td><td><strong>Activo</strong> (kube-prometheus-stack)</td><td>sin Prometheus; Grafana (para Loki)</td></tr>
+    <tr><td>Stack de logging</td><td>ninguno observado</td><td>ns <code>logging</code> (fluent-bit)</td><td><strong>sin ns <code>logging</code> observado</strong></td><td><strong>Loki + Promtail + Grafana</strong></td></tr>
+    <tr><td><strong>Registry</strong></td><td><code>glx-registry-sit.tigo.com.pa</code></td><td><code>glx-registry-sit.tigo.com.pa</code> (compartido con SIT)</td><td><code>glx-registry.tigo.com.pa</code> (propio)</td><td><code>registry-local.tigo.com.pa</code> (imágenes base)</td></tr>
+    <tr><td>Ingress</td><td>nginx, <code>glx-&lt;app&gt;-sit.tigo.com.pa</code>, LB <code>10.30.15.x</code></td><td>nginx, <code>glx-&lt;app&gt;-uat.tigo.com.pa</code>, LB <code>10.30.19.x</code></td><td>nginx, <code>glx-&lt;app&gt;.tigo.com.pa</code>, LB <code>10.30.14.x</code></td><td>nginx, <strong>host único</strong> <code>k8s-dev-sat.tigo.com.pa</code> (basado en path)</td></tr>
+  </tbody>
+</table>
+
+<h2>2. Service mesh — Istio</h2>
+<ul>
+  <li><strong>SIT:</strong> <code>istiod</code> 1/1 (<code>docker.io/istio/pilot:1.26.1</code>), <code>istio-cni-node</code> en todos los nodos, <code>glx</code> etiquetado <code>istio-injection=enabled</code>, cada pod 2/2 — <strong>pero cero CRs de mesh</strong> (sin Gateway/VS/DR/Sidecar/PeerAuth), config de mesh por defecto, mTLS PERMISSIVE, sin ingress gateway, <strong>Kiali ausente</strong>. → sobrecarga sin valor funcional.</li>
+  <li><strong>UAT y Master:</strong> el namespace <code>istio-system</code> no existe; Istio <strong>no instalado</strong>, pods 1/1.</li>
+</ul>
+<p>→ Solo SIT lleva Istio, y allí no hace nada. Decidir: estandarizar (adoptar mTLS STRICT + Kiali + políticas en todos los entornos) o eliminar la inyección sin uso en SIT.</p>
+
+<h2>3. Red / ingress</h2>
+<p>Los tres: ingress nginx, un Ingress por app expuesta, LB multi-VIP. Patrones de host:</p>
+<ul>
+  <li>SIT: <code>glx-&lt;app&gt;-sit.tigo.com.pa</code> (LB <code>10.30.15.x</code>)</li>
+  <li>UAT: <code>glx-&lt;app&gt;-uat.tigo.com.pa</code> (LB <code>10.30.19.x</code>)</li>
+  <li>Master: <code>glx-&lt;app&gt;.tigo.com.pa</code> (LB <code>10.30.14.x</code>, ~26 VIPs)</li>
+</ul>
+<p><strong>Problemas de calidad de datos (persisten en todos los entornos):</strong></p>
+<ul>
+  <li><strong>TLD incorrecto <code>.cam</code></strong>: <code>glx-case-management-tasks-pa-stg.tigo.cam</code> (ns <code>galaxion</code>, todos los entornos); <code>glx-users-management.tigo.cam</code> (Master), <code>glx-users-management-sit.tigo.cam</code> (UAT — además entorno incorrecto), <code>glx-users-management-sit.tigo.cam</code> (SIT).</li>
+  <li>Error tipográfico en nombre de recurso <code>equipments-seravice-ingress</code> (todos los entornos).</li>
+  <li>El ingress de <code>maildev</code> reutiliza <code>glx-crm[-env].tigo.com.pa</code> (host compartido) en UAT y Master.</li>
+</ul>
+
+<h2>4. Autoescalado y resiliencia</h2>
+<p>Postura idéntica en todos lados: <strong>cada aplicación = 1 réplica, sin HPA.</strong> Solo el <code>istiod</code> de SIT tiene un HPA (1–5). metrics-server está presente en los tres (por lo que un HPA por CPU/mem es <em>posible</em>, simplemente no se usa). Cada aplicación es un punto único de falla.</p>
+
+<h2>5. Observabilidad</h2>
+<table>
+  <thead><tr><th>Componente</th><th class="c">SIT</th><th class="c">UAT</th><th class="c">Master</th></tr></thead>
+  <tbody>
+    <tr><td>Prometheus</td><td><strong>deshabilitado (0/0)</strong></td><td>activo (sts 1/1)</td><td>activo (sts 1/1)</td></tr>
+    <tr><td>Prometheus operator</td><td>—</td><td>1/1</td><td>1/1</td></tr>
+    <tr><td>kube-state-metrics</td><td>deshabilitado</td><td>1/1</td><td>1/1</td></tr>
+    <tr><td>Alertmanager</td><td>sts 1/1 (huérfano)</td><td>(en el stack)</td><td>(en el stack)</td></tr>
+    <tr><td>Logging</td><td>ninguno observado</td><td>ns <code>logging</code> (fluent-bit)</td><td><strong>ninguno observado</strong></td></tr>
+  </tbody>
+</table>
+<blockquote><p>⚠️ <strong>Master/PROD no muestra namespace <code>logging</code> de fluent-bit</strong> — confirmar a dónde se envían los logs de producción (puede diferir de la ruta fluent-bit→ES externo de UAT).</p></blockquote>
+
+<h2>6. Mapeo de aplicaciones — apps bajo nuestra responsabilidad</h2>
+<p>Constantes: <strong>réplica = 1, sin HPA</strong> en todos los entornos. SIT agrega un sidecar istio-proxy (2/2); UAT/Master no tienen ninguno (1/1).</p>
+
+<h3>6.1 Matriz de presencia</h3>
+<table>
+  <thead><tr><th>App</th><th class="c">SIT</th><th class="c">UAT</th><th class="c">Master</th></tr></thead>
+  <tbody>
+    <tr><td>acquisition-prospects-service</td><td class="c">✅</td><td class="c">✅</td><td class="c">✅</td></tr>
+    <tr><td>adjustments-service</td><td class="c">✅</td><td class="c">✅</td><td class="c">✅</td></tr>
+    <tr><td>barrings-service</td><td class="c">✅</td><td class="c">✅</td><td class="c">✅</td></tr>
+    <tr><td>billing-service</td><td class="c">✅</td><td class="c">✅</td><td class="c">✅</td></tr>
+    <tr><td>case-management-pa-audit-worker</td><td class="c">✅</td><td class="c">✅</td><td class="c">✅</td></tr>
+    <tr><td>case-management-pa-users-worker</td><td class="c">✅</td><td class="c">✅</td><td class="c">✅</td></tr>
+    <tr><td>collections-service</td><td class="c">✅</td><td class="c">✅</td><td class="c">✅</td></tr>
+    <tr><td>customer-pa-management</td><td class="c">✅</td><td class="c">✅</td><td class="c">✅</td></tr>
+    <tr><td>email-sender-service</td><td class="c">✅</td><td class="c">✅</td><td class="c">✅</td></tr>
+    <tr><td>geographic-management</td><td class="c">✅</td><td class="c">✅</td><td class="c">✅</td></tr>
+    <tr><td>mailcatcher → <strong>maildev</strong></td><td class="c">❌</td><td class="c">✅</td><td class="c">✅</td></tr>
+    <tr><td>otp-verification-service</td><td class="c">✅</td><td class="c">✅</td><td class="c">✅</td></tr>
+    <tr><td>prospect-lead</td><td class="c">✅</td><td class="c">✅</td><td class="c">✅</td></tr>
+    <tr><td>sms-sender-service</td><td class="c">✅</td><td class="c">✅</td><td class="c">✅</td></tr>
+    <tr><td>tigo-ar-workflow-connector</td><td class="c">✅</td><td class="c">✅</td><td class="c">✅</td></tr>
+    <tr><td>tigo-collection-management-workflow-connector</td><td class="c">❌</td><td class="c">✅</td><td class="c">❌</td></tr>
+    <tr><td>tigo-equipments-workflow-connector</td><td class="c">✅</td><td class="c">✅</td><td class="c">✅</td></tr>
+    <tr><td>tigo-pa-adjustment-custom-service</td><td class="c">✅</td><td class="c">✅</td><td class="c">✅</td></tr>
+    <tr><td>tigo-pa-order-processor</td><td class="c">✅</td><td class="c">✅</td><td class="c">✅</td></tr>
+    <tr><td>user-management-workflow-connector</td><td class="c">❌</td><td class="c">✅</td><td class="c">✅</td></tr>
+    <tr><td>workflow-engine-facade</td><td class="c">✅</td><td class="c">✅</td><td class="c">✅</td></tr>
+  </tbody>
+</table>
+<p>Notas: la trampa de correo es <code>maildev</code> (no <code>mailcatcher</code>) y está <strong>ausente en SIT</strong>. <code>tigo-collection-management-workflow-connector</code> existe <strong>solo en UAT</strong>. <code>user-management-workflow-connector</code> <strong>falta en SIT</strong>.</p>
+
+<h3>6.2 Recursos (CPU req/lim · Mem req/lim)</h3>
+<blockquote><p><strong>UAT y Master usan dimensionamiento idéntico.</strong> SIT es el caso atípico — sobre-solicita CPU en las apps "core/backend" (500m vs 150m).</p></blockquote>
+<table>
+  <thead><tr><th>App</th><th>SIT</th><th>UAT = Master</th></tr></thead>
+  <tbody>
+    <tr><td>acquisition-prospects-service</td><td>500m/1 · 1Gi/2Gi</td><td>150m/1 · 768Mi/2Gi</td></tr>
+    <tr><td>adjustments-service</td><td>500m/1 · 1Gi/2Gi</td><td>500m/1 · 1Gi/2Gi</td></tr>
+    <tr><td>barrings-service</td><td>500m/1 · 1Gi/2Gi</td><td>600m/1 · 768Mi/2Gi</td></tr>
+    <tr><td>billing-service</td><td>500m/500m · 1Gi/1Gi</td><td>150m/500m · 768Mi/1Gi</td></tr>
+    <tr><td>case-management-pa-audit-worker</td><td>50m/250m · 256Mi/1Gi</td><td>150m/250m · 768Mi/1Gi</td></tr>
+    <tr><td>case-management-pa-users-worker</td><td>50m/250m · 256Mi/1Gi</td><td>150m/250m · 768Mi/1Gi</td></tr>
+    <tr><td>collections-service</td><td>500m/1 · 1Gi/2Gi</td><td>500m/1 · 1Gi/2Gi</td></tr>
+    <tr><td>customer-pa-management</td><td>50m/500m · 512Mi/1Gi</td><td>50m/500m · 512Mi/1Gi</td></tr>
+    <tr><td>email-sender-service</td><td>500m/1 · 1Gi/2Gi</td><td>150m/1 · 768Mi/2Gi</td></tr>
+    <tr><td>geographic-management</td><td>50m/250m · 256Mi/1Gi</td><td>150m/250m · 512Mi/1Gi</td></tr>
+    <tr><td>maildev</td><td>(ausente)</td><td><strong>sin req/limits</strong> (BestEffort)</td></tr>
+    <tr><td>otp-verification-service</td><td>50m/500m · 256Mi/1Gi</td><td>150m/500m · 768Mi/1Gi</td></tr>
+    <tr><td>prospect-lead</td><td>150m/500m · 500Mi/1Gi</td><td>150m/500m · 512Mi/1Gi</td></tr>
+    <tr><td>sms-sender-service</td><td>500m/1 · 1Gi/2Gi</td><td>150m/1 · 768Mi/2Gi</td></tr>
+    <tr><td>tigo-ar-workflow-connector</td><td>50m/500m · 256Mi/1Gi</td><td>150m/500m · 768Mi/1Gi</td></tr>
+    <tr><td>tigo-equipments-workflow-connector</td><td>50m/500m · 256Mi/1Gi</td><td>150m/500m · 768Mi/1Gi</td></tr>
+    <tr><td>tigo-pa-adjustment-custom-service</td><td>6m/400m · 256Mi/768Mi</td><td>6m/400m · 256Mi/768Mi</td></tr>
+    <tr><td>tigo-pa-order-processor</td><td>100m/500m · 512Mi/1Gi</td><td>100m/500m · 512Mi/1Gi</td></tr>
+    <tr><td>workflow-engine-facade</td><td>500m/500m · 1Gi/1Gi</td><td>500m/500m · 768Mi/1Gi</td></tr>
+  </tbody>
+</table>
+
+<h3>6.3 Tags de imagen (SIT × UAT × Master)</h3>
+<p>Prefijo de registry: SIT/UAT = <code>glx-registry-sit.tigo.com.pa</code>, Master = <code>glx-registry.tigo.com.pa</code>.</p>
+<table>
+  <thead><tr><th>App</th><th>SIT</th><th>UAT</th><th>Master/PROD</th></tr></thead>
+  <tbody>
+    <tr><td>acquisition-prospects-service</td><td>5.1.1</td><td>5.1.1</td><td>4.5.4</td></tr>
+    <tr><td>adjustments-service</td><td>8.1.0</td><td>8.1.0</td><td>7.3.0</td></tr>
+    <tr><td>barrings-service</td><td>4.3.2</td><td>4.3.2</td><td>4.3.2</td></tr>
+    <tr><td>billing-service</td><td>2.4.0</td><td>2.4.0</td><td>2.2.0</td></tr>
+    <tr><td>case-management-pa-audit-worker</td><td>release-4.3.0</td><td>release-4.3.0</td><td>release-4.3.0</td></tr>
+    <tr><td>case-management-pa-users-worker</td><td>release-4.0.1</td><td>release-4.0.1</td><td>release-4.0.1</td></tr>
+    <tr><td>collections-service</td><td>8.1.8</td><td>8.1.2</td><td>7.3.3</td></tr>
+    <tr><td>customer-pa-management</td><td>release-1.0.0</td><td>release-1.0.0</td><td><strong>1.0.0-SNAPSHOT</strong> ⚠️</td></tr>
+    <tr><td>email-sender-service</td><td>3.4.0</td><td>3.4.0</td><td>3.2.0</td></tr>
+    <tr><td>geographic-management</td><td>1.0.1-SNAPSHOT</td><td>1.0.1-SNAPSHOT</td><td><strong>1.0.3</strong> (release)</td></tr>
+    <tr><td>maildev</td><td>(ausente)</td><td>maildev/maildev</td><td>maildev/maildev (público)</td></tr>
+    <tr><td>otp-verification-service</td><td>6.1.0</td><td>6.1.0</td><td>5.3.0</td></tr>
+    <tr><td>prospect-lead</td><td>2.0.0</td><td>release-1.1.0</td><td>1.1.0</td></tr>
+    <tr><td>sms-sender-service</td><td>3.3.0</td><td>3.3.0</td><td>3.3.0</td></tr>
+    <tr><td>tigo-ar-workflow-connector</td><td>1.0.0</td><td>1.0.0</td><td><strong>1.0.1</strong> (prod más nuevo ⚠️)</td></tr>
+    <tr><td>tigo-collection-management-workflow-connector</td><td>ausente</td><td>1.0.0-SNAPSHOT</td><td>ausente</td></tr>
+    <tr><td>tigo-equipments-workflow-connector</td><td>1.12.0</td><td>1.10.1</td><td>1.8.1</td></tr>
+    <tr><td>tigo-pa-adjustment-custom-service</td><td>1.0.0-SNAPSHOT</td><td>release-3.1.24</td><td>1.0.0-SNAPSHOT</td></tr>
+    <tr><td>tigo-pa-order-processor</td><td>1.2.0</td><td>1.2.0</td><td>1.1.0</td></tr>
+    <tr><td>user-management-workflow-connector</td><td>ausente</td><td>2.0.1</td><td>2.0.1</td></tr>
+    <tr><td>workflow-engine-facade</td><td>3.1.0</td><td>2.3.0</td><td>2.1.0</td></tr>
+  </tbody>
+</table>
+<p><strong>Observaciones de flujo de versiones:</strong></p>
+<ul>
+  <li>La promoción normal (SIT ≥ UAT ≥ PROD) se cumple en la mayoría: collections (8.1.8→8.1.2→7.3.3), equipments-connector (1.12.0→1.10.1→1.8.1), wfe-facade (3.1.0→2.3.0→2.1.0), acquisition, adjustments, billing, email-sender, otp, order-processor.</li>
+  <li><strong>Anomalías a investigar:</strong>
+    <ul>
+      <li><code>customer-pa-management</code>: PROD ejecuta <code>1.0.0-SNAPSHOT</code> mientras SIT/UAT ejecutan <code>release-1.0.0</code> — <strong>un SNAPSHOT en producción</strong>.</li>
+      <li><code>geographic-management</code>: PROD en <code>1.0.3</code> (release) pero SIT/UAT en <code>1.0.1-SNAPSHOT</code> — entornos inferiores <em>por detrás</em> de prod y en SNAPSHOT.</li>
+      <li><code>tigo-ar-workflow-connector</code>: PROD <code>1.0.1</code> más nuevo que SIT/UAT <code>1.0.0</code>.</li>
+      <li><code>tigo-pa-adjustment-custom-service</code>: SIT y PROD <code>1.0.0-SNAPSHOT</code>, UAT <code>release-3.1.24</code> — inconsistencia a tres bandas.</li>
+      <li><code>prospect-lead</code>: esquema de tags distinto (<code>2.0.0</code> / <code>release-1.1.0</code> / <code>1.1.0</code>).</li>
+    </ul>
+  </li>
+</ul>
+
+<h3>6.4 Componentes de plataforma de nuestra lista</h3>
+<table>
+  <thead><tr><th>Componente</th><th>SIT</th><th>UAT</th><th>Master</th></tr></thead>
+  <tbody>
+    <tr><td><code>spark-operator</code> (ns cdr)</td><td>webhook+controller 1/1</td><td><em>por confirmar</em></td><td><em>por confirmar</em></td></tr>
+    <tr><td><code>istiod</code></td><td>1/1 v1.26.1 (HPA 1–5)</td><td>ausente</td><td>ausente</td></tr>
+    <tr><td><code>prometheus-server</code></td><td>deshabilitado 0/0</td><td>activo</td><td>activo</td></tr>
+    <tr><td><code>prometheus-alertmanager</code></td><td>sts 1/1</td><td>en el stack</td><td>en el stack</td></tr>
+  </tbody>
+</table>
+
+<h2>7. Hallazgos y riesgos clave</h2>
+
+<div class="card crit">
+  <div class="tt"><span class="pill crit">CRÍTICO</span> &nbsp;1. Rollouts atascados / fallos de pull en PROD (~2026-06-19)</div>
+  <p><code>account-receivable-facade</code>, <code>payments-ui</code> y <code>sms-sender-service</code> tienen nuevos ReplicaSets en <code>ImagePullBackOff</code> mientras los antiguos sirven; muchos pods de migración <code>*-dbmdl</code>, <code>cdr-usage-consumption-service</code> (0/1) e <code>itsf-dbmdl</code> (61.912 reinicios) también fallan al hacer pull. Triar el registry / tags de imagen de producción.</p>
+</div>
+
+<div class="card high">
+  <div class="tt"><span class="pill high">ALTO</span> &nbsp;2. <code>maildev</code> desde Docker Hub público en PROD</div>
+  <p><code>maildev/maildev</code> sin tag, el único workload que evita el registry corporativo; eliminar de prod o replicarlo internamente.</p>
+</div>
+
+<div class="card high">
+  <div class="tt"><span class="pill high">ALTO</span> &nbsp;3. Imágenes SNAPSHOT/anómalas en PROD</div>
+  <p><code>customer-pa-management:1.0.0-SNAPSHOT</code>, <code>tigo-pa-adjustment-custom-service:1.0.0-SNAPSHOT</code>; más anomalías de flujo de versiones (geographic-management, tigo-ar-workflow-connector) que sugieren deploys fuera de banda.</p>
+</div>
+
+<div class="card high">
+  <div class="tt"><span class="pill high">ALTO</span> &nbsp;4. Sin resiliencia</div>
+  <p>1 réplica, sin HPA, en todos lados.</p>
+</div>
+
+<div class="card">
+  <div class="tt"><span class="pill med">MED</span> &nbsp;5. Istio solo en SIT y sin uso</div>
+  <p>Sobrecarga de sidecar sin mTLS/CRs/Kiali.</p>
+</div>
+
+<div class="card">
+  <div class="tt"><span class="pill med">MED</span> &nbsp;6. Acoplamiento de registry SIT↔UAT</div>
+  <p>UAT depende del registry de SIT; un incidente del registry de SIT también rompe los pulls de UAT.</p>
+</div>
+
+<div class="card">
+  <div class="tt"><span class="pill med">MED</span> &nbsp;7. Brechas de observabilidad</div>
+  <p>Prometheus apagado en SIT; sin ns <code>logging</code> de fluent-bit observado en PROD (confirmar el envío de logs de producción).</p>
+</div>
+
+<div class="card">
+  <div class="tt"><span class="pill med">MED</span> &nbsp;8. Errores tipográficos de host de ingress</div>
+  <p>TLD <code>.cam</code> en todos los entornos; UAT apunta un ingress de UAT a un host <code>sit</code>.</p>
+</div>
+
+<div class="card">
+  <div class="tt"><span class="pill med">MED</span> &nbsp;9. Workers expuestos vía ingress</div>
+  <p><code>case-management-pa-audit-worker</code>/<code>users-worker</code> tienen HTTP público en todos los entornos; verificar intención.</p>
+</div>
+
+<div class="card low">
+  <div class="tt"><span class="pill low">BAJO</span> &nbsp;10. Sobre-solicitud de CPU en SIT</div>
+  <p>Las apps core/backend solicitan 500m en SIT vs 150m en UAT/PROD; reserva desperdiciada en SIT.</p>
+</div>
+
+<div class="card low">
+  <div class="tt"><span class="pill low">BAJO</span> &nbsp;11. Deriva del conjunto de aplicaciones</div>
+  <p>SIT carece de <code>maildev</code>/<code>user-management-workflow-connector</code>; <code>tigo-collection-management-workflow-connector</code> existe solo en UAT. Los entornos no ejecutan el mismo conjunto de componentes.</p>
+</div>
+
+<h2>8. Pendientes / seguimientos</h2>
+<ul>
+  <li>○ Triar la oleada de <strong>ImagePullBackOff en PROD</strong> (registry/tags) — ítem de gestión de cambios en producción.</li>
+  <li>○ Confirmar la ruta de <strong>logging de PROD</strong> (no se vio ns de fluent-bit).</li>
+  <li>○ Confirmar el estado de <code>spark-operator</code> en UAT y Master.</li>
+  <li>○ Resolver anomalías de versión de imagen (SNAPSHOTs en prod, casos de prod adelantado a entornos inferiores).</li>
+  <li>○ (opcional) recolectar detalle por aplicación de SAT dev (imágenes/recursos/ingress) si se desea una tabla por app.</li>
+</ul>
+
+<h2>9. SAT dev — resumen de plataforma (stack distinto)</h2>
+<p>SAT dev (<code>tocpait-sat-dev</code>) es una <strong>línea de producto separada</strong> de Galaxion — el stack NTT/satélite (POS/cash <code>cr-*</code>, IUC/SAP billing <code>iuc-*</code>, admin/notificaciones/ETL NTT <code>adminntt-*</code>, más <code>digital-sale-closure</code>). Sus aplicaciones <strong>no</strong> se solapan con el portafolio <code>glx</code> de GLX, por lo que se compara solo a nivel de plataforma.</p>
+
+<h3>Topología y plataforma</h3>
+<ul>
+  <li><strong>45 deployments de negocio todos en el namespace <code>argocd</code></strong> (los workloads comparten el ns de ArgoCD — sin aislamiento de blast-radius, anti-patrón).</li>
+  <li>Todos con <strong>réplica única</strong> (1/1); existen deployments canary pero escalados a <strong>0/0</strong> (ociosos).</li>
+  <li>Expuesto mediante <strong>un host de ingress</strong> <code>k8s-dev-sat.tigo.com.pa</code> (basado en path), svc ClusterIP :80.</li>
+  <li>Cada dominio trae su <strong>propio servicio de auth</strong> (<code>cr-service-auth</code>, <code>iuc-service-auth</code>, <code>adminntt-service-auth</code>, <code>eov-service-auth</code>) — auth duplicado.</li>
+  <li>Sin Istio / sin Kiali (un contenedor por pod). Logging vía <strong>Loki + Promtail + Grafana</strong> (sin Kibana, sin Prometheus).</li>
+</ul>
+
+<h3>Autoescalado — decorativo</h3>
+<table>
+  <thead><tr><th>Aspecto</th><th>Observación</th></tr></thead>
+  <tbody>
+    <tr><td>HPAs</td><td><strong>45 HPAs existen pero todos con <code>minReplicas = maxReplicas = 1</code></strong> → no pueden escalar (targets CPU/mem 70%/75% configurados pero inalcanzables como disparadores). Contraste con GLX, que <strong>no tiene HPAs en absoluto</strong>: ambos terminan en réplica única, por medios distintos.</td></tr>
+    <tr><td>CPU</td><td><strong>Masivamente sobre-solicitada</strong>: 45 × 100m = 4,5 cores reservados vs ~76m realmente usados (~98% ocioso).</td></tr>
+    <tr><td>Memoria</td><td><strong>Subdimensionada</strong>: 256Mi request / 512Mi limit, JVM <code>-Xmx512m</code> == límite del contenedor → <strong>cero margen</strong>, riesgo de OOM en <strong>17 servicios Java</strong> (pico ~124% del request). Dirección de right-size: CPU 100m→25–50m, mem request 256Mi→384Mi, limit 512Mi→768Mi.</td></tr>
+    <tr><td>Candidatos reales de escalado</td><td><strong>Dirigidos por eventos (KEDA sobre profundidad de cola RabbitMQ)</strong>, no HPA por CPU: los consumidores <code>adminntt</code> (email/sms/notification/ondemand) y consumidores de payment/mediation.</td></tr>
+  </tbody>
+</table>
+
+<h3>Otros hallazgos de SAT dev (del relevamiento)</h3>
+<div class="card high">
+  <div class="tt"><span class="pill high">ALTO</span> &nbsp;PVCs NFS vacíos</div>
+  <p>los 45 servicios montan un PVC NFS RWX de 10Gi que está <strong>sin uso</strong> (~450 GiB asignados para nada) — y una dependencia dura de NFS sin beneficio.</p>
+</div>
+<div class="card high">
+  <div class="tt"><span class="pill high">ALTO</span> &nbsp;RabbitMQ con misconfiguración de vhost</div>
+  <p>RabbitMQ (3 nodos, en ns <code>argocd</code>) tiene una <strong>misconfiguración split-vhost</strong> (<code>/</code> vs <code>/sat</code>) que deja mensajes NTT de create/close atascados sin consumidor, más un <strong>DLQ/backlog sin drenador</strong> (3 SMS muertos, 2 emails atascados).</p>
+</div>
+<div class="card">
+  <div class="tt"><span class="pill med">MED</span> &nbsp;Logging no apto para soporte</div>
+  <p>DEBUG efectivo pese a <code>LOG_LEVEL=INFO</code>, ~100% de ruido de probes <code>/health</code>, sin correlation IDs, sin JSON, spam de validación de conexiones HikariCP.</p>
+</div>
+<blockquote><p>Detalle: ver <code>sat-dev-analysis.md</code>, <code>sat-observability-logging-report.md</code>, <code>sat-dev-observability-plan.md</code>.</p></blockquote>
+
+<h2>Anexo — runbook de recolección (solo lectura)</h2>
+<p>Nota Master/PROD: <code>/usr/bin/kubectl</code> puede no ser ejecutable para el usuario; usar el binario de RKE2. Corregir el kubeconfig y luego crear el alias:</p>
+<div class="flow">sudo cp /etc/rancher/rke2/rke2.yaml "$HOME/rke2.yaml" &amp;&amp; sudo chown "$USER" "$HOME/rke2.yaml" &amp;&amp; chmod 600 "$HOME/rke2.yaml"
+alias k='/var/lib/rancher/rke2/bin/kubectl --kubeconfig=$HOME/rke2.yaml'</div>
+<table>
+  <thead><tr><th style="width:18%">Objetivo</th><th>Comando</th></tr></thead>
+  <tbody>
+    <tr><td>Cluster</td><td><code>k get nodes</code> ; <code>k get ns --show-labels</code></td></tr>
+    <tr><td>Apps</td><td><code>k -n glx get deploy</code> ; <code>k -n glx get pods</code></td></tr>
+    <tr><td>Istio</td><td><code>k -n istio-system get deploy istiod -o jsonpath='{.spec.template.spec.containers[0].image}'</code> ; <code>k -n glx get gateway,virtualservice,destinationrule,peerauthentication</code></td></tr>
+    <tr><td>Kiali</td><td><code>k get deploy,svc -A | grep -i kiali</code></td></tr>
+    <tr><td>HPA</td><td><code>k get hpa -A</code></td></tr>
+    <tr><td>Monitoring</td><td><code>k -n monitoring get deploy,sts</code></td></tr>
+    <tr><td>Ingress</td><td><code>k get ingress -A</code></td></tr>
+    <tr><td>Recursos</td><td><code>k -n glx get deploy -o 'custom-columns=NAME:.metadata.name,CPUREQ:.spec.template.spec.containers[0].resources.requests.cpu,CPULIM:.spec.template.spec.containers[0].resources.limits.cpu,MEMREQ:.spec.template.spec.containers[0].resources.requests.memory,MEMLIM:.spec.template.spec.containers[0].resources.limits.memory'</code></td></tr>
+    <tr><td>Imágenes</td><td><code>k -n glx get deploy -o 'custom-columns=NAME:.metadata.name,IMAGE:.spec.template.spec.containers[0].image'</code></td></tr>
+  </tbody>
+</table>
+
+<div class="footer">Informe de Mapeo de Plataforma y Aplicaciones — Galaxion (GLX) + SAT · proyecto Zeus · Tigo Panamá · 2026-06-23. Recolección solo lectura. Documentos relacionados: sat-dev-analysis · sat-observability-logging-report · sat-dev-observability-plan · informe-observabilidad-logging-sat. Documento confidencial, uso interno.</div>
+</div>
+</body>
+</html>
