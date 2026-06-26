@@ -1,123 +1,137 @@
-# Runbook de execução — Istio (ambient) + Kiali · SAT dev
+# Runbook operacional — Istio (ambient) + Kiali · SAT dev — **As-Built**
 
-> Operador roda no **bastion Wallix** (kubectl apontando para `tocpait-sat-dev`).
-> Daqui (workstation) NÃO há acesso direto ao cluster — só os arquivos GitOps foram preparados.
-> Repo: `tigo-devops-panama` (branch `main`). Plano: `plan-observabilidad-istio-kiali-sat-dev.md`.
+> Operador roda no **bastion Wallix** (kubectl apontando para `tocpait-sat-dev`). Da workstation
+> NÃO há acesso direto ao cluster.
+> Repo GitOps: `tigo-devops-panama`, **branch `dev`** (o ArgoCD do dev rastreia `dev`).
+> Plano as-built: `plan-observabilidad-istio-kiali-sat-dev.md`.
+> **Status:** Fases 0–4 concluídas; mesh no ar. Fase 3 via **label de namespace** (opção A): ns `argocd`
+> `ambient` (~130 pods), Rabbit/ArgoCD excluídos com `none` **ao vivo**. **Pendente:** firmar o `none` do
+> Rabbit via GitOps (template do StatefulSet) — ver Fase 3.
 
-## O que já está pronto (Fase 1, no repo, NÃO aplicado)
-
-Em `tigo-devops-panama/cluster-resources/istio/`:
+## Estado atual no repo (`cluster-resources/istio/`)
 
 | Arquivo | O que é | Wave |
 |---|---|---|
-| `namespaces.yaml` | ns `istio-system` + `kiali` (rotulados) | — |
-| `netpol-kiali.yaml` | NetworkPolicy do ns `kiali` | — |
-| `app-istio-base.yaml` | Application Helm `base` (CRDs) | 1 |
-| `app-istiod.yaml` | Application Helm `istiod` **profile=ambient** | 2 |
-| `app-istio-cni.yaml` | Application Helm `cni` (ambient) | 3 |
-| `app-ztunnel.yaml` | Application Helm `ztunnel` (DaemonSet L4) | 4 |
-| `app-istio-ingressgateway.yaml` | Application Helm `gateway` | 5 |
-| `app-kiali.yaml` | Application Helm `kiali-server` (ns kiali, podAffinity ao argocd-server) | 6 |
-| `app-kiali-gateway.yaml` + `kiali-gateway/` | Gateway+VirtualService expondo Kiali | 7 |
-| `prometheus/app-prometheus.yaml` | Prometheus dedicado (**comentado**; só se não houver um) | 2 |
+| `namespaces.yaml` | ns `istio-system` + `kiali` | — |
+| `charts/` | charts Helm **vendorizados** (base, istiod, cni, ztunnel, kiali-server, prometheus) | — |
+| `app-istio-base.yaml` | Application `base` (CRDs) | 1 |
+| `app-istiod.yaml` | Application `istiod` **profile=ambient** | 2 |
+| `app-istio-cni.yaml` | Application `cni` (paths Canal: `/etc/cni/net.d`, `/opt/cni/bin`) | 3 |
+| `app-ztunnel.yaml` | Application `ztunnel` (DaemonSet L4; exclui `nfs-01`) | 4 |
+| `app-kiali.yaml` | Application `kiali-server` (ns kiali, podAffinity preferred + toleration `gitlab-ci`) | 6 |
+| `kiali-ingress.yaml` | Ingress nginx → `https://k8s-dev-sat.tigo.com.pa/kiali` | — |
+| `prometheus/app-prometheus.yaml` | Prometheus dedicado (`prometheus.istio-system:9090`) | 2 |
 
-Wiring: `istio` AppProject em `argocd-projects.yaml`; `- istio` em `cluster-resources/kustomization.yaml`.
-Versões fixadas: **Istio 1.24.3**, **kiali-server 2.4.0**, **prometheus 25.27.0**.
+Wiring: AppProject `istio` em `argocd-projects.yaml`; `- istio` em `cluster-resources/kustomization.yaml`.
+**Versões:** Istio **1.26.8**, kiali-server **2.11.0**, prometheus (chart) **29.13.0**.
+**Sem NetworkPolicy** no ns kiali (cluster dev sem hardening de namespace). **Sem mesh-gateway**
+(exposição é via nginx). `istioctl` **não** está no bastion → validar por `kubectl`/Kiali.
 
----
-
-## Fase 0 — pre-flight (ANTES de fazer merge)
-
-```bash
-bash zeus-sat-istio-preflight.sh      # zeus/scripts/; read-only; enviar output de volta
-```
-
-Decisões que o output fecha **antes do merge**:
-1. **Prometheus existe?** Se sim → editar `app-kiali.yaml` › `external_services.prometheus.url`
-   para a URL real. Se não → descomentar `- prometheus/app-prometheus.yaml` no
-   `cluster-resources/istio/kustomization.yaml` (e preencher `storageClass`).
-2. **Versão K8s/RKE2** compatível com Istio 1.24? Se não, alterar `targetRevision` nos 5
-   Applications istio (manter todos iguais).
-3. **Paths de CNI do RKE2** (passo 3). Se não forem `/etc/cni/net.d` + `/opt/cni/bin`,
-   ajustar `cni.cniConfDir`/`cni.cniBinDir` em `app-istio-cni.yaml` (ver nota no arquivo).
-4. **Egress/airgap**: se sem internet, espelhar imagens istio/kiali/prometheus no registry
-   interno e trocar os `repoURL`/imagens.
+> **Particularidades do ambiente** (descobertas no pre-flight): K8s 1.32 (→ Istio 1.26); CNI **Canal**;
+> **não há Prometheus** (só Loki/Grafana) → provisionado um dedicado; **proxy TLS-intercept** no egress
+> → charts **vendorizados no git** (o `argocd-repo-server` não confia na CA; imagens públicas baixam
+> normal); `tigo-tls-secret` **não existe** (TLS no HAProxy externo) → Ingress sem bloco `tls`.
 
 ---
 
-## Fase 2 — bootstrap do mesh (merge → ArgoCD sincroniza). NÃO toca nas apps.
+## Fase 0 — pre-flight (read-only) — ✅ feito
 
 ```bash
-# 1. merge no tigo-devops-panama (após ajustes da Fase 0)
-git -C tigo-devops-panama add cluster-resources/istio cluster-resources/kustomization.yaml \
-    cluster-resources/argocd-projects/argocd-projects.yaml
-git -C tigo-devops-panama commit -m "feat(istio): mesh ambient + Kiali via GitOps (SAT dev)"
-git -C tigo-devops-panama push origin main
-
-# 2. acompanhar o sync (App-of-Apps já sincroniza cluster-resources automaticamente)
-argocd app list | grep -E 'istio|ztunnel|kiali'
-argocd app sync istio-base istiod istio-cni ztunnel istio-ingressgateway kiali kiali-gateway   # se preciso forçar
-
-# 3. validar control-plane
-kubectl -n istio-system get pods           # istiod, istio-cni-*, ztunnel-* Running
-kubectl -n istio-system get ds ztunnel istio-cni-node   # ztunnel em TODOS os nós
-istioctl version
-istioctl x precheck
+bash zeus-sat-istio-preflight.sh      # zeus/scripts/; read-only
 ```
+Resultado já incorporado no design (tabela §5 do plano).
 
-> **Neste ponto NENHUM namespace de app está enrolado → zero impacto nos workloads.**
-
----
-
-## Fase 3 — habilitar telemetria ambient (rótulo de ns, SEM restart)
-
-Começar por **1 ns de baixo risco** (canary). As apps estão no ns `argocd` — **não enrolar
-o `argocd` inteiro de cara**. Validar primeiro num ns de teste/dedicado.
+## Fase 2 — bootstrap (já aplicado via push na `dev`). Validar estado:
 
 ```bash
-# canary
-kubectl label namespace <ns-canary> istio.io/dataplane-mode=ambient
-kubectl get ns --show-labels | grep ambient
-
-# prova de que NADA reiniciou (ambient, sem sidecar): RESTARTS inalterado, READY continua 1/1 (não 2/2)
-kubectl get pods -n <ns-canary> -o wide
-
-# expandir gradualmente após validar no Kiali. Endurecer mTLS só depois:
-# kubectl apply -f -  <<'EOF'  (PeerAuthentication STRICT por ns, opcional, pós-validação)
+# Applications verdes
+kubectl get applications -n argocd -o custom-columns='APP:.metadata.name,SYNC:.status.sync.status,HEALTH:.status.health.status' \
+  | grep -Ei 'istio|ztunnel|kiali|prometheus'
+# control-plane
+kubectl -n istio-system get pods
+kubectl -n istio-system get ds istio-cni-node ztunnel    # 13/13 (sem o nfs-01)
+kubectl -n kiali get pods -o wide                        # 1/1 no nó do argocd-server
 ```
+Esperado: `istio-base, istiod, istio-cni, ztunnel, kiali, istio-prometheus` `Synced/Healthy`.
 
----
+> Se algo voltar a `OutOfSync` no `caBundle` dos ValidatingWebhooks, já há `ignoreDifferences` em
+> base/istiod. Para forçar releitura: `kubectl -n argocd annotate application <app> argocd.argoproj.io/refresh=hard --overwrite`.
 
-## Fase 4 — expor Kiali + dashboard
+## Fase 3 — telemetria ambient — **opção A: label de namespace** (feito)
+
+**Canário (validado):** `kubectl apply -f mesh-canary.yaml` → grafo L4 + mTLS; pods `1/1`. Remover:
+`kubectl delete ns mesh-canary`.
+
+**NÃO existe label `project`** em pods/deployments → enrolagem por **namespace**. Ordem importa:
+exclui Rabbit/ArgoCD **antes** de rotular o ns.
 
 ```bash
-# Gateway+VirtualService já sobem no wave 7. Garantir host no DNS/HAProxy:
-#   kiali-dev-sat.tigo.com.pa  -> istio-ingressgateway (TLS termina no HAProxy externo)
-kubectl -n istio-system get gateway kiali-gateway
-kubectl -n istio-system get virtualservice kiali-vs
-kubectl -n kiali get pod -o wide          # confirmar agendado no nó do argocd-server
+# 1) excluir RabbitMQ + control-plane do ArgoCD (sem restart) — ANTES do label do ns
+for p in $(kubectl -n argocd get pods -o name | grep -E '/(rabbitmq|argocd-)'); do
+  kubectl -n argocd label "$p" istio.io/dataplane-mode=none --overwrite ; done
+kubectl -n argocd get pods -L istio.io/dataplane-mode | grep -E 'rabbitmq|argocd-'   # tem que mostrar 'none'
 
-# abrir: https://kiali-dev-sat.tigo.com.pa/kiali
+# 2) rotular o ns argocd (captura todos os pods, existentes + futuros, sem restart)
+kubectl label ns argocd istio.io/dataplane-mode=ambient --overwrite
+kubectl get ns argocd --show-labels | tr ',' '\n' | grep dataplane
+
+# 3) validar (READY 1/1, RESTARTS inalterado; total ~ todos menos os 9 excluídos)
+kubectl -n argocd get pods -l istio.io/dataplane-mode=ambient -o name | wc -l
 ```
 
-Auth = `anonymous` (dev). Avaliar `openid` com o Keycloak existente em fase posterior.
+No Kiali (Traffic Graph, ns `argocd`, Last 30m, **Idle Nodes ON**): aparece o conjunto; arestas surgem com o tráfego real.
+
+> **⚠️ Firmeza do `none` do Rabbit (PENDENTE):** a label `none` no pod **some se o pod recriar**; como o
+> ns está `ambient`, um pod de Rabbit recriado **entra no mesh** (risco AMQP/clustering). Firmar baixando
+> `istio.io/dataplane-mode: none` no **template do StatefulSet** em `cluster-resources/rabbitmq/` (GitOps)
+> → 1 rollout controlado do Rabbit. Até lá, **não recriar o Rabbit** sem reaplicar o `none`.
+>
+> **Permanência total via GitOps (opcional):** a label de ns já cobre tudo sem mexer em templates. Se um
+> dia quiserem 100% versionado por workload, usar um patch em massa estilo `ci/patch_tz.py` nos overlays.
+
+**Rollback imediato:**
+```bash
+kubectl label ns argocd istio.io/dataplane-mode-          # tira a captura do ns inteiro, na hora
+# (por pod:  kubectl -n argocd label pod <nome> istio.io/dataplane-mode-)
+```
+
+## Fase 4 — exposição do Kiali — ✅ feito
+
+Exposto pelo padrão do cluster (host único + path), **não** pelo mesh-gateway:
+
+```bash
+kubectl -n kiali get ingress         # host k8s-dev-sat.tigo.com.pa, path /kiali -> kiali:20001
+```
+Acesso: **`https://k8s-dev-sat.tigo.com.pa/kiali`** (TLS no HAProxy externo; auth `anonymous`).
+
+**Acesso alternativo via port-forward** (se precisar sem passar pelo HAProxy):
+```bash
+kubectl -n kiali port-forward svc/kiali 20001:20001
+# da VM Windows, túnel: ssh -L 20001:localhost:20001 <user>@10.30.13.6  -> http://localhost:20001/kiali
+```
 
 ---
 
 ## Verificação end-to-end (checklist)
 
-- [ ] `istioctl x precheck` e `istioctl version` sem erros.
-- [ ] istiod, istio-cni e ztunnel `Running` (ztunnel em todos os nós).
-- [ ] `kubectl get ns --show-labels | grep ambient` → ns enrolado(s).
-- [ ] Kiali: grafo do ns enrolado com **arestas L4** + **cadeado mTLS**, sem warning de Prometheus.
-- [ ] **Apps intactas**: `kubectl get pods -n <ns>` → `RESTARTS` inalterado, `READY` = `1/1` (não `2/2`).
-- [ ] ArgoCD: Applications istio*/kiali* `Synced`/`Healthy`; Kiali no nó do argocd-server.
+- [ ] Applications istio*/kiali*/prometheus `Synced/Healthy`.
+- [ ] istiod, istio-cni, ztunnel, prometheus, kiali `Running`; DaemonSets 13/13.
+- [ ] Após enrolar um `project`: grafo no Kiali com **arestas L4** + **cadeado mTLS**.
+- [ ] **Apps intactas**: `RESTARTS` inalterado, `READY` = `1/1` (não `2/2`).
+- [ ] Kiali acessível em `https://k8s-dev-sat.tigo.com.pa/kiali`.
 
-## Rollback
+## Operação / manutenção
+
+- **Subir versão (Istio/Kiali/Prometheus):** re-vendorizar os `.tgz` em `cluster-resources/istio/charts/`
+  (o repo-server não busca por HTTPS por causa do proxy TLS), commit + push na `dev`.
+- **Forçar sync:** `kubectl -n argocd annotate application <app> argocd.argoproj.io/refresh=hard --overwrite`.
+- **L7 (HTTP/RPS/latência), opcional:** deploy de *waypoint* por namespace (sem tocar pods), fase futura.
+
+## Rollback total
 
 ```bash
-# remover captura de um ns (volta ao estado anterior na hora, sem restart)
-kubectl label namespace <ns> istio.io/dataplane-mode-
-
-# remover o mesh inteiro: reverter o commit; ArgoCD (prune:true) remove os Applications e recursos.
+# tirar captura de todos os pods/ns enrolados (imediato, sem restart):
+kubectl -n argocd label pod -l istio.io/dataplane-mode=ambient istio.io/dataplane-mode-
+# remover o mesh inteiro: reverter o commit na dev; ArgoCD (prune:true) remove as Applications.
+#   recursos de Applications sem finalizer ficam órfãos -> limpar com kubectl se necessário.
 ```

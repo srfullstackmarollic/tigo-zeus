@@ -1,5 +1,12 @@
 # Observabilidade SAT dev — Istio (ambient) + Kiali via GitOps
 
+> ⚠️ **DOCUMENTO HISTÓRICO (plano original, pré-execução).** O estado real implantado e as
+> decisões finais estão no **as-built**: `plan-observabilidad-istio-kiali-sat-dev.md` e no runbook
+> `sat-dev-istio-kiali-runbook.md`. Desvios principais vs este plano: branch **`dev`** (não main);
+> Istio **1.26.8** / Kiali **2.11.0** (não 1.24); charts **vendorizados no git** (proxy TLS);
+> exposição via **Ingress nginx em `k8s-dev-sat.tigo.com.pa/kiali`** (não pelo mesh-gateway);
+> rollout por **`project` label** dos pods (não pelo ns `argocd` inteiro). Mantido só como referência.
+
 ## Contexto
 
 O cluster **SAT dev** (`tocpait-sat-dev`, RKE2, acesso por SSH ao master `tocpait-sat-dev-mstrs-k8s-01`)
